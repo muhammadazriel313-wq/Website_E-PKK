@@ -110,15 +110,16 @@
             <label style="font-size: 13px; font-weight: 500;">Bidang <span class="text-danger">*</span></label>
             <select name="bidang" class="form-select" required>
               <option value="">-- Pilih Bidang --</option>
+              <option value="semua">Semua Bidang (Rekap Total)</option>
               <option value="pendidikan">Pendidikan Dan Ketrampilan</option>
               <option value="pengembangan">Pengembangan Kehidupan Berkoperasi</option>
-              </select>
+            </select>
           </div>
           <div class="mb-3">
             <label style="font-size: 13px; font-weight: 500;">Format <span class="text-danger">*</span></label>
             <select name="format" id="formatExportPokja2" class="form-select" required>
               <option value="">-- Pilih Format --</option>
-              <option value="pdf">📄 PDF (Download)</option>
+              <option value="pdf">📄 PDF (Download / Print)</option>
               <option value="excel">📊 Google Sheets (Online)</option>
             </select>
           </div>
@@ -163,17 +164,38 @@
 
     if (!format) { Swal.fire({ icon: 'warning', title: 'Pilih Format!', text: 'Silakan pilih format export terlebih dahulu' }); return; }
 
+    // ==========================================
+    // PERBAIKAN LOGIKA CETAK PDF / PRINT (Buka di tab baru)
+    // ==========================================
     if (format === "pdf") {
       let params = new URLSearchParams();
       params.append('bidang', bidang);
-      if (bulan && tahun) {
-          params.append('search', `${tahun}-${bulan.toString().padStart(2, '0')}`);
-      } else if (tahun) {
-          params.append('search2', tahun);
+      params.append('tahun', tahun);
+
+      // Cek apakah cetak perbulan atau pertahun
+      if (bulan) {
+          params.append('tipe_cetak', 'perbulan');
+          params.append('bulan', bulan);
+      } else {
+          params.append('tipe_cetak', 'tahunan');
       }
-      window.location.href = "{{ route('pendidikan.filter') }}?" + params.toString();
+
+      // Tutup modal agar rapi
+      bootstrap.Modal.getInstance(document.getElementById('modalLaporanPokja2'))?.hide();
+      
+      // FIX: Arahkan langsung ke fungsi cetak di Pokja2Controller
+      window.open("{{ route('pokja2.cetak') }}?" + params.toString(), "_blank");
     } 
+    // ==========================================
+    // LOGIKA EXPORT EXCEL (GOOGLE SHEETS)
+    // ==========================================
     else if (format === "excel") {
+      // (Biar gak eror milih 'semua' pas ekspor ke Google Sheets)
+      if (bidang === 'semua') {
+         Swal.fire('Perhatian!', 'Untuk export ke Google Sheets, silakan pilih bidang spesifik satu per satu.', 'warning');
+         return;
+      }
+
       if(APPS_SCRIPT_URL_POKJA2 === "TARUH_LINK_APPS_SCRIPT_DISINI") {
           Swal.fire('URL Belum Diatur!', 'Komandan, kamu belum menaruh URL Google Script di file Blade.', 'error');
           return;

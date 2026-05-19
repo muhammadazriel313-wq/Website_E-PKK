@@ -127,6 +127,7 @@
             <label style="font-size: 13px; font-weight: 500;">Bidang <span class="text-danger">*</span></label>
             <select name="bidang" class="form-select" required>
               <option value="">-- Pilih Bidang --</option>
+              <option value="semua">Semua Bidang (Rekap Total)</option>
               <option value="penghayatan">Penghayatan & Pengamalan Pancasila</option>
               <option value="gotongroyong">Gotong Royong</option>
               <option value="kader">Kader Pokja 1</option>
@@ -136,7 +137,7 @@
             <label style="font-size: 13px; font-weight: 500;">Format <span class="text-danger">*</span></label>
             <select name="format" id="formatExportPokja1" class="form-select" required>
               <option value="">-- Pilih Format --</option>
-              <option value="pdf">📄 PDF (Download)</option>
+              <option value="pdf">📄 PDF (Download / Print)</option>
               <option value="excel">📊 Google Sheets (Online)</option>
             </select>
           </div>
@@ -182,17 +183,38 @@
 
     if (!format) { Swal.fire({ icon: 'warning', title: 'Pilih Format!', text: 'Silakan pilih format export terlebih dahulu' }); return; }
 
+    // ==========================================
+    // PERBAIKAN LOGIKA CETAK PDF / PRINT
+    // ==========================================
     if (format === "pdf") {
       let params = new URLSearchParams();
       params.append('bidang', bidang);
-      if (bulan && tahun) {
-          params.append('search', `${tahun}-${bulan.toString().padStart(2, '0')}`);
-      } else if (tahun) {
-          params.append('search2', tahun);
+      params.append('tahun', tahun);
+
+      // Cek apakah cetak perbulan atau pertahun
+      if (bulan) {
+          params.append('tipe_cetak', 'perbulan');
+          params.append('bulan', bulan);
+      } else {
+          params.append('tipe_cetak', 'tahunan');
       }
-      window.location.href = "{{ route('gotongroyong.filter') }}?" + params.toString();
+
+      // Tutup modal agar rapi
+      bootstrap.Modal.getInstance(document.getElementById('modalLaporanPokja1'))?.hide();
+      
+      // Buka halaman cetak di Tab Baru (Arahkan ke pokja1.cetak, BUKAN gotongroyong.filter)
+      window.open("{{ route('pokja1.cetak') }}?" + params.toString(), "_blank");
     } 
+    // ==========================================
+    // LOGIKA EXPORT EXCEL (GOOGLE SHEETS)
+    // ==========================================
     else if (format === "excel") {
+      // (Biar gak eror milih 'semua' pas ekspor ke Google Sheets)
+      if (bidang === 'semua') {
+         Swal.fire('Perhatian!', 'Untuk export ke Google Sheets, silakan pilih bidang spesifik satu per satu.', 'warning');
+         return;
+      }
+
       const confirmExport = await Swal.fire({
         title: 'Mulai Ekspor?',
         html: `Data akan ditimpa/diperbarui ke dalam <b>Google Sheets Pokja 1</b>.<br><br>
@@ -211,11 +233,9 @@
       Swal.fire({ title: 'Mengekspor data...', text: 'Sedang mengambil data dari Database...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
       try {
-        // FIX: Route sekarang mengarah ke Pokja1Controller, bukan LaporanPokja1Controller lama
         const urlTarget = `{{ route('pokja1.exportJson') }}?bulan=${bulan}&tahun=${tahun}&bidang=${bidang}`;
         const dbResponse = await fetch(urlTarget);
         
-        // FIX: Debugger Canggih, tidak sekadar nampilin "Status 500" lagi
         if (!dbResponse.ok) {
             const textError = await dbResponse.text();
             let realErrorMsg = `Status HTTP: ${dbResponse.status}`;

@@ -165,4 +165,69 @@ class Pokja2Controller extends Controller
             ], 500);
         }
     }
+    /*
+    |--------------------------------------------------------------------------
+    | FUNGSI CETAK LAPORAN POKJA 2
+    |--------------------------------------------------------------------------
+    */
+    public function cetak(Request $request)
+    {
+        $tipeCetak = $request->input('tipe_cetak', 'tahunan'); 
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+        
+        // 1. TANGKAP VARIABEL BIDANG (Saklar Tabel)
+        $bidang = $request->input('bidang', 'semua'); 
+        
+        $tanggal = ($tipeCetak == 'perbulan') ? \Carbon\Carbon::createFromDate($tahun, $bulan)->format('F Y') : $tahun;
+        $formattedDate = \Carbon\Carbon::now()->isoFormat('d MMMM Y');
+
+        // =========================================================
+        // PERHATIAN: Sesuaikan nama tabel 'laporan_pendidikan_n_keterampilan' 
+        // dan 'laporan_pengembangan_kehidupan_berkoperasi' dengan yang ada di database komandan
+        // =========================================================
+
+        // QUERY PENDIDIKAN
+     // 1. GANTI NAMA TABEL PENDIDIKAN DI SINI
+        $queryPendidikan = \Illuminate\Support\Facades\DB::table('laporan_pendidikan_n_keterampilan')
+            ->leftJoin('users_mobile', 'laporan_pendidikan_n_keterampilan.id_user', '=', 'users_mobile.id')
+            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
+            ->select('laporan_pendidikan_n_keterampilan.*', 'subdistrict.name as nama_kec')
+            ->whereIn('laporan_pendidikan_n_keterampilan.status', ['Disetujui2']); 
+
+        // 2. GANTI NAMA TABEL PENGEMBANGAN KOPERASI DI SINI
+        $queryPengembangan = \Illuminate\Support\Facades\DB::table('laporan_pengembangan_kehidupan')
+            ->leftJoin('users_mobile', 'laporan_pengembangan_kehidupan.id_user', '=', 'users_mobile.id')
+            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
+            ->select('laporan_pengembangan_kehidupan.*', 'subdistrict.name as nama_kec')
+            ->whereIn('laporan_pengembangan_kehidupan.status', ['Disetujui2']);
+
+        // ... dan jangan lupa ganti juga nama tabelnya di bagian FILTER TAHUN / BULAN di bawahnya:
+        if ($tipeCetak == 'perbulan') {
+            $queryPendidikan->whereMonth('laporan_pendidikan_n_keterampilan.created_at', $bulan)->whereYear('laporan_pendidikan_n_keterampilan.created_at', $tahun);
+            $queryPengembangan->whereMonth('laporan_pengembangan_kehidupan.created_at', $bulan)->whereYear('laporan_pengembangan_kehidupan.created_at', $tahun);
+        } else {
+            $queryPendidikan->whereYear('laporan_pendidikan_n_keterampilan.created_at', $tahun);
+            $queryPengembangan->whereYear('laporan_pengembangan_kehidupan.created_at', $tahun);
+        }
+
+
+        // Eksekusi Query
+        $pendidikan = $queryPendidikan->get();
+        $pengembangan = $queryPengembangan->get();
+
+        // DATA TANDA TANGAN 
+        $wakil = \Illuminate\Support\Facades\DB::table('ttds')->where('pokja', 'Kelompok Kerja II')
+                    ->where(function($q) { $q->where('jabatan', 'like', '%Wakil%')->orWhere('jabatan', 'like', '%Sekretaris%'); })->get();
+        
+        $ketua = \Illuminate\Support\Facades\DB::table('ttds')->where('pokja', 'Kelompok Kerja II')->where('jabatan', 'Ketua')->get();
+
+        $viewName = ($tipeCetak == 'perbulan') ? 'backend.cetak_bulan_pokja2' : 'backend.cetak_tahun_pokja2';
+
+        // Lempar data ke view Print
+        return view($viewName, compact(
+            'pendidikan', 'pengembangan', 
+            'wakil', 'ketua', 'tanggal', 'formattedDate', 'bidang'
+        ));
+    }
 }

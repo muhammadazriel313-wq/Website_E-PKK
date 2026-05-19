@@ -207,4 +207,13 @@ class BidangUmumController extends Controller
             ], 500);
         }
     }
+    public function cetak(Request $request) 
+{
+    // ... proses ambil data ...
+    
+    $tanggal = $request->tahun; // Atau dari mana saja sumber tanggalnya didapat
+
+    // Pastikan 'tanggal' masuk ke dalam compact()
+    return view('backend.cetak_tahun_bidangumum', compact('data', 'tanggal'));
+}
 }

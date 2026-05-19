@@ -496,3 +496,8 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
         Route::resource('input_pengumuman', App\Http\Controllers\backend\InputPengumumanController::class);
     });
 });
+
+Route::get('/cetak-pokja2', [App\Http\Controllers\backend\Pokja2Controller::class, 'cetak'])->name('pokja2.cetak');
+Route::get('/cetak-pokja3', [App\Http\Controllers\backend\Pokja3Controller::class, 'cetak'])->name('pokja3.cetak');
+Route::get('/cetak-pokja4', [App\Http\Controllers\backend\Pokja4Controller::class, 'cetak'])->name('pokja4.cetak');
+Route::get('/export-pokja4', [App\Http\Controllers\backend\Pokja4Controller::class, 'getExportData'])->name('pokja4.exportJson');

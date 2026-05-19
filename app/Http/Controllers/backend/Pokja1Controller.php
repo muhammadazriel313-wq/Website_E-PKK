@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class Pokja1Controller extends Controller
 {
@@ -22,85 +23,43 @@ class Pokja1Controller extends Controller
             $statusAdmin = ['Disetujui1', 'Disetujui2'];
 
             $modelPertama = DB::table('laporan_penghayatan_n_pengamalan')
-                ->leftJoin(
-                    'users_mobile',
-                    'laporan_penghayatan_n_pengamalan.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
+                ->leftJoin('users_mobile', 'laporan_penghayatan_n_pengamalan.id_user', '=', 'users_mobile.id')
                 ->where(function ($query) {
-                    // DESA
                     $query->where(function ($q) {
                         $q->where('users_mobile.id_role', 1)
-                            ->whereIn(
-                                'laporan_penghayatan_n_pengamalan.status',
-                                ['Disetujui1','Disetujui2']
-                            );
+                          ->whereIn('laporan_penghayatan_n_pengamalan.status', ['Disetujui1', 'Disetujui2']);
                     })
-                        // MOBILE KECAMATAN
-                        ->orWhere(function ($q) {
-                            $q->where('users_mobile.id_role', 2)
-                                ->whereIn(
-                                    'laporan_penghayatan_n_pengamalan.status',
-                                    ['Proses', 'proses', 'PROSES','Disetujui2']
-                                );
-                        });
-                })
-                ->count();
+                    ->orWhere(function ($q) {
+                        $q->where('users_mobile.id_role', 2)
+                          ->whereIn('laporan_penghayatan_n_pengamalan.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
+                    });
+                })->count();
 
             $modelKedua = DB::table('laporan_gotong_royong')
-                ->leftJoin(
-                    'users_mobile',
-                    'laporan_gotong_royong.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
+                ->leftJoin('users_mobile', 'laporan_gotong_royong.id_user', '=', 'users_mobile.id')
                 ->where(function ($query) {
-                    // DESA
                     $query->where(function ($q) {
                         $q->where('users_mobile.id_role', 1)
-                            ->whereIn(
-                                'laporan_gotong_royong.status',
-                                ['Disetujui1','Disetujui2']
-                            );
+                          ->whereIn('laporan_gotong_royong.status', ['Disetujui1', 'Disetujui2']);
                     })
-                        // MOBILE KECAMATAN
-                        ->orWhere(function ($q) {
-                            $q->where('users_mobile.id_role', 2)
-                                ->whereIn(
-                                    'laporan_gotong_royong.status',
-                                    ['Proses', 'proses', 'PROSES','Disetujui2']
-                                );
-                        });
-                })
-                ->count();
+                    ->orWhere(function ($q) {
+                        $q->where('users_mobile.id_role', 2)
+                          ->whereIn('laporan_gotong_royong.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
+                    });
+                })->count();
 
             $modelKetiga = DB::table('laporan_kader_pokja1')
-                ->leftJoin(
-                    'users_mobile',
-                    'laporan_kader_pokja1.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
+                ->leftJoin('users_mobile', 'laporan_kader_pokja1.id_user', '=', 'users_mobile.id')
                 ->where(function ($query) {
-                    // DESA
                     $query->where(function ($q) {
                         $q->where('users_mobile.id_role', 1)
-                            ->whereIn(
-                                'laporan_kader_pokja1.status',
-                                ['Disetujui1','Disetujui2']
-                            );
+                          ->whereIn('laporan_kader_pokja1.status', ['Disetujui1', 'Disetujui2']);
                     })
-                        // MOBILE KECAMATAN
-                        ->orWhere(function ($q) {
-                            $q->where('users_mobile.id_role', 2)
-                                ->whereIn(
-                                    'laporan_kader_pokja1.status',
-                                    ['Proses', 'proses', 'PROSES', 'Disetujui2']
-                                );
-                        });
-                })
-                ->count();
+                    ->orWhere(function ($q) {
+                        $q->where('users_mobile.id_role', 2)
+                          ->whereIn('laporan_kader_pokja1.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
+                    });
+                })->count();
         }
         // =====================================
         // WEB KECAMATAN
@@ -137,22 +96,100 @@ class Pokja1Controller extends Controller
         return view('backend.pokja1', compact('modelPertama', 'modelKedua', 'modelKetiga'));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FUNGSI FILTER (Menyaring Laporan Berdasarkan Waktu)
+    |--------------------------------------------------------------------------
+    */
     public function filter(Request $request)
     {
-        /* Kode asli filter tetap dibiarkan utuh di project-mu */
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        // Ambil data untuk dikirim kembali ke View setelah di-filter
+        $modelPertama = DB::table('laporan_penghayatan_n_pengamalan')->when($bulan, function($q) use ($bulan){ return $q->whereMonth('created_at', $bulan); })->when($tahun, function($q) use ($tahun){ return $q->whereYear('created_at', $tahun); })->count();
+        $modelKedua = DB::table('laporan_gotong_royong')->when($bulan, function($q) use ($bulan){ return $q->whereMonth('created_at', $bulan); })->when($tahun, function($q) use ($tahun){ return $q->whereYear('created_at', $tahun); })->count();
+        $modelKetiga = DB::table('laporan_kader_pokja1')->when($bulan, function($q) use ($bulan){ return $q->whereMonth('created_at', $bulan); })->when($tahun, function($q) use ($tahun){ return $q->whereYear('created_at', $tahun); })->count();
+
+        // Menyimpan nilai filter untuk ditampilkan lagi di dropdown
+        return view('backend.pokja1', compact('modelPertama', 'modelKedua', 'modelKetiga', 'bulan', 'tahun'));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FUNGSI CETAK LAPORAN (Menyiapkan Data ke View Print)
+    |--------------------------------------------------------------------------
+    */
+/*
+    |--------------------------------------------------------------------------
+    | FUNGSI CETAK LAPORAN (Menyiapkan Data ke View Print)
+    |--------------------------------------------------------------------------
+    */
     public function cetak(Request $request)
     {
-        /* Kode asli cetak tetap dibiarkan utuh di project-mu */
+        $tipeCetak = $request->input('tipe_cetak', 'tahunan'); 
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+        
+        // 1. TANGKAP VARIABEL BIDANG (Jika kosong, otomatis anggap 'semua')
+        $bidang = $request->input('bidang', 'semua'); 
+        
+        $tanggal = ($tipeCetak == 'perbulan') ? Carbon::createFromDate($tahun, $bulan)->format('F Y') : $tahun;
+        $formattedDate = Carbon::now()->isoFormat('d MMMM Y');
+
+        // QUERY PENGHAYATAN PANCASILA
+        $queryPenghayatan = DB::table('laporan_penghayatan_n_pengamalan')
+            ->leftJoin('users_mobile', 'laporan_penghayatan_n_pengamalan.id_user', '=', 'users_mobile.id')
+            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
+            ->select('laporan_penghayatan_n_pengamalan.*', 'subdistrict.name as nama_kec')
+            ->whereIn('laporan_penghayatan_n_pengamalan.status', ['Disetujui2']); 
+
+        // QUERY GOTONG ROYONG
+        $queryGotongRoyong = DB::table('laporan_gotong_royong')
+            ->leftJoin('users_mobile', 'laporan_gotong_royong.id_user', '=', 'users_mobile.id')
+            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
+            ->select('laporan_gotong_royong.*', 'subdistrict.name as nama_kec')
+            ->whereIn('laporan_gotong_royong.status', ['Disetujui2']);
+
+        // QUERY KADER POKJA 1
+        $queryKaderPokja = DB::table('laporan_kader_pokja1')
+            ->leftJoin('users_mobile', 'laporan_kader_pokja1.id_user', '=', 'users_mobile.id')
+            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
+            ->select('laporan_kader_pokja1.*', 'subdistrict.name as nama_kec')
+            ->whereIn('laporan_kader_pokja1.status', ['Disetujui2']);
+
+        // FILTER TAHUN / BULAN
+        if ($tipeCetak == 'perbulan') {
+            $queryPenghayatan->whereMonth('laporan_penghayatan_n_pengamalan.created_at', $bulan)->whereYear('laporan_penghayatan_n_pengamalan.created_at', $tahun);
+            $queryGotongRoyong->whereMonth('laporan_gotong_royong.created_at', $bulan)->whereYear('laporan_gotong_royong.created_at', $tahun);
+            $queryKaderPokja->whereMonth('laporan_kader_pokja1.created_at', $bulan)->whereYear('laporan_kader_pokja1.created_at', $tahun);
+        } else {
+            $queryPenghayatan->whereYear('laporan_penghayatan_n_pengamalan.created_at', $tahun);
+            $queryGotongRoyong->whereYear('laporan_gotong_royong.created_at', $tahun);
+            $queryKaderPokja->whereYear('laporan_kader_pokja1.created_at', $tahun);
+        }
+
+        // Eksekusi Query
+        $penghayatan = $queryPenghayatan->get();
+        $gotongroyong = $queryGotongRoyong->get();
+        $laporanpokja1 = $queryKaderPokja->get();
+
+        // DATA TANDA TANGAN 
+        $wakil = DB::table('ttds')->where('pokja', 'Kelompok Kerja I')
+                    ->where(function($q) { $q->where('jabatan', 'like', '%Wakil%')->orWhere('jabatan', 'like', '%Sekretaris%'); })->get();
+        
+        $ketua = DB::table('ttds')->where('pokja', 'Kelompok Kerja I')->where('jabatan', 'Ketua')->get();
+
+        $viewName = ($tipeCetak == 'perbulan') ? 'backend.cetak_bulan_pokja1' : 'backend.cetak_tahun_pokja1';
+
+        // 2. JANGAN LUPA COMPACT VARIABEL 'bidang' KE VIEW
+        return view($viewName, compact(
+            'penghayatan', 'gotongroyong', 'laporanpokja1', 
+            'wakil', 'ketua', 'tanggal', 'formattedDate', 'bidang'
+        ));
     }
 
-    // ==========================================
-    // FUNGSI BARU: EXPORT JSON POKJA 1
-    // ==========================================
-    // ==========================================
-    // FUNGSI BARU: EXPORT JSON POKJA 1
-    // ==========================================
+
     // ==========================================
     // FUNGSI BARU: EXPORT JSON POKJA 1
     // ==========================================

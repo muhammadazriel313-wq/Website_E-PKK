@@ -102,7 +102,7 @@
               <div style="background:#ffedd5; width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
                 <i class="bi bi-lightbulb-fill" style="font-size:26px; color:#ea580c;"></i>
               </div>
-              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Inovasi</h5>
+              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Inovasi (Prioritas & Unggulan)</h5>
             </div>
             <div class="d-flex align-items-center gap-3">
               <span style="font-size:28px; font-weight:600; color:#0369a1;"> {{($modelKelima ?? 0) + ($modelKeenam ?? 0) + ($modelKetujuh ?? 0) + ($modelKedelapan ?? 0)}}</span>
@@ -165,17 +165,21 @@
             <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Bidang <span class="text-danger">*</span></label>
             <select name="bidang" class="form-select" required>
               <option value="">-- Pilih Bidang --</option>
+              <option value="semua">Semua Bidang (Rekap Total)</option>
               <option value="kesehatan">Kesehatan</option>
               <option value="kelestarian">Kelestarian Lingkungan Hidup</option>
               <option value="perencanaan">Perencanaan Sehat</option>
               <option value="kader">Kader Pokja 4</option>
+              {{-- TAMBAHAN MENU INOVASI --}}
+              <option value="inovasi_prioritas">Inovasi Prioritas</option>
+              <option value="inovasi_unggulan">Inovasi Unggulan</option>
             </select>
           </div>
           <div class="mb-3">
             <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Format <span class="text-danger">*</span></label>
             <select name="format" id="formatExport" class="form-select" required>
               <option value="">-- Pilih Format --</option>
-              <option value="pdf">📄 PDF (Download)</option>
+              <option value="pdf">📄 PDF (Download / Print)</option>
               <option value="excel">📊 Google Sheets (Online)</option>
             </select>
           </div>
@@ -220,20 +224,36 @@
 
     if (!format) { Swal.fire({ icon: 'warning', title: 'Pilih Format!', text: 'Silakan pilih format export terlebih dahulu' }); return; }
 
-    // --- PDF EXPORT ---
+    // ==========================================
+    // PERBAIKAN LOGIKA CETAK PDF / PRINT (Buka di tab baru)
+    // ==========================================
     if (format === "pdf") {
       let params = new URLSearchParams();
       params.append('bidang', bidang);
-      if (bulan && tahun) {
-          params.append('search', `${tahun}-${bulan.toString().padStart(2, '0')}`);
-      } else if (tahun) {
-          params.append('search2', tahun);
+      params.append('tahun', tahun);
+
+      if (bulan) {
+          params.append('tipe_cetak', 'perbulan');
+          params.append('bulan', bulan);
+      } else {
+          params.append('tipe_cetak', 'tahunan');
       }
-      window.location.href = "{{ route('kesehatan.filter') }}?" + params.toString(); 
+
+      // Tutup modal agar rapi
+      bootstrap.Modal.getInstance(document.getElementById('modalLaporan'))?.hide();
+      
+      // FIX: Arahkan langsung ke fungsi cetak di Pokja4Controller
+      window.open("{{ route('pokja4.cetak') }}?" + params.toString(), "_blank");
+      return;
     } 
     
     // --- GOOGLE SHEETS EXPORT ---
     else if (format === "excel") {
+      if (bidang === 'semua') {
+         Swal.fire('Perhatian!', 'Untuk export ke Google Sheets, silakan pilih bidang spesifik satu per satu.', 'warning');
+         return;
+      }
+
       const confirmExport = await Swal.fire({
         title: 'Mulai Ekspor?', html: `Data akan ditimpa/diperbarui ke dalam <b>Google Sheets Pokja 4</b>.<br><br>
                  <a href="${SHEET_HREF}" target="_blank" style="text-decoration: none; color: #0d6efd; font-weight: 600; background: #f8f9fa; padding: 5px 10px; border-radius: 5px;">
@@ -250,13 +270,20 @@
       Swal.fire({ title: 'Mengekspor data...', text: 'Sedang mengambil data dari Database...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
       try {
-        // 1. Fetch JSON dari Laravel Controller
-        const urlTarget = `{{ route('laporanpokja4.exportJson') }}?bulan=${bulan}&tahun=${tahun}&bidang=${bidang}`;
+        // Fetch JSON dari Laravel Controller
+        const urlTarget = `{{ route('pokja4.exportJson') }}?bulan=${bulan}&tahun=${tahun}&bidang=${bidang}`;
         const dbResponse = await fetch(urlTarget);
         
         if (!dbResponse.ok) {
             const textError = await dbResponse.text();
-            throw new Error(`Gagal memproses data di server lokal (Status: ${dbResponse.status}).`);
+            let realErrorMsg = `Status HTTP: ${dbResponse.status}`;
+            try {
+                const jsonError = JSON.parse(textError);
+                if(jsonError.message) realErrorMsg = jsonError.message;
+            } catch(e) {
+                realErrorMsg = `Gagal memproses data di server lokal (Pastikan route pokja4.exportJson sudah ada).`;
+            }
+            throw new Error(realErrorMsg);
         }
         
         const dbResult = await dbResponse.json();
@@ -268,7 +295,7 @@
 
         Swal.update({ text: `Ditemukan ${dbResult.data.length} baris data. Mengirim ke Google Sheets...` });
 
-        // 2. Tembak data ke Google Apps Script
+        // Tembak data ke Google Apps Script
         const googleResponse = await fetch(APPS_SCRIPT_URL, {
           method: 'POST', redirect: 'follow',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },

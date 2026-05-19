@@ -146,6 +146,7 @@
             <label style="font-size: 13px; font-weight: 500;">Bidang <span class="text-danger">*</span></label>
             <select name="bidang" class="form-select" required>
               <option value="">-- Pilih Bidang --</option>
+              <option value="semua">Semua Bidang (Rekap Total)</option>
               <option value="pangan">Program Pangan</option>
               <option value="sandang">Program Sandang</option>
               <option value="perumahan">Perumahan dan Tata Laksana Rumah Tangga</option>
@@ -156,7 +157,7 @@
             <label style="font-size: 13px; font-weight: 500;">Format <span class="text-danger">*</span></label>
             <select name="format" id="formatExportPokja3" class="form-select" required>
               <option value="">-- Pilih Format --</option>
-              <option value="pdf">📄 PDF (Download)</option>
+              <option value="pdf">📄 PDF (Download / Print)</option>
               <option value="excel">📊 Google Sheets (Online)</option>
             </select>
           </div>
@@ -198,19 +199,39 @@
     const tahun = formData.get('tahun');
     const bidang = formData.get('bidang');
 
+    if (!format) { Swal.fire({ icon: 'warning', title: 'Pilih Format!', text: 'Silakan pilih format export terlebih dahulu' }); return; }
+
+    // ==========================================
+    // PERBAIKAN LOGIKA CETAK PDF / PRINT (Buka di tab baru)
+    // ==========================================
     if (format === "pdf") {
       let params = new URLSearchParams();
       params.append('bidang', bidang);
-      if (bulan && tahun) {
-          params.append('search', `${tahun}-${bulan.toString().padStart(2, '0')}`);
-      } else if (tahun) {
-          params.append('search2', tahun);
+      params.append('tahun', tahun);
+
+      // Cek apakah cetak perbulan atau pertahun
+      if (bulan) {
+          params.append('tipe_cetak', 'perbulan');
+          params.append('bulan', bulan);
+      } else {
+          params.append('tipe_cetak', 'tahunan');
       }
-      window.location.href = "{{ route('pangan.filter') }}?" + params.toString();
+
+      // Tutup modal agar rapi
+      bootstrap.Modal.getInstance(document.getElementById('modalLaporanPokja3'))?.hide();
+      
+      // FIX: Arahkan langsung ke fungsi cetak di Pokja3Controller
+      window.open("{{ route('pokja3.cetak') }}?" + params.toString(), "_blank");
       return;
     } 
 
     if (format === "excel") {
+      // (Biar gak eror milih 'semua' pas ekspor ke Google Sheets)
+      if (bidang === 'semua') {
+         Swal.fire('Perhatian!', 'Untuk export ke Google Sheets, silakan pilih bidang spesifik satu per satu.', 'warning');
+         return;
+      }
+
       const confirmExport = await Swal.fire({
         title: 'Mulai Ekspor?',
         html: `Data akan dikirim ke <b>Google Sheets Pokja 3</b>.<br><br><a href="${SHEET_HREF}" target="_blank" style="text-decoration:none; color:#0d6efd; font-weight:600;">Pratinjau Spreadsheet</a>`,
@@ -227,11 +248,21 @@
       try {
         const urlTarget = `{{ route('pokja3.exportJson') }}?bulan=${bulan}&tahun=${tahun}&bidang=${bidang}`;
         const dbResponse = await fetch(urlTarget);
-        if (!dbResponse.ok) throw new Error("Gagal mengambil data dari database.");
+        if (!dbResponse.ok) {
+            const textError = await dbResponse.text();
+            let realErrorMsg = `Status HTTP: ${dbResponse.status}`;
+            try {
+                const jsonError = JSON.parse(textError);
+                if(jsonError.message) realErrorMsg = jsonError.message;
+            } catch(e) {
+                realErrorMsg = `Laravel Error 500. Pastikan nama tabel Pokja 3 di database sudah benar.`;
+            }
+            throw new Error(realErrorMsg);
+        }
         
         const dbResult = await dbResponse.json();
         if (dbResult.status === 'empty' || !dbResult.data || dbResult.data.length === 0) {
-          Swal.fire('Data Kosong', 'Tidak ada data pada periode tersebut.', 'info');
+          Swal.fire('Data Kosong', 'Tidak ada data laporan yang valid pada periode tersebut.', 'info');
           btn.disabled = false; btnText.textContent = 'Export'; return;
         }
 
@@ -249,7 +280,8 @@
                 .then(() => { form.reset(); document.getElementById("infoLinkSheet").style.display = "none"; bootstrap.Modal.getInstance(document.getElementById('modalLaporanPokja3'))?.hide(); });
             } else { throw new Error(result.message); }
         } catch(e) {
-            throw new Error("Gagal memproses respon dari Google.");
+            let debugHTML = textResult.substring(0, 150).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            throw new Error(`Google Apps Script Error. Pastikan Deploy as Web App di-set ke 'Anyone'.<br><br><small style="color:red;">${debugHTML}...</small>`);
         }
 
       } catch (error) {

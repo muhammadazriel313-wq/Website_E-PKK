@@ -26,46 +26,60 @@ class GaleryController extends Controller
      *
      * @return View
      */
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $today = now()->format('Y-m-d');
         $visitor = Visitor::firstOrNew(['tanggal' => $today]);
         $visitor->count++;
         $visitor->save();
-        
+
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
 
         $totalMinggu = Visitor::whereBetween('tanggal', [$startOfWeek, $endOfWeek])
-        ->sum('count');
-        
+            ->sum('count');
+
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
 
         $totalBulan = Visitor::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
-        ->sum('count');
-        
+            ->sum('count');
+
         $startOfYear = Carbon::now()->startOfYear();
         $endOfYear = Carbon::now()->endOfYear();
 
         $totalTahun = Visitor::whereBetween('tanggal', [$startOfYear, $endOfYear])
-        ->sum('count');
-        
+            ->sum('count');
+
         $totalVisitors = Visitor::sum('count');
-        if ($request->has('search')){
-            $galerys = Galeri::where('deskripsi','LIKE','%' .$request->search.'%')->where('status', 'upload')->paginate();
-        }else{
-            $galerys = Galeri::where('status', 'upload')->latest()->paginate();
-        }
-        
-        
+        $galerys = Galeri::where('status', 'upload2')
+
+            ->when($request->search, function ($query) use ($request) {
+
+                $query->where(function ($q) use ($request) {
+
+                    $q->where('deskripsi', 'LIKE', '%' . $request->search . '%')
+
+                        ->orWhere('lokasi', 'LIKE', '%' . $request->search . '%')
+
+                        ->orWhere('bidang', 'LIKE', '%' . $request->search . '%')
+
+                        ->orWhere('pokja', 'LIKE', '%' . $request->search . '%');
+                });
+            })
+
+            ->latest()
+
+            ->paginate(8);
+
+
         //render view with posts
         return view('frontend.galery', compact('galerys', 'visitor', 'totalMinggu', 'totalBulan', 'totalTahun', 'totalVisitors'));
-       
+
         //get posts
         // $data = Galeri::latest()->paginate(6);
-        
+
         // //render view with posts
         // return view('frontend.galery', compact('data'));
     }
-    
 }

@@ -7,7 +7,7 @@ use App\Models\Galeri;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 
-class GaleriLaporanPokja3Controller extends Controller
+class GaleriInovasiController extends Controller
 {
     public function index()
     {
@@ -22,38 +22,47 @@ class GaleriLaporanPokja3Controller extends Controller
                 '=',
                 'users_mobile.id'
             )
-                ->where(
-                    'galerys.bidang',
-                    'Kader Pokja III'
-                )
-                // =====================================
-                // FILTER ROLE + STATUS
-                // =====================================
-                ->where(function ($query) {
-                    // DATA DARI DESA
-                    $query->where(function ($q) {
-                        $q->where('galerys.id_role', 1)
-                            ->whereIn('galerys.status', [
-                                'upload1',
-                                'upload2'
-                            ]);
-                    })
+            ->whereIn(
+                'galerys.bidang',
+                ['Inovasi Unggulan', 'Inovasi Prioritas']
+            )
 
-                        // DATA DARI MOBILE KECAMATAN
-                        ->orWhere(function ($q) {
-                            $q->where('galerys.id_role', 2)
-                                ->whereIn('galerys.status', [
-                                    'Proses',
-                                    'upload2'
-                                ]);
-                        });
+            // =====================================
+            // FILTER ROLE + STATUS
+            // =====================================
+            ->where(function ($query) {
+
+                // DATA DARI DESA
+                $query->where(function ($q) {
+
+                    $q->where('galerys.id_role', 1)
+
+                    ->whereIn('galerys.status', [
+                        'upload1',
+                        'upload2'
+                    ]);
+
                 })
 
-                ->select('galerys.*')
+                // DATA DARI MOBILE KECAMATAN
+                ->orWhere(function ($q) {
 
-                ->latest('galerys.created_at')
+                    $q->where('galerys.id_role', 2)
 
-                ->get();
+                    ->whereIn('galerys.status', [
+                        'Proses',
+                        'upload2'
+                    ]);
+
+                });
+
+            })
+
+            ->select('galerys.*')
+
+            ->latest('galerys.created_at')
+
+            ->get();
         }
 
         // =====================================
@@ -70,33 +79,42 @@ class GaleriLaporanPokja3Controller extends Controller
                 'users_mobile.id'
             )
 
-                ->where('galerys.bidang', 'Kader Pokja III')
+            ->whereIn(
+                'galerys.bidang',
+                ['Inovasi Unggulan', 'Inovasi Prioritas']
+            )
 
-                // DATA DARI DESA
-                ->where('galerys.id_role', 1)
+            // DATA DARI DESA
+            ->where(
+                'galerys.id_role',
+                1
+            )
 
-                // SESUAI KECAMATAN LOGIN
-                ->where(
-                    'users_mobile.id_subdistrict',
-                    $user->id_subdistrict
-                )
+            // SESUAI KECAMATAN LOGIN
+            ->where(
+                'users_mobile.id_subdistrict',
+                $user->id_subdistrict
+            )
 
-                // PROSES + SUDAH DIREVIEW
-                ->whereIn('galerys.status', [
+            // PROSES + SUDAH DIREVIEW
+            ->whereIn(
+                'galerys.status',
+                [
                     'Proses',
                     'upload1',
                     'upload2'
-                ])
+                ]
+            )
 
-                ->select('galerys.*')
+            ->select('galerys.*')
 
-                ->latest('galerys.created_at')
+            ->latest('galerys.created_at')
 
-                ->get();
+            ->get();
         }
 
         return view(
-            'backend.galerilaporanpokja3',
+            'backend.galeriinovasi',
             compact('data')
         );
     }
@@ -104,12 +122,17 @@ class GaleriLaporanPokja3Controller extends Controller
     public function edit(string $id)
     {
         $data = Galeri::find($id);
-        return view('backend.tampil_galerilaporanpokja3', compact('data'));
+
+        return view(
+            'backend.tampil_galeriinovasi',
+            compact('data')
+        );
     }
 
     public function update(Request $request, string $id)
     {
         $data = Galeri::find($id);
+
         // =====================================
         // WEB KECAMATAN
         // DESA -> KAB
@@ -130,7 +153,9 @@ class GaleriLaporanPokja3Controller extends Controller
             ]);
 
             return redirect()
-                ->route('galerilaporanpokja3.index')
+
+                ->route('galeriinovasi.index')
+
                 ->with([
                     'success' => 'Berhasil Upload Ke Kabupaten'
                 ]);
@@ -155,7 +180,9 @@ class GaleriLaporanPokja3Controller extends Controller
             ]);
 
             return redirect()
-                ->route('galerilaporanpokja3.index')
+
+                ->route('galeriinovasi.index')
+
                 ->with([
                     'success' => 'Berhasil Publish Ke Landing Page'
                 ]);
@@ -166,14 +193,24 @@ class GaleriLaporanPokja3Controller extends Controller
     {
         $data = Galeri::findOrFail($id);
 
-        // Ganti dengan path sesuai lokasi file kamu
-        $filePath = public_path('frontend2/gallery2/' . $data->gambar);
+        // HAPUS FILE GAMBAR
+        $filePath = public_path(
+            'storage/gallery/' . $data->gambar
+        );
 
         if (File::exists($filePath)) {
+
             File::delete($filePath);
         }
 
         $data->delete();
-        return redirect()->route('galerilaporanpokja3.index')->with(['success' => 'Berhasil Menghapus Gambar dalam Galeri']);
+
+        return redirect()
+
+            ->route('galeriinovasi.index')
+
+            ->with([
+                'success' => 'Berhasil Menghapus Gambar dalam Galeri'
+            ]);
     }
 }

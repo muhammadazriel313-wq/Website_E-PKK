@@ -189,6 +189,7 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     Route::resource('galerilaporanpokja1', App\Http\Controllers\backend\GaleriLaporanPokja1Controller::class);
     Route::resource('galerilaporanpokja3', App\Http\Controllers\backend\GaleriLaporanPokja3Controller::class);
     Route::resource('galerilaporanpokja4', App\Http\Controllers\backend\GaleriLaporanPokja4Controller::class);
+    Route::resource('galeriinovasi', App\Http\Controllers\backend\GaleriInovasiController::class);
 
     /*
 |--------------------------------------------------------------------------

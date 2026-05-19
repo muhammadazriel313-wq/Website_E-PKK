@@ -37,8 +37,11 @@ class HomeController extends Controller
 
         $totalVisitors = Visitor::sum('count');
 
-        // 🔥 GALERI TERBARU
-        $galerys = Galeri::latest()->take(6)->get();
+        //  GALERI TERBARU
+        $galerys = Galeri::where('status', 'upload2')
+            ->latest()
+            ->take(6)
+            ->get();
 
         return view('home', compact(
             'visitor',

@@ -9,7 +9,7 @@
 
         <div class="form-card">
 
-            <form action="{{ route('galerisandang.update', $data->id) }}"
+            <form action="{{ route('galeriinovasi.update', $data->id) }}"
                 method="POST"
                 enctype="multipart/form-data">
 
@@ -61,6 +61,25 @@
                         oninput="this.setCustomValidity('')"
                         placeholder="Masukkan Deskripsi"
                         value="{{ $data->deskripsi }}" />
+
+                </div>
+
+                 <div class="form-group">
+
+                    <label for="deskripsi" class="form-label">
+                        Kategori :
+                    </label>
+
+                    <input type="text"
+                        name="deskripsi"
+                        id="kategori"
+                        class="form-control"
+                        required
+                        readonly
+                        oninvalid="this.setCustomValidity('Harap lengkapi Kategori')"
+                        oninput="this.setCustomValidity('')"
+                        placeholder="Masukkan Kategori"
+                        value="{{ $data->bidang }}" />
 
                 </div>
 
@@ -119,7 +138,7 @@
 
                     @else
 
-                    <a href="{{ route('galerisandang.index') }}"
+                    <a href="{{ route('galeriinovasi.index') }}"
                         class="btn-kirim"
                         style="
                             background-color: #6c757d !important;
@@ -154,7 +173,7 @@
 
                     @else
 
-                    <a href="{{ route('galerisandang.index') }}"
+                    <a href="{{ route('galeriinovasi.index') }}"
                         class="btn-kirim"
                         style="
                             background-color: #6c757d !important;

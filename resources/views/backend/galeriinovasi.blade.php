@@ -125,7 +125,7 @@
     <section class="section">
 
         <h1 class="page-heading">
-            Galeri Kesehatan
+            Galeri Inovasi
         </h1>
 
         @if ($message = Session::get('success'))
@@ -180,6 +180,10 @@
                             Deskripsi
                         </th>
 
+                         <th>
+                            Kategori
+                        </th>
+
                         <th>
                             Lokasi Kegiatan
                         </th>
@@ -229,6 +233,12 @@
 
                         </td>
 
+                        <td class="table-desc">
+
+                            {{ $tampil->bidang }}
+
+                        </td>
+
                         <td class="table-lokasi">
 
                             {{ $tampil->lokasi ?? '-' }}
@@ -274,7 +284,7 @@
 
                                 @if(strtolower($tampil->status) == 'proses')
 
-                                <a href="{{ route('galerikesehatan.edit', $tampil->id) }}"
+                                <a href="{{ route('galeriinovasi.edit', $tampil->id) }}"
                                     class="btn btn-sm btn-review-custom d-flex align-items-center gap-1 px-3 py-2 border-0 rounded"
                                     data-bs-toggle="tooltip"
                                     data-bs-placement="top"
@@ -297,7 +307,7 @@
                                 strtolower($tampil->status) == 'proses'
                                 )
 
-                                <a href="{{ route('galerikesehatan.edit', $tampil->id) }}"
+                                <a href="{{ route('galeriinovasi.edit', $tampil->id) }}"
                                     class="btn btn-sm btn-review-custom d-flex align-items-center gap-1 px-3 py-2 border-0 rounded"
                                     data-bs-toggle="tooltip"
                                     data-bs-placement="top"
@@ -313,7 +323,7 @@
 
 
                                 {{-- HAPUS --}}
-                                <form action="{{ route('galerikesehatan.destroy', $tampil->id)}}"
+                                <form action="{{ route('galeriinovasi.destroy', $tampil->id)}}"
                                     method="POST"
                                     class="d-inline delete-form">
 

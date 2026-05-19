@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Models\Ttd;
 use App\Models\Ttds;
 use App\Models\Galeri;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
@@ -13,13 +14,144 @@ class Galeri2Controller extends Controller
 {
     public function index()
     {
-        $pertama = Galeri::where('bidang', 'Pendidikan & Ketrampilan')
-            ->whereIn('status', ['Proses', 'Upload'])
-            ->count();
+        $pertama = 0;
+        $kedua = 0;
+        // =====================================
+        if (Auth::guard('web')->check()) {
 
-        $kedua = Galeri::where('bidang', 'Pengembangan Kehidupan Berkoperasi')
-            ->whereIn('status', ['Proses', 'Upload'])
-            ->count();
+            $pertama = Galeri::leftJoin(
+                'users_mobile',
+                'galerys.id_user',
+                '=',
+                'users_mobile.id'
+            )
+
+                ->where('galerys.bidang', 'Pendidikan & Ketrampilan')
+
+                ->where(function ($query) {
+
+                    // DATA DESA YANG SUDAH DIREVIEW KEC
+                    $query->where(function ($q) {
+
+                        $q->where('users_mobile.id_role', 1)
+
+                            ->whereIn('galerys.status', [
+                                'upload1',
+                                'upload2'
+                            ]);
+                    })
+
+                        // DATA MOBILE KECAMATAN
+                        ->orWhere(function ($q) {
+
+                            $q->where('users_mobile.id_role', 2)
+
+                                ->whereIn('galerys.status', [
+                                    'Proses',
+                                    'upload2'
+                                ]);
+                        });
+                })
+
+                ->count();
+
+
+
+            $kedua = Galeri::leftJoin(
+                'users_mobile',
+                'galerys.id_user',
+                '=',
+                'users_mobile.id'
+            )
+
+                ->where('galerys.bidang', 'Pengembangan Kehidupan Berkoperasi')
+
+                ->where(function ($query) {
+
+                    $query->where(function ($q) {
+
+                        $q->where('users_mobile.id_role', 1)
+
+                            ->whereIn('galerys.status', [
+                                'upload1',
+                                'upload2'
+                            ]);
+                    })
+
+                        ->orWhere(function ($q) {
+
+                            $q->where('users_mobile.id_role', 2)
+
+                                ->whereIn('galerys.status', [
+                                    'Proses',
+                                    'upload2'
+                                ]);
+                        });
+                })
+
+                ->count();
+
+        }
+        // =====================================
+        // WEB KECAMATAN
+        // =====================================
+        elseif (Auth::guard('pengguna')->check()) {
+
+            $user = Auth::guard('pengguna')->user();
+
+            if ($user->id_role == 2) {
+
+                $pertama = Galeri::leftJoin(
+                    'users_mobile',
+                    'galerys.id_user',
+                    '=',
+                    'users_mobile.id'
+                )
+                    ->where('galerys.bidang', 'Pendidikan & Ketrampilan')
+
+                    // HANYA DATA DESA
+                    ->where('users_mobile.id_role', 1)
+
+                    ->where(
+                        'users_mobile.id_subdistrict',
+                        $user->id_subdistrict
+                    )
+
+                    ->whereIn('galerys.status', [
+                        'Proses',
+                        'upload1',
+                        'upload2'
+                    ])
+
+                    ->count();
+
+
+
+                $kedua = Galeri::leftJoin(
+                    'users_mobile',
+                    'galerys.id_user',
+                    '=',
+                    'users_mobile.id'
+                )
+                    ->where('galerys.bidang', 'Pengembangan Kehidupan Berkoperasi')
+
+                    // HANYA DATA DESA
+                    ->where('users_mobile.id_role', 1)
+
+                    ->where(
+                        'users_mobile.id_subdistrict',
+                        $user->id_subdistrict
+                    )
+
+                    ->whereIn('galerys.status', [
+                        'Proses',
+                        'upload1',
+                        'upload2'
+                    ])
+
+                    ->count();
+            }
+        }
 
         return view('backend.galeripokja2', compact('pertama', 'kedua'));
     }

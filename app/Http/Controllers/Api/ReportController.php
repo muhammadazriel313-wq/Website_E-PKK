@@ -17,7 +17,7 @@ class ReportController extends Controller
 
             // VALIDASI
             $request->validate([
-                'gambar' => 'required|image|mimes:jpeg,jpg,png,gif',
+                'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif',
                 'id_user' => 'required',
                 'deskripsi' => 'required',
                 'pokja' => 'required',

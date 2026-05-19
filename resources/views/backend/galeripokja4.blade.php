@@ -59,6 +59,19 @@
                     </div>
                 </a>
             </div>
+
+            <!-- Inovasi -->
+            <div class="col-md-6 mb-3">
+                <a href="{{ route('galeriinovasi.index') }}" style="text-decoration: none;">
+                    <div class="form-card gallery-card" style="padding: 16px; transition: all 0.3s; cursor: pointer; min-height: 140px; display: flex; flex-direction: column;">
+                        <div style="background-color: #ede9fe; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; flex-shrink: 0;">
+                            <i class="bi bi-lightbulb-fill" style="font-size: 22px; color:#ea580c;"></i>
+                        </div>
+                        <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; color: #2d3748; margin-bottom: 6px; flex-grow: 1;">Inovasi</h5>
+                        <p style="font-family: 'Poppins', sans-serif; font-size: 11px; color: #6b7280; margin: 0;">{{ $kelima }} Data Galeri</p>
+                    </div>
+                </a>
+            </div>
         </div>
 
         <!-- Filter Section -->

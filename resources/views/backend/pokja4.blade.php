@@ -141,7 +141,7 @@
         @csrf
         <div class="modal-body">
           <div class="mb-3">
-            <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Bulan <span class="text-muted" style="font-size: 11px;">(Opsional untuk tahunan)</span></label>
+            <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Bulan <span class="text-muted" style="font-size: 11px;">(Opsional)</span></label>
             <select name="bulan" class="form-select">
               <option value="">-- Pilih Bulan --</option>
               <option value="1">Januari</option><option value="2">Februari</option>
@@ -163,18 +163,30 @@
           </div>
           <div class="mb-3">
             <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Bidang <span class="text-danger">*</span></label>
-            <select name="bidang" class="form-select" required>
+            <select name="bidang" id="bidangSelect" class="form-select" required>
               <option value="">-- Pilih Bidang --</option>
               <option value="semua">Semua Bidang (Rekap Total)</option>
               <option value="kesehatan">Kesehatan</option>
               <option value="kelestarian">Kelestarian Lingkungan Hidup</option>
               <option value="perencanaan">Perencanaan Sehat</option>
               <option value="kader">Kader Pokja 4</option>
-              {{-- TAMBAHAN MENU INOVASI --}}
               <option value="inovasi_prioritas">Inovasi Prioritas</option>
               <option value="inovasi_unggulan">Inovasi Unggulan</option>
             </select>
           </div>
+
+          {{-- 🚨 INI DIA SAKLAR SUB-BIDANG INOVASI BARU 🚨 --}}
+          <div class="mb-3" id="wrapSubBidang" style="display: none; background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+            <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: #0284c7;">Pilih Sub Inovasi <span class="text-danger">*</span></label>
+            <select name="sub_bidang" id="subBidangSelect" class="form-select border-primary">
+              <option value="semua">-- Semua Sub Inovasi (Hanya PDF) --</option>
+              <option value="rekap_bulanan">Rekap Desa Bulanan</option>
+              <option value="rekap_tahunan">Rekap Desa Tahunan</option>
+              <option value="posyandu">Rekap Posyandu</option>
+              <option value="kegiatan_pokja4">Kegiatan Pokja 4</option>
+            </select>
+          </div>
+
           <div class="mb-3">
             <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Format <span class="text-danger">*</span></label>
             <select name="format" id="formatExport" class="form-select" required>
@@ -184,10 +196,9 @@
             </select>
           </div>
           <div class="alert alert-primary mt-3" id="infoLinkSheet" style="display:none; border-left:4px solid #0d6efd; background-color: #f0f7ff;">
-            <h6 class="alert-heading fw-bold mb-1" style="font-size:13px;"><i class="bi bi-link-45deg"></i> Link Spreadsheet Tujuan</h6>
-            <p class="mb-2" style="font-size:12px; color:#475569;">Data akan diekspor ke dalam tab di Google Sheets berikut:</p>
+            <p class="mb-2" style="font-size:12px; color:#475569;">Data akan diekspor ke Google Sheets:</p>
             <a href="https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
-              <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet Laporan
+              <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet
             </a>
           </div>
         </div>
@@ -202,9 +213,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  // URL GOOGLE APPS SCRIPT POKJA 4 YANG BARU
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzZHCfXfsAKfF9rdeLGNRnEGmWe8u7Wxzfw4tePj-aXmjypjntzlRkp8-n4LgThYc/exec";
   const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing";
+
+  // Saklar memunculkan Sub Bidang Inovasi
+  document.getElementById("bidangSelect").addEventListener("change", function() {
+    const wrapSub = document.getElementById("wrapSubBidang");
+    if (this.value === "inovasi_prioritas" || this.value === "inovasi_unggulan") {
+        wrapSub.style.display = "block";
+    } else {
+        wrapSub.style.display = "none";
+        document.getElementById("subBidangSelect").value = "semua";
+    }
+  });
 
   document.getElementById("formatExport").addEventListener("change", function() {
     document.getElementById("infoLinkSheet").style.display = this.value === "excel" ? "block" : "none";
@@ -221,15 +242,15 @@
     const bulan = formData.get('bulan');
     const tahun = formData.get('tahun');
     const bidang = formData.get('bidang');
+    const sub_bidang = formData.get('sub_bidang') || 'semua';
 
-    if (!format) { Swal.fire({ icon: 'warning', title: 'Pilih Format!', text: 'Silakan pilih format export terlebih dahulu' }); return; }
+    if (!format) { Swal.fire('Pilih Format!', 'Silakan pilih format export terlebih dahulu', 'warning'); return; }
 
-    // ==========================================
-    // PERBAIKAN LOGIKA CETAK PDF / PRINT (Buka di tab baru)
-    // ==========================================
+    // EXPORT PDF
     if (format === "pdf") {
       let params = new URLSearchParams();
       params.append('bidang', bidang);
+      params.append('sub_bidang', sub_bidang);
       params.append('tahun', tahun);
 
       if (bulan) {
@@ -239,92 +260,60 @@
           params.append('tipe_cetak', 'tahunan');
       }
 
-      // Tutup modal agar rapi
       bootstrap.Modal.getInstance(document.getElementById('modalLaporan'))?.hide();
-      
-      // FIX: Arahkan langsung ke fungsi cetak di Pokja4Controller
       window.open("{{ route('pokja4.cetak') }}?" + params.toString(), "_blank");
       return;
     } 
     
-    // --- GOOGLE SHEETS EXPORT ---
-    else if (format === "excel") {
+    // EXPORT GOOGLE SHEETS
+    if (format === "excel") {
       if (bidang === 'semua') {
-         Swal.fire('Perhatian!', 'Untuk export ke Google Sheets, silakan pilih bidang spesifik satu per satu.', 'warning');
-         return;
+         Swal.fire('Perhatian!', 'Untuk export Excel, pilih bidang spesifik.', 'warning'); return;
+      }
+      if ((bidang === 'inovasi_prioritas' || bidang === 'inovasi_unggulan') && sub_bidang === 'semua') {
+         Swal.fire('Perhatian!', 'Google Sheets membutuhkan format tabel yang rapi. Silakan pilih Sub Inovasi secara spesifik (Misal: Rekap Posyandu).', 'warning'); return;
       }
 
       const confirmExport = await Swal.fire({
-        title: 'Mulai Ekspor?', html: `Data akan ditimpa/diperbarui ke dalam <b>Google Sheets Pokja 4</b>.<br><br>
-                 <a href="${SHEET_HREF}" target="_blank" style="text-decoration: none; color: #0d6efd; font-weight: 600; background: #f8f9fa; padding: 5px 10px; border-radius: 5px;">
-                   <i class="bi bi-box-arrow-up-right"></i> Pratinjau Spreadsheet
-                 </a>`,
-        icon: 'question', showCancelButton: true,
-        confirmButtonColor: '#198754', cancelButtonColor: '#6c757d',
-        confirmButtonText: '<i class="bi bi-send"></i> Ya, Ekspor!', cancelButtonText: 'Batal', reverseButtons: true
+        title: 'Mulai Ekspor?', html: `Data akan dikirim ke <b>Google Sheets</b>.`,
+        icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Ekspor!', reverseButtons: true
       });
       if (!confirmExport.isConfirmed) return;
 
-      btn.disabled = true;
-      btnText.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
-      Swal.fire({ title: 'Mengekspor data...', text: 'Sedang mengambil data dari Database...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+      btn.disabled = true; btnText.innerHTML = 'Memproses...';
+      Swal.fire({ title: 'Mengekspor...', text: 'Mengambil data...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
       try {
-        // Fetch JSON dari Laravel Controller
-        const urlTarget = `{{ route('pokja4.exportJson') }}?bulan=${bulan}&tahun=${tahun}&bidang=${bidang}`;
+        const urlTarget = `{{ route('pokja4.exportJson') }}?bulan=${bulan}&tahun=${tahun}&bidang=${bidang}&sub_bidang=${sub_bidang}`;
         const dbResponse = await fetch(urlTarget);
-        
-        if (!dbResponse.ok) {
-            const textError = await dbResponse.text();
-            let realErrorMsg = `Status HTTP: ${dbResponse.status}`;
-            try {
-                const jsonError = JSON.parse(textError);
-                if(jsonError.message) realErrorMsg = jsonError.message;
-            } catch(e) {
-                realErrorMsg = `Gagal memproses data di server lokal (Pastikan route pokja4.exportJson sudah ada).`;
-            }
-            throw new Error(realErrorMsg);
-        }
+        if (!dbResponse.ok) throw new Error(`Gagal memproses data server.`);
         
         const dbResult = await dbResponse.json();
-        
         if (dbResult.status === 'empty' || !dbResult.data || dbResult.data.length === 0) {
-          Swal.fire('Data Kosong', dbResult.message || 'Tidak ada laporan yang Disetujui pada periode tersebut.', 'info');
+          Swal.fire('Data Kosong', 'Tidak ada laporan valid pada periode tersebut.', 'info');
           btn.disabled = false; btnText.textContent = 'Export'; return;
         }
 
-        Swal.update({ text: `Ditemukan ${dbResult.data.length} baris data. Mengirim ke Google Sheets...` });
-
-        // Tembak data ke Google Apps Script
+        Swal.update({ text: `Mengirim ${dbResult.data.length} data ke Google Sheets...` });
         const googleResponse = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST', redirect: 'follow',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(dbResult)
         });
         
         const textResult = await googleResponse.text();
-        
-        try {
-            const result = JSON.parse(textResult);
-            if (result.status === "success") {
-              Swal.fire({ icon: 'success', title: 'Berhasil!', html: `✅ ${result.message}<br><br>
-                                   <a href="${SHEET_HREF}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                      Buka Laporan Pokja 4
-                                   </a>`, confirmButtonText: 'Tutup' })
-                .then(() => { form.reset(); document.getElementById("infoLinkSheet").style.display = "none"; bootstrap.Modal.getInstance(document.getElementById('modalLaporan'))?.hide(); });
-            } else { throw new Error(result.message); }
-        } catch(e) {
-            let debugHTML = textResult.substring(0, 150).replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            throw new Error(`Gagal memproses response Google Apps Script. Pastikan Deploy as Web App di-set ke 'Anyone'.<br><br><small style="color:red;">${debugHTML}...</small>`);
-        }
+        const result = JSON.parse(textResult);
+        if (result.status === "success") {
+            Swal.fire('Berhasil!', result.message, 'success').then(() => { form.reset(); bootstrap.Modal.getInstance(document.getElementById('modalLaporan'))?.hide(); });
+        } else { throw new Error(result.message); }
 
       } catch (error) {
-        Swal.fire({ icon: 'error', title: 'Gagal Mengirim!', html: `Terjadi kesalahan jaringan atau server:<br><br><code>${error.message}</code>` });
+        Swal.fire('Gagal Mengirim!', error.message, 'error');
       } finally {
         btn.disabled = false; btnText.textContent = 'Export';
       }
     }
   });
+</script>
 </script>
 
 @endsection

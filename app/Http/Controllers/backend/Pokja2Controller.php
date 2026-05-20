@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class Pokja2Controller extends Controller
 {
@@ -33,7 +34,7 @@ class Pokja2Controller extends Controller
                         $q->where('users_mobile.id_role', 1)
                             ->whereIn(
                                 'laporan_pendidikan_n_keterampilan.status',
-                                ['Disetujui1','Disetujui2']
+                                ['Disetujui1', 'Disetujui2']
                             );
                     })
                         // MOBILE KECAMATAN
@@ -41,7 +42,7 @@ class Pokja2Controller extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_pendidikan_n_keterampilan.status',
-                                    ['Proses', 'proses', 'PROSES','Disetujui2']
+                                    ['Proses', 'proses', 'PROSES', 'Disetujui2']
                                 );
                         });
                 })
@@ -60,7 +61,7 @@ class Pokja2Controller extends Controller
                         $q->where('users_mobile.id_role', 1)
                             ->whereIn(
                                 'laporan_pengembangan_kehidupan.status',
-                                ['Disetujui1','Disetujui2']
+                                ['Disetujui1', 'Disetujui2']
                             );
                     })
                         // MOBILE KECAMATAN
@@ -68,12 +69,11 @@ class Pokja2Controller extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_pengembangan_kehidupan.status',
-                                    ['Proses', 'proses', 'PROSES','Disetujui2']
+                                    ['Proses', 'proses', 'PROSES', 'Disetujui2']
                                 );
                         });
                 })
                 ->count();
-
         }
         // =====================================
         // 2. PENGGUNA MOBILE (KECAMATAN / DESA)
@@ -97,7 +97,6 @@ class Pokja2Controller extends Controller
                     ->where('users_mobile.id_role', 1)
                     ->whereIn('laporan_pengembangan_kehidupan.status', $statusKecamatan)
                     ->count();
-
             }
         }
 
@@ -117,7 +116,7 @@ class Pokja2Controller extends Controller
         if ($bidang == 'pendidikan') $tabel = 'laporan_pendidikan_n_keterampilan';
         elseif ($bidang == 'pengembangan') $tabel = 'laporan_pengembangan_kehidupan';
         // Opsional kalau ada Kader Pokja 2
-        elseif ($bidang == 'kader') $tabel = 'laporan_kader_pokja2'; 
+        elseif ($bidang == 'kader') $tabel = 'laporan_kader_pokja2';
         else return response()->json(['status' => 'error', 'message' => 'Bidang tidak valid.']);
 
         try {
@@ -136,7 +135,7 @@ class Pokja2Controller extends Controller
                 if ($user->id_role == 2) {
                     $statusKecamatan = ['Proses', 'proses', 'PROSES', 'Disetujui1', 'disetujui1', 'DISETUJUI1'];
                     $query->whereIn("$tabel.status", $statusKecamatan)
-                          ->where('users_mobile.id_subdistrict', $user->id_subdistrict);
+                        ->where('users_mobile.id_subdistrict', $user->id_subdistrict);
                 } else {
                     $query->where("$tabel.id_user", $user->id);
                 }
@@ -157,10 +156,9 @@ class Pokja2Controller extends Controller
                 'bidang' => strtoupper($bidang),
                 'data' => $data
             ]);
-
         } catch (\Throwable $e) {
             return response()->json([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'Error Baris ' . $e->getLine() . ': ' . $e->getMessage()
             ], 500);
         }
@@ -172,62 +170,202 @@ class Pokja2Controller extends Controller
     */
     public function cetak(Request $request)
     {
-        $tipeCetak = $request->input('tipe_cetak', 'tahunan'); 
+        $tipeCetak = $request->input('tipe_cetak', 'tahunan');
         $bulan = $request->input('bulan', date('m'));
         $tahun = $request->input('tahun', date('Y'));
-        
-        // 1. TANGKAP VARIABEL BIDANG (Saklar Tabel)
-        $bidang = $request->input('bidang', 'semua'); 
-        
-        $tanggal = ($tipeCetak == 'perbulan') ? \Carbon\Carbon::createFromDate($tahun, $bulan)->format('F Y') : $tahun;
-        $formattedDate = \Carbon\Carbon::now()->isoFormat('d MMMM Y');
 
-        // =========================================================
-        // PERHATIAN: Sesuaikan nama tabel 'laporan_pendidikan_n_keterampilan' 
-        // dan 'laporan_pengembangan_kehidupan_berkoperasi' dengan yang ada di database komandan
-        // =========================================================
+        $bidang = $request->input('bidang', 'semua');
 
-        // QUERY PENDIDIKAN
-     // 1. GANTI NAMA TABEL PENDIDIKAN DI SINI
-        $queryPendidikan = \Illuminate\Support\Facades\DB::table('laporan_pendidikan_n_keterampilan')
-            ->leftJoin('users_mobile', 'laporan_pendidikan_n_keterampilan.id_user', '=', 'users_mobile.id')
-            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
-            ->select('laporan_pendidikan_n_keterampilan.*', 'subdistrict.name as nama_kec')
-            ->whereIn('laporan_pendidikan_n_keterampilan.status', ['Disetujui2']); 
+        $tanggal = ($tipeCetak == 'perbulan')
+            ? Carbon::createFromDate($tahun, $bulan)->format('F Y')
+            : $tahun;
 
-        // 2. GANTI NAMA TABEL PENGEMBANGAN KOPERASI DI SINI
-        $queryPengembangan = \Illuminate\Support\Facades\DB::table('laporan_pengembangan_kehidupan')
-            ->leftJoin('users_mobile', 'laporan_pengembangan_kehidupan.id_user', '=', 'users_mobile.id')
-            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
-            ->select('laporan_pengembangan_kehidupan.*', 'subdistrict.name as nama_kec')
-            ->whereIn('laporan_pengembangan_kehidupan.status', ['Disetujui2']);
+        $formattedDate = Carbon::now()->isoFormat('d MMMM Y');
 
-        // ... dan jangan lupa ganti juga nama tabelnya di bagian FILTER TAHUN / BULAN di bawahnya:
-        if ($tipeCetak == 'perbulan') {
-            $queryPendidikan->whereMonth('laporan_pendidikan_n_keterampilan.created_at', $bulan)->whereYear('laporan_pendidikan_n_keterampilan.created_at', $tahun);
-            $queryPengembangan->whereMonth('laporan_pengembangan_kehidupan.created_at', $bulan)->whereYear('laporan_pengembangan_kehidupan.created_at', $tahun);
-        } else {
-            $queryPendidikan->whereYear('laporan_pendidikan_n_keterampilan.created_at', $tahun);
-            $queryPengembangan->whereYear('laporan_pengembangan_kehidupan.created_at', $tahun);
+        // =====================================================
+        // QUERY PENDIDIKAN & KETERAMPILAN
+        // =====================================================
+
+        $queryPendidikan = DB::table('laporan_pendidikan_n_keterampilan')
+            ->leftJoin(
+                'users_mobile',
+                'laporan_pendidikan_n_keterampilan.id_user',
+                '=',
+                'users_mobile.id'
+            )
+            ->leftJoin(
+                'subdistrict',
+                'users_mobile.id_subdistrict',
+                '=',
+                'subdistrict.id'
+            )
+            ->select(
+                'laporan_pendidikan_n_keterampilan.*',
+                'subdistrict.name as nama_kec'
+            );
+
+        // =====================================================
+        // QUERY PENGEMBANGAN KEHIDUPAN BERKOPERASI
+        // =====================================================
+
+        $queryPengembangan = DB::table('laporan_pengembangan_kehidupan')
+            ->leftJoin(
+                'users_mobile',
+                'laporan_pengembangan_kehidupan.id_user',
+                '=',
+                'users_mobile.id'
+            )
+            ->leftJoin(
+                'subdistrict',
+                'users_mobile.id_subdistrict',
+                '=',
+                'subdistrict.id'
+            )
+            ->select(
+                'laporan_pengembangan_kehidupan.*',
+                'subdistrict.name as nama_kec'
+            );
+
+        // =====================================================
+        // FILTER LOGIN
+        // =====================================================
+
+        // =====================================
+        // WEB KABUPATEN
+        // =====================================
+
+        if (Auth::guard('web')->check()) {
+
+            $queryPendidikan->whereIn(
+                'laporan_pendidikan_n_keterampilan.status',
+                ['Disetujui2', 'disetujui2', 'DISETUJUI2']
+            );
+
+            $queryPengembangan->whereIn(
+                'laporan_pengembangan_kehidupan.status',
+                ['Disetujui2', 'disetujui2', 'DISETUJUI2']
+            );
         }
 
+        // =====================================
+        // WEB KECAMATAN
+        // =====================================
 
-        // Eksekusi Query
-        $pendidikan = $queryPendidikan->get();
-        $pengembangan = $queryPengembangan->get();
+        elseif (Auth::guard('pengguna')->check()) {
 
-        // DATA TANDA TANGAN 
-        $wakil = \Illuminate\Support\Facades\DB::table('ttds')->where('pokja', 'Kelompok Kerja II')
-                    ->where(function($q) { $q->where('jabatan', 'like', '%Wakil%')->orWhere('jabatan', 'like', '%Sekretaris%'); })->get();
-        
-        $ketua = \Illuminate\Support\Facades\DB::table('ttds')->where('pokja', 'Kelompok Kerja II')->where('jabatan', 'Ketua')->get();
+            $user = Auth::guard('pengguna')->user();
 
-        $viewName = ($tipeCetak == 'perbulan') ? 'backend.cetak_bulan_pokja2' : 'backend.cetak_tahun_pokja2';
+            if ($user->id_role == 2) {
 
-        // Lempar data ke view Print
+                $queryPendidikan
+                    ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
+                    ->where('users_mobile.id_role', 1)
+                    ->whereIn(
+                        'laporan_pendidikan_n_keterampilan.status',
+                        ['Disetujui1', 'disetujui1', 'DISETUJUI1']
+                    );
+
+                $queryPengembangan
+                    ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
+                    ->where('users_mobile.id_role', 1)
+                    ->whereIn(
+                        'laporan_pengembangan_kehidupan.status',
+                        ['Disetujui1', 'disetujui1', 'DISETUJUI1']
+                    );
+            }
+        }
+
+        // =====================================================
+        // FILTER BULAN / TAHUN
+        // =====================================================
+
+        if ($tipeCetak == 'perbulan') {
+
+            $queryPendidikan
+                ->whereMonth(
+                    'laporan_pendidikan_n_keterampilan.created_at',
+                    $bulan
+                )
+                ->whereYear(
+                    'laporan_pendidikan_n_keterampilan.created_at',
+                    $tahun
+                );
+
+            $queryPengembangan
+                ->whereMonth(
+                    'laporan_pengembangan_kehidupan.created_at',
+                    $bulan
+                )
+                ->whereYear(
+                    'laporan_pengembangan_kehidupan.created_at',
+                    $tahun
+                );
+        } else {
+
+            $queryPendidikan
+                ->whereYear(
+                    'laporan_pendidikan_n_keterampilan.created_at',
+                    $tahun
+                );
+
+            $queryPengembangan
+                ->whereYear(
+                    'laporan_pengembangan_kehidupan.created_at',
+                    $tahun
+                );
+        }
+
+        // =====================================================
+        // EKSEKUSI QUERY
+        // =====================================================
+
+        $pendidikan = $queryPendidikan
+            ->orderBy(
+                'laporan_pendidikan_n_keterampilan.created_at',
+                'desc'
+            )
+            ->get();
+
+        $pengembangan = $queryPengembangan
+            ->orderBy(
+                'laporan_pengembangan_kehidupan.created_at',
+                'desc'
+            )
+            ->get();
+
+        // =====================================================
+        // DATA TANDA TANGAN
+        // =====================================================
+
+        $wakil = DB::table('ttds')
+            ->where('pokja', 'Kelompok Kerja II')
+            ->where(function ($q) {
+                $q->where('jabatan', 'like', '%Wakil%')
+                    ->orWhere('jabatan', 'like', '%Sekretaris%');
+            })
+            ->get();
+
+        $ketua = DB::table('ttds')
+            ->where('pokja', 'Kelompok Kerja II')
+            ->where('jabatan', 'Ketua')
+            ->get();
+
+        // =====================================================
+        // VIEW
+        // =====================================================
+
+        $viewName = ($tipeCetak == 'perbulan')
+            ? 'backend.cetak_bulan_pokja2'
+            : 'backend.cetak_tahun_pokja2';
+
         return view($viewName, compact(
-            'pendidikan', 'pengembangan', 
-            'wakil', 'ketua', 'tanggal', 'formattedDate', 'bidang'
+            'pendidikan',
+            'pengembangan',
+            'wakil',
+            'ketua',
+            'tanggal',
+            'formattedDate',
+            'bidang'
         ));
     }
 }

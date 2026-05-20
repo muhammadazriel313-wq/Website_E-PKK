@@ -49,7 +49,7 @@
             <h3>Laporan Gotong Royong</h3>
             <table align="center">
                 <thead>
-                    <tr>
+                    <tr style="background: #e0f2fe;">
                         <th align="center"><b>NO</b></th>
                         <th align="center"><b>Kecamatan</b></th>
                         <th align="center"><b>Kerja Bakti</b></th>
@@ -96,7 +96,7 @@
             <h3>Laporan Penghayatan Dan Pengamalan Pancasila</h3>
             <table align="center">
                 <thead>
-                    <tr>
+                    <tr style="background: #e0f2fe;">
                         <th align="center"><b>NO</b></th>
                         <th align="center"><b>Kecamatan</b></th>
                         <th align="center"><b>Jumlah Kel Simulasi 1</b></th>
@@ -156,7 +156,7 @@
             <h3>Laporan Kader Pokja 1</h3>
             <table align="center">
                 <thead>
-                    <tr>
+                    <tr style="background: #e0f2fe;">
                         <th align="center"><b>NO</b></th>
                         <th align="center"><b>Kecamatan</b></th>
                         <th align="center"><b>PKBN</b></th>

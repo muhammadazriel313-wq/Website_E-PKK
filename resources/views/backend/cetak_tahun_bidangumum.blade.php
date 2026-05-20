@@ -102,7 +102,7 @@
 
     <table align="center">
         <thead>
-            <tr>
+            <tr style="background: #e0f2fe;">
                 <th align="center"><b>NO</b></th>
                 <th align="center"><b>Kecamatan</b></th>
                 <th align="center"><b>Dusun Lingkungan</b></th>

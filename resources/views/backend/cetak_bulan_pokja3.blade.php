@@ -53,7 +53,7 @@
         <h3>Laporan Program Pangan</h3>
         <table align="center">
             <thead>
-                <tr>
+                <tr style="background: #e0f2fe;">
                     <th align="center"><b>NO</b></th>
                     <th align="center"><b>Kecamatan</b></th>
                     <th align="center"><b>Beras</b></th>
@@ -112,10 +112,10 @@
     @endif
 
     @if($bidang == 'semua' || $bidang == 'sandang')
-        <h3>Laporan Sandang</h3>
+        <h3>Laporan Industri Rumah Tangga</h3>
         <table align="center">
             <thead>
-                <tr>
+                <tr style="background: #e0f2fe;">
                     <th align="center"><b>NO</b></th>
                     <th align="center"><b>Kecamatan</b></th>
                     <th align="center"><b>Pangan</b></th>
@@ -158,7 +158,7 @@
         <h3>Laporan Program Perumahan Dan Tata Laksana Rumah Tangga</h3>
         <table align="center">
             <thead>
-                <tr>
+                <tr style="background: #e0f2fe;">
                     <th align="center"><b>NO</b></th>
                     <th align="center"><b>Kecamatan</b></th>
                     <th align="center"><b>Layak Huni</b></th>
@@ -198,7 +198,7 @@
         <h3>Laporan Kader Pokja 3</h3>
         <table align="center">
             <thead>
-                <tr>
+                <tr style="background: #e0f2fe;">
                     <th align="center"><b>NO</b></th>
                     <th align="center"><b>Kecamatan</b></th>
                     <th align="center"><b>Pangan</b></th>

@@ -148,7 +148,7 @@
               <option value="">-- Pilih Bidang --</option>
               <option value="semua">Semua Bidang (Rekap Total)</option>
               <option value="pangan">Program Pangan</option>
-              <option value="sandang">Program Sandang</option>
+              <option value="sandang">Program Industri Rumah Tangga</option>
               <option value="perumahan">Perumahan dan Tata Laksana Rumah Tangga</option>
               <option value="kader">Kader Pokja 3</option>
             </select>

@@ -49,7 +49,7 @@
             <h3>Laporan Pendidikan Dan Keterampilan</h3>
             <table align="center">
                 <thead>
-                    <tr>
+                    <tr style="background: #e0f2fe;">
                         <th align="center" rowspan="2"><b>NO</b></th>
                         <th align="center" rowspan="2"><b>Kecamatan</b></th>
                         <th align="center" rowspan="2"><b>Warga Buta</b></th>
@@ -72,7 +72,7 @@
                         <th align="center" rowspan="2"><b>TP3PKK</b></th>
                         <th align="center" rowspan="2"><b>Damas PKK</b></th>
                     </tr>
-                    <tr>
+                    <tr style="background: #e0f2fe;">
                         <th align="center"><b>Kel Belajar</b></th>
                         <th align="center"><b>Warga Belajar</b></th>
                         <th align="center"><b>Kel Belajar</b></th>
@@ -167,7 +167,7 @@
             <h3>Laporan Pengembangan Kehidupan Berkoperasi</h3>
             <table align="center">
                 <thead>
-                    <tr>
+                    <tr style="background: #e0f2fe;">
                         <th align="center"><b>NO</b></th>
                         <th align="center"><b>Kecamatan</b></th>
                         <th align="center"><b>Jumlah Kel Pemula</b></th>

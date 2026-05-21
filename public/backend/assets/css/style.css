@@ -1268,3 +1268,50 @@ h6 {
   max-height: 250px !important;
   border-radius: 10px;
 }
+
+/*--------------------------------------------------------------
+# RESPONSIVE MOBILE OVERRIDE
+--------------------------------------------------------------*/
+@media (max-width: 991px) {
+  /* Sidebar benar-benar tersembunyi di mobile */
+  .sidebar {
+    left: -300px !important;
+    width: 280px !important;
+    top: 70px !important;
+    z-index: 9999 !important;
+    transition: left 0.3s ease !important;
+  }
+
+  /* Saat toggle aktif, sidebar overlay muncul */
+  .toggle-sidebar .sidebar {
+    left: 0 !important;
+  }
+
+  /* Main content full width — tidak ada margin kiri */
+  #main {
+    margin-left: 0 !important;
+    padding: 16px 12px !important;
+  }
+
+  .toggle-sidebar #main,
+  .toggle-sidebar #footer {
+    margin-left: 0 !important;
+  }
+
+  /* Header full width */
+  .header {
+    left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  #main {
+    margin-left: 0 !important;
+    padding: 12px 8px !important;
+  }
+
+  .toggle-sidebar #main {
+    margin-left: 0 !important;
+  }
+}

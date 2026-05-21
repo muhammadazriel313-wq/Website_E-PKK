@@ -57,7 +57,7 @@
                     <form action="" method="GET">
                         <div class="input-group">
                             <input type="search" name="search" class="form-control" placeholder="Kata kunci" style="font-family: 'Poppins', sans-serif; font-size: 14px; border: 1px solid #ddd; border-radius: 6px 0 0 6px;">
-                            <button type="submit" class="btn" style="background-color: #0ea5e9; color: white; border-radius: 0 6px 6px 0; padding: 8px 20px; font-family: 'Poppins', sans-serif; font-weight: 500;">
+                            <button type="submit" class="btn" style="background-color: #016AA3; color: white; border-radius: 0 6px 6px 0; padding: 8px 20px; font-family: 'Poppins', sans-serif; font-weight: 500;">
                                 <i class="bi bi-search"></i>
                             </button>
                         </div>

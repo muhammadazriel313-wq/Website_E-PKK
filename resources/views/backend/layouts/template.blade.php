@@ -35,6 +35,161 @@
     }
     body { background: #f6f9ff; }
 
+    /* ===== KONSISTENSI WARNA BUTTON BIRU ===== */
+    :root {
+      --bs-primary: #016AA3;
+      --bs-primary-rgb: 1, 106, 163;
+      --bs-btn-bg: #016AA3;
+      --bs-btn-border-color: #016AA3;
+      --bs-btn-hover-bg: #015a8a;
+      --bs-btn-hover-border-color: #015a8a;
+      --bs-btn-active-bg: #014d77;
+      --bs-btn-active-border-color: #014d77;
+      --bs-link-color: #016AA3;
+      --bs-link-hover-color: #015a8a;
+    }
+    .btn-primary,
+    .btn-primary.background-blue-1 {
+      background-color: #016AA3 !important;
+      border-color: #016AA3 !important;
+      color: #fff !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active,
+    .btn-primary.active {
+      background-color: #015a8a !important;
+      border-color: #015a8a !important;
+      color: #fff !important;
+    }
+    /* btn-info juga disamakan ke biru tua */
+    .btn-info,
+    .btn-info.text-white {
+      background-color: #016AA3 !important;
+      border-color: #016AA3 !important;
+      color: #fff !important;
+    }
+    .btn-info:hover,
+    .btn-info:focus,
+    .btn-info:active {
+      background-color: #015a8a !important;
+      border-color: #015a8a !important;
+      color: #fff !important;
+    }
+    .btn-outline-primary {
+      color: #016AA3 !important;
+      border-color: #016AA3 !important;
+    }
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus {
+      background-color: #016AA3 !important;
+      border-color: #016AA3 !important;
+      color: #fff !important;
+    }
+    a.text-primary, .text-primary { color: #016AA3 !important; }
+    .bg-primary { background-color: #016AA3 !important; }
+    /* background-blue-1 override */
+    .background-blue-1 {
+      background-color: #016AA3 !important;
+      border-color: #016AA3 !important;
+    }
+    /* ===== END BUTTON ===== */
+
+    /* ===== SWEETALERT2 MODERN STYLE ===== */
+    .swal2-popup {
+      font-family: 'Poppins', sans-serif !important;
+      border-radius: 24px !important;
+      padding: 40px 32px 32px !important;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.12) !important;
+      max-width: 400px !important;
+    }
+    .swal2-title {
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 20px !important;
+      font-weight: 700 !important;
+      color: #1a1a2e !important;
+      padding: 0 !important;
+      margin-bottom: 8px !important;
+    }
+    .swal2-html-container,
+    .swal2-content {
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 14px !important;
+      color: #6b7280 !important;
+      line-height: 1.6 !important;
+    }
+    /* Ikon warning — lingkaran pink dengan ikon merah */
+    .swal2-icon.swal2-warning {
+      border: none !important;
+      background: #ffe4e6 !important;
+      border-radius: 50% !important;
+      width: 72px !important;
+      height: 72px !important;
+      margin: 0 auto 20px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .swal2-icon.swal2-warning .swal2-icon-content {
+      font-size: 36px !important;
+      color: #ef4444 !important;
+      font-weight: 700 !important;
+    }
+    /* Tombol area */
+    .swal2-actions {
+      gap: 12px !important;
+      margin-top: 28px !important;
+      width: 100% !important;
+      padding: 0 !important;
+    }
+    /* Tombol Hapus (confirm) — merah penuh */
+    .swal2-confirm {
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      border-radius: 14px !important;
+      padding: 12px 0 !important;
+      flex: 1 !important;
+      background-color: #ef4444 !important;
+      border: none !important;
+      color: #fff !important;
+      letter-spacing: 0.2px !important;
+      transition: background 0.2s !important;
+    }
+    .swal2-confirm:hover {
+      background-color: #dc2626 !important;
+    }
+    /* Tombol Batal (cancel) — outline putih */
+    .swal2-cancel {
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      border-radius: 14px !important;
+      padding: 12px 0 !important;
+      flex: 1 !important;
+      background-color: #fff !important;
+      border: 2px solid #e5e7eb !important;
+      color: #374151 !important;
+      letter-spacing: 0.2px !important;
+      transition: all 0.2s !important;
+    }
+    .swal2-cancel:hover {
+      background-color: #f9fafb !important;
+      border-color: #d1d5db !important;
+    }
+    /* Ikon success */
+    .swal2-icon.swal2-success {
+      border-color: #016AA3 !important;
+      color: #016AA3 !important;
+    }
+    .swal2-icon.swal2-success [class^=swal2-success-line] {
+      background-color: #016AA3 !important;
+    }
+    .swal2-icon.swal2-success .swal2-success-ring {
+      border-color: rgba(1, 106, 163, 0.3) !important;
+    }
+    /* ===== END SWEETALERT2 ===== */
+
     /* Header styling */
     .header {
       background: #fff !important;
@@ -372,6 +527,101 @@
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 8px rgba(239,68,68,0.3) !important;
     }
+
+    /* ===== RESPONSIVE MOBILE BACKEND ===== */
+    @media (max-width: 991px) {
+      /* Sembunyikan sidebar sepenuhnya di mobile */
+      .sidebar {
+        left: -300px !important;
+        width: 280px !important;
+        transition: all 0.3s ease !important;
+        z-index: 9999 !important;
+      }
+
+      /* Saat toggle-sidebar aktif di mobile, sidebar muncul */
+      .toggle-sidebar .sidebar {
+        left: 0 !important;
+        width: 280px !important;
+      }
+
+      /* Main content FULL WIDTH di mobile — tidak ada margin kiri */
+      #main {
+        margin-left: 0 !important;
+        padding: 16px 12px !important;
+        width: 100% !important;
+      }
+
+      .toggle-sidebar #main {
+        margin-left: 0 !important;
+      }
+
+      /* Header full width */
+      .header {
+        padding: 0 12px !important;
+        left: 0 !important;
+        width: 100% !important;
+      }
+
+      .header .logo span {
+        font-size: 12px !important;
+        white-space: normal !important;
+        line-height: 1.2 !important;
+        max-width: 200px !important;
+      }
+
+      .header .logo img {
+        width: 38px !important;
+        height: 38px !important;
+        margin-right: 8px !important;
+      }
+
+      /* Form card padding lebih kecil */
+      .form-card {
+        padding: 16px !important;
+      }
+
+      /* Page heading */
+      .page-heading, .pagetitle h1 {
+        font-size: 18px !important;
+      }
+
+      /* Tabel responsive */
+      .table-responsive {
+        font-size: 13px !important;
+      }
+    }
+
+    @media (max-width: 576px) {
+      #main {
+        padding: 12px 8px !important;
+        margin-left: 0 !important;
+      }
+
+      .card-body {
+        padding: 14px !important;
+      }
+
+      .pagetitle h1 {
+        font-size: 16px !important;
+      }
+
+      .btn-sm {
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+      }
+
+      .form-control, .form-select {
+        font-size: 14px !important;
+      }
+
+      /* Info cards di dashboard — 1 kolom */
+      .col-xxl-4, .col-xxl-3, .col-xxl-6,
+      .col-xl-4, .col-xl-3, .col-xl-6 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+      }
+    }
+    /* ===== END RESPONSIVE MOBILE ===== */
   </style>
 </head>
 
@@ -410,6 +660,23 @@
   <script src="{{ asset('backend/assets/vendor/tinymce/tinymce.min.js') }}"></script>
   <script src="{{ asset('backend/assets/vendor/php-email-form/validate.js') }}"></script>
   <script src="{{ asset('backend/assets/js/main.js') }}"></script>
+
+  {{-- Auto-dismiss semua alert session (success/error/warning/info) setelah 3 detik --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const alerts = document.querySelectorAll('.alert-success, .alert-warning, .alert-info');
+      alerts.forEach(function (alert) {
+        // Hanya dismiss alert yang bukan statusAlert (validasi form) dan bukan d-none
+        if (!alert.id && !alert.classList.contains('d-none')) {
+          setTimeout(function () {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            setTimeout(function () { alert.remove(); }, 500);
+          }, 3000);
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>

@@ -90,6 +90,18 @@
     .sidebar-nav .nav-link i { font-size: 18px; margin-right: 12px; color: #6b7280; }
     .sidebar-nav .nav-link:hover { background: #f3f4f6; color: #4154f1; }
     i, .bi, [class^="bi-"], [class*=" bi-"], [class^="fa"], [class*=" fa-"] { font-family: unset !important; }
+
+    /* SweetAlert2 Modern */
+    .swal2-popup { font-family: 'Poppins', sans-serif !important; border-radius: 24px !important; padding: 40px 32px 32px !important; box-shadow: 0 24px 64px rgba(0,0,0,0.12) !important; max-width: 400px !important; }
+    .swal2-title { font-family: 'Poppins', sans-serif !important; font-size: 20px !important; font-weight: 700 !important; color: #1a1a2e !important; }
+    .swal2-html-container { font-family: 'Poppins', sans-serif !important; font-size: 14px !important; color: #6b7280 !important; }
+    .swal2-icon.swal2-warning { border: none !important; background: #ffe4e6 !important; border-radius: 50% !important; width: 72px !important; height: 72px !important; }
+    .swal2-icon.swal2-warning .swal2-icon-content { font-size: 36px !important; color: #ef4444 !important; font-weight: 700 !important; }
+    .swal2-actions { gap: 12px !important; margin-top: 28px !important; width: 100% !important; padding: 0 !important; }
+    .swal2-confirm { font-family: 'Poppins', sans-serif !important; font-size: 15px !important; font-weight: 600 !important; border-radius: 14px !important; padding: 12px 0 !important; flex: 1 !important; background-color: #ef4444 !important; border: none !important; color: #fff !important; }
+    .swal2-confirm:hover { background-color: #dc2626 !important; }
+    .swal2-cancel { font-family: 'Poppins', sans-serif !important; font-size: 15px !important; font-weight: 600 !important; border-radius: 14px !important; padding: 12px 0 !important; flex: 1 !important; background-color: #fff !important; border: 2px solid #e5e7eb !important; color: #374151 !important; }
+    .swal2-cancel:hover { background-color: #f9fafb !important; border-color: #d1d5db !important; }
   </style>
 </head>
 

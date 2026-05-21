@@ -70,23 +70,16 @@
 
     <!-- HEADER -->
     <header id="header" class="header fixed-top d-flex align-items-center">
-
-        <div class="d-flex align-items-center justify-content-between">
-
-            <a href="#" class="logo d-flex align-items-center">
-
-                <img src="{{ asset('backend/assets/img/pkk.png') }}" alt="">
-
-                <span class="d-none d-lg-block">
-                    PKK NGANJUK
-                </span>
-
-            </a>
-
+        <div class="d-flex align-items-center w-100">
             <i class="bi bi-list toggle-sidebar-btn"></i>
-
+            <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center" style="text-decoration:none;">
+                <img src="{{ asset('backend/assets/img/pkk.png') }}" alt="PKK">
+                <span class="d-none d-lg-block">
+                    Pemberdayaan Kesejahteraan Keluarga<br>Kabupaten Nganjuk
+                </span>
+            </a>
         </div>
-
+        <nav class="header-nav ms-auto"></nav>
     </header>
 
     <!-- SIDEBAR -->

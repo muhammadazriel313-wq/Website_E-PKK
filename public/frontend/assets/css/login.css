@@ -1,9 +1,9 @@
   .background-blue-1 {
-    background: rgb(0 171, 205);
+    background: #016AA3 !important;
   }
 
   .font-col {
-    color: rgb(0 171, 205);
+    color: #016AA3;
   }
   
   @media (min-width: 768px) {

@@ -356,6 +356,21 @@
     });
   </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const alerts = document.querySelectorAll('.alert-success, .alert-warning, .alert-info');
+      alerts.forEach(function (alert) {
+        if (!alert.id && !alert.classList.contains('d-none')) {
+          setTimeout(function () {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            setTimeout(function () { alert.remove(); }, 500);
+          }, 3000);
+        }
+      });
+    });
+  </script>
+
 </body>
 
 </html>

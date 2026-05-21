@@ -29,51 +29,82 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Skrip jaga-jaga: Paksa hapus preloader (loading muter) jika nyantol
     const preloader = document.querySelector('#preloader');
     if (preloader) {
       preloader.style.display = 'none';
     }
 
-    // Tampilkan SweetAlert
     Swal.fire({
       icon: 'success',
       title: 'Berhasil Logout!',
-      html: '<span style="font-family: \'Poppins\', sans-serif; font-size: 15px; color: #64748b;">{{ session("success") ?? session("status") ?? session("message") ?? "Sampai jumpa! Anda telah aman keluar dari sistem E-PKK." }}</span>',
+      html: '<span style="font-family: \'Poppins\', sans-serif; font-size: 14px; color: #6b7280;">{{ session("success") ?? session("status") ?? session("message") ?? "Sampai jumpa! Anda telah aman keluar dari sistem E-PKK." }}</span>',
       showConfirmButton: true,
-      confirmButtonText: '<i class="bi bi-house-door-fill me-1"></i> Tutup',
-      confirmButtonColor: '#4154f1', // Warna biru elegan menyesuaikan tema
-      timer: 5000, // Hilang otomatis dalam 5 detik
+      confirmButtonText: '<i class="bi bi-house-door-fill me-2"></i> Tutup',
+      confirmButtonColor: '#016AA3',
+      timer: 3000,
       timerProgressBar: true,
-      backdrop: `rgba(15, 23, 42, 0.5)`, // Latar belakang blur agak gelap
+      backdrop: 'rgba(15, 23, 42, 0.5)',
       customClass: {
-        popup: 'rounded-4 shadow-lg border-0',
-        title: 'font-poppins fw-bold text-dark fs-3',
-        confirmButton: 'font-poppins fw-semibold rounded-pill px-4 py-2 mt-2 shadow-sm'
+        popup: 'swal2-modern-popup',
+        title: 'swal2-modern-title',
+        confirmButton: 'swal2-modern-confirm',
+        timerProgressBar: 'swal2-modern-timer'
       },
       showClass: {
-        popup: 'animate__animated animate__zoomIn animate__faster' // Muncul dengan efek Zoom
+        popup: 'animate__animated animate__zoomIn animate__faster'
       },
       hideClass: {
-        popup: 'animate__animated animate__zoomOut animate__faster' // Hilang dengan efek Zoom
+        popup: 'animate__animated animate__zoomOut animate__faster'
       }
     });
   });
 </script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 <style>
-  .font-poppins {
+  .swal2-modern-popup {
     font-family: 'Poppins', sans-serif !important;
+    border-radius: 24px !important;
+    padding: 40px 32px 32px !important;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.12) !important;
+    max-width: 420px !important;
   }
-
-  .swal2-confirm:hover {
-    background-color: #2a3eb1 !important;
-    transform: translateY(-2px);
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 10px rgba(65, 84, 241, 0.4) !important;
+  .swal2-modern-title {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #1a1a2e !important;
   }
-
-  @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+  .swal2-modern-confirm {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 50px !important;
+    padding: 12px 32px !important;
+    background-color: #016AA3 !important;
+    border: none !important;
+    letter-spacing: 0.2px !important;
+    transition: all 0.2s ease !important;
+  }
+  .swal2-modern-confirm:hover {
+    background-color: #015a8a !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(1, 106, 163, 0.35) !important;
+  }
+  .swal2-modern-timer {
+    background: #016AA3 !important;
+  }
+  /* Ikon success — warna biru tua */
+  .swal2-modern-popup .swal2-icon.swal2-success {
+    border-color: #016AA3 !important;
+  }
+  .swal2-modern-popup .swal2-icon.swal2-success [class^=swal2-success-line] {
+    background-color: #016AA3 !important;
+  }
+  .swal2-modern-popup .swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(1, 106, 163, 0.25) !important;
+  }
 </style>
 @endif
 

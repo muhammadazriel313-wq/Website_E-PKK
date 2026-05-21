@@ -166,7 +166,7 @@
 
   .search-button {
     padding: 12px 24px;
-    background: #3498db;
+    background: #016AA3;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -176,7 +176,7 @@
   }
 
   .search-button:hover {
-    background: #2980b9;
+    background: #015a8a;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
   }

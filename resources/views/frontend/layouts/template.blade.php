@@ -26,6 +26,38 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset ('frontend/assets/css/style.css')}}" rel="stylesheet">
+
+  <style>
+    /* ===== KONSISTENSI WARNA BUTTON BIRU ===== */
+    :root {
+      --bs-primary: #016AA3;
+      --bs-primary-rgb: 1, 106, 163;
+    }
+    .btn-primary {
+      background-color: #016AA3 !important;
+      border-color: #016AA3 !important;
+      color: #fff !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active,
+    .btn-primary.active {
+      background-color: #015a8a !important;
+      border-color: #015a8a !important;
+      color: #fff !important;
+    }
+    .btn-outline-primary {
+      color: #016AA3 !important;
+      border-color: #016AA3 !important;
+    }
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus {
+      background-color: #016AA3 !important;
+      border-color: #016AA3 !important;
+      color: #fff !important;
+    }
+    /* ===== END BUTTON ===== */
+  </style>
 </head>
 
 <body>
@@ -317,6 +349,22 @@
       const x = e.pageX - slider.offsetLeft;
       const walk = (x - startX) * 2;
       slider.scrollLeft = scrollLeft - walk;
+    });
+  </script>
+
+  {{-- Auto-dismiss semua alert session (success/error/warning/info) setelah 3 detik --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const alerts = document.querySelectorAll('.alert-success, .alert-warning, .alert-info');
+      alerts.forEach(function (alert) {
+        if (!alert.id && !alert.classList.contains('d-none')) {
+          setTimeout(function () {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            setTimeout(function () { alert.remove(); }, 500);
+          }, 3000);
+        }
+      });
     });
   </script>
 

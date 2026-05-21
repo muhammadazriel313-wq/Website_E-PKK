@@ -232,7 +232,7 @@
                   
                   <td class="text-center">
                     <a href="{{ route('penghayatan.edit', $peng1->id_pokja1_bidang1) }}" class="btn btn-sm btn-info text-white me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Review Data">
-                      <i class="bi bi-search"></i> Review
+                      <i class="bi bi-search"></i>
                     </a>
 
                     <form action="{{ route('penghayatan.destroy', $peng1->id_pokja1_bidang1)}}" method="POST" class="d-inline delete-form">

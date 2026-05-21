@@ -140,6 +140,7 @@
 
                 <div class="text-end pt-1 pb-1 mt-4">
                   <button class="btn btn-primary ps-xxl-5 pe-xxl-5 mr-auto background-blue-1 mb-2 fw-semibold fs-5"
+                    style="background-color: #016AA3 !important; border-color: #016AA3 !important;"
                     type="submit">Edit</button>
                 </div>
 

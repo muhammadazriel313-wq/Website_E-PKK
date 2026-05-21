@@ -744,6 +744,34 @@ section {
   padding: 100px;
 }
 
+@media (max-width: 991px) {
+  .app-section {
+    padding: 60px 20px;
+    text-align: center;
+  }
+  .app-section .app-img {
+    margin-bottom: 30px;
+  }
+  .app-section .app-img img {
+    max-height: 320px;
+  }
+  .app-section .btn-app {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 576px) {
+  .app-section {
+    padding: 40px 16px;
+  }
+  .app-section .app-img img {
+    max-height: 260px;
+  }
+  .app-title {
+    font-size: 22px !important;
+  }
+}
+
 /* GAMBAR */
 .app-img {
   padding: 20px;
@@ -2188,3 +2216,184 @@ section {
 	margin-bottom: 25px;
 }
 
+
+/*--------------------------------------------------------------
+# RESPONSIVE MOBILE — LANDING PAGE
+--------------------------------------------------------------*/
+
+/* ---- NAVBAR MOBILE ---- */
+@media (max-width: 991px) {
+  #header {
+    padding: 8px 16px !important;
+  }
+  .logo-img {
+    height: 40px !important;
+    width: 40px !important;
+  }
+  .site-title h1 {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* ---- HERO SECTION MOBILE ---- */
+@media (max-width: 768px) {
+  #hero {
+    min-height: 100vh !important;
+    height: auto !important;
+    background-position: center center !important;
+  }
+  #hero::before {
+    width: 100% !important;
+    background: linear-gradient(
+      180deg,
+      rgba(7, 48, 74, 0.92) 0%,
+      rgba(1, 106, 163, 0.75) 60%,
+      rgba(7, 48, 74, 0.85) 100%
+    ) !important;
+  }
+  .hero-content {
+    padding: 100px 20px 60px !important;
+    text-align: center;
+    justify-content: center !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .hero-logo {
+    height: 80px !important;
+    margin-bottom: 16px;
+  }
+  #typing-text {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+  }
+  #typing-sub {
+    font-size: 14px !important;
+  }
+}
+
+/* ---- APP SECTION MOBILE ---- */
+@media (max-width: 991px) {
+  .app-section {
+    padding: 60px 20px !important;
+    text-align: center;
+  }
+  .app-img img {
+    max-height: 300px !important;
+    margin-bottom: 30px;
+  }
+  .app-title {
+    font-size: 22px !important;
+  }
+  .btn-app {
+    display: inline-block;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .app-section {
+    padding: 40px 16px !important;
+  }
+  .app-img img {
+    max-height: 240px !important;
+  }
+  .app-title {
+    font-size: 20px !important;
+  }
+}
+
+/* ---- ABOUT SECTION (KETUA PKK) MOBILE ---- */
+@media (max-width: 991px) {
+  #about .container .row {
+    flex-direction: column;
+    text-align: center;
+  }
+  #about .col-lg-4 {
+    margin-bottom: 24px;
+  }
+  .img-box {
+    display: flex;
+    justify-content: center;
+  }
+  .img-box img {
+    max-height: 260px !important;
+    width: auto;
+  }
+  .animated-list {
+    text-align: left;
+    display: inline-block;
+  }
+}
+
+/* ---- PROGRAM KERJA CARDS MOBILE ---- */
+@media (max-width: 768px) {
+  .program-card {
+    margin-bottom: 20px;
+  }
+  .program-card-img {
+    height: 180px !important;
+  }
+  .program-content {
+    padding: 20px 16px !important;
+  }
+  .program-content h3 {
+    font-size: 16px !important;
+  }
+}
+
+/* ---- GALERI SECTION MOBILE ---- */
+@media (max-width: 768px) {
+  .gallery-carousel-wrapper {
+    padding: 30px 0 !important;
+  }
+  .gallerySwiper {
+    padding: 40px 20px !important;
+  }
+  .gallery-image {
+    height: 220px !important;
+  }
+  .section-title h3 {
+    font-size: 22px !important;
+  }
+  .section-badge {
+    font-size: 12px !important;
+    padding: 6px 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-image {
+    height: 200px !important;
+  }
+  .gallerySwiper {
+    padding: 30px 12px !important;
+  }
+}
+
+/* ---- SECTION GENERAL MOBILE ---- */
+@media (max-width: 768px) {
+  section {
+    padding: 60px 0 !important;
+  }
+  .section-title {
+    padding-bottom: 20px !important;
+  }
+  .section-title h3 {
+    font-size: 22px !important;
+  }
+  .modern-btn {
+    padding: 10px 24px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* ---- FOOTER MOBILE ---- */
+@media (max-width: 768px) {
+  .footer-top .row {
+    text-align: center;
+  }
+  .footer-top .col-lg-3 {
+    margin-top: 20px;
+  }
+}

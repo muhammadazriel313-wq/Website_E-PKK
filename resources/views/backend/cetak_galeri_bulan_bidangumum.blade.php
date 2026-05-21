@@ -120,7 +120,7 @@
         <h2 style='font-size: 36px;' align="center">REKAPITULASI</h2>
         <h4 style='font-size: 28px;' align="center">JADWAL KEGIATAN TIM PENGGERAK PKK</br>
         KABUPATEN NGANJUK</br>
-        TAHUN {{ \Carbon\Carbon::parse($tanggal2)->isoFormat('Y') }}</br></h4>
+        TAHUN {{ $tanggal2 ?? date('Y') }}<br></h4>
     </div>
 
     <div class="separator"></div>

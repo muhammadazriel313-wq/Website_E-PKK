@@ -22,7 +22,6 @@
         margin: auto;
     }
 
-    /* DESKRIPSI */
     .table-desc {
         max-width: 220px;
         word-break: break-word;
@@ -30,7 +29,6 @@
         line-height: 1.5;
     }
 
-    /* LOKASI */
     .table-lokasi {
         min-width: 240px;
         max-width: 320px;
@@ -39,7 +37,6 @@
         line-height: 1.5;
     }
 
-    /* STATUS */
     .table-status {
         text-align: center;
         vertical-align: middle !important;
@@ -53,7 +50,6 @@
         height: 34px;
     }
 
-    /* AKSI */
     .table-aksi {
         text-align: center;
         vertical-align: middle !important;
@@ -67,7 +63,6 @@
         min-height: 110px;
     }
 
-    /* BADGE */
     .status-upload {
         background-color: #22c55e;
         color: white;
@@ -160,118 +155,82 @@
 
         @endif
 
-        {{-- FILTER --}}
-        <div class="form-card" style="margin-bottom: 20px; padding: 20px 32px;">
-
-            <form action="{{ route('galeribidangumum.filter') }}"
-                method="GET"
-                id="filterForm">
-
-                <div class="d-flex align-items-center gap-3 mb-3">
-
-                    <div class="d-flex align-items-center gap-2">
-
-                        <label for="bulan"
-                            class="form-label"
-                            style="margin-bottom:0; font-size:14px; color:#6b7280; white-space:nowrap; font-weight:500;">
-
-                            Pilih Bulan
-
-                        </label>
-
-                        <select name="bulan"
-                            id="bulan"
-                            class="form-control"
-                            style="height:40px; width:180px; font-size:13px;">
-
-                            <option value="">-- Pilih Bulan --</option>
-
-                            <option value="01">Januari</option>
-                            <option value="02">Februari</option>
-                            <option value="03">Maret</option>
-                            <option value="04">April</option>
-                            <option value="05">Mei</option>
-                            <option value="06">Juni</option>
-                            <option value="07">Juli</option>
-                            <option value="08">Agustus</option>
-                            <option value="09">September</option>
-                            <option value="10">Oktober</option>
-                            <option value="11">November</option>
-                            <option value="12">Desember</option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="d-flex align-items-center gap-2">
-
-                        <label for="tahun"
-                            class="form-label"
-                            style="margin-bottom:0; font-size:14px; color:#6b7280; white-space:nowrap; font-weight:500;">
-
-                            Pilih Tahun
-
-                        </label>
-
-                        <select name="tahun"
-                            id="tahun"
-                            class="form-control"
-                            style="height:40px; width:180px; font-size:13px;">
-
-                            <option value="">-- Pilih Tahun --</option>
-
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-
-                        </select>
-
-                    </div>
-
+        {{-- CETAK --}}
+   {{-- TOMBOL CETAK MODAL --}}
+        <div class="form-card" style="padding: 24px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 style="font-family: 'Poppins', sans-serif; font-weight: 700; color: #0f172a; margin-bottom: 6px; font-size: 18px;">Cetak Laporan Bidang Umum</h4>
+                    <p style="font-family: 'Poppins', sans-serif; color: #64748b; margin-bottom: 0; font-size: 13px;">Cetak seluruh laporan galeri bidang umum berdasarkan bulan dan tahun.</p>
                 </div>
-
-                <div class="d-flex justify-content-end gap-2">
-
-                    <button type="button"
-                        class="btn"
-                        onclick="resetFilter()"
-                        style="background-color:#9ca3af; color:white; height:40px; padding:0 24px; border-radius:6px;">
-
-                        Refresh
-
-                    </button>
-
-                    <button type="button"
-                        class="btn d-flex align-items-center justify-content-center gap-2"
-                        onclick="submitFilter()"
-                        style="background-color:#0369a1; color:white; height:40px; padding:0 24px; border-radius:6px;">
-
-                        <i class="bi bi-funnel-fill"></i>
-
-                        <span>Filter</span>
-
-                    </button>
-
-                </div>
-
-            </form>
-
+                <button type="button" class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCetak" style="font-family: 'Poppins', sans-serif; padding: 10px 20px; font-weight: 500; border-radius: 8px; background-color: #2563eb; border: none;">
+                    <i class="bi bi-printer"></i> Cetak Laporan
+                </button>
+            </div>
         </div>
 
-        {{-- CETAK --}}
-        <div class="d-flex justify-content-end mb-3">
+        {{-- MODAL CETAK --}}
+        <div class="modal fade" id="modalCetak" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                    <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding: 20px 24px;">
+                        <h5 class="modal-title" style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #0f172a; font-size: 16px;">Cetak Laporan Bidang Umum</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <form action="{{ route('galeribidangumum.cetak') }}" method="GET" target="_blank">
+                        <div class="modal-body" style="padding: 24px;">
+                            <div class="mb-3">
+                                <label class="form-label" style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: #475569;">Tipe Cetak</label>
+                                <select name="tipe_cetak" id="tipeCetak" class="form-select" style="font-family: 'Poppins', sans-serif; font-size: 14px; height: 42px;" required>
+                                    <option value="tahunan">Tahunan</option>
+                                    <option value="perbulan">Per Bulan</option>
+                                </select>
+                            </div>
 
-            <button type="button"
-                class="btn d-flex align-items-center justify-content-center gap-2"
-                onclick="cetakGaleri()"
-                style="background-color:#0369a1; color:white; height:40px; padding:0 24px; border-radius:6px;">
+                            <div class="mb-3" id="wrapBulan" style="display: none;">
+                                <label class="form-label" style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: #475569;">Bulan</label>
+                                <select name="bulan" id="bulanSelect" class="form-select" style="font-family: 'Poppins', sans-serif; font-size: 14px; height: 42px;">
+                                    <option value="">-- Pilih Bulan --</option>
+                                    @for($i=1; $i<=12; $i++)
+                                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">{{ \Carbon\Carbon::create()->month($i)->isoFormat('MMMM') }}</option>
+                                    @endfor
+                                </select>
+                            </div>
 
-                <i class="bi bi-download"></i>
+                            <div class="mb-3">
+                                <label class="form-label" style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: #475569;">Tahun</label>
+                                <select name="tahun" class="form-select" style="font-family: 'Poppins', sans-serif; font-size: 14px; height: 42px;" required>
+                                    <option value="">-- Pilih Tahun --</option>
+                                    @for($y=date('Y'); $y>=2023; $y--)
+                                        <option value="{{ $y }}">{{ $y }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 16px 24px;">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 16px;">Batal</button>
+                            <button type="submit" class="btn btn-success" style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 16px; background-color: #10b981; border-color: #10b981;"><i class="bi bi-printer me-1"></i> Cetak PDF</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-                <span>Cetak Galeri</span>
-
-            </button>
+        <script>
+            document.getElementById('tipeCetak').addEventListener('change', function() {
+                const wrapBulan = document.getElementById('wrapBulan');
+                const bulanSelect = document.getElementById('bulanSelect');
+                if(this.value === 'perbulan') {
+                    wrapBulan.style.display = 'block';
+                    bulanSelect.setAttribute('required', 'required');
+                } else {
+                    wrapBulan.style.display = 'none';
+                    bulanSelect.removeAttribute('required');
+                    bulanSelect.value = '';
+                }
+            });
+        </script>
 
         </div>
 
@@ -384,16 +343,12 @@
 
                             <div class="table-aksi-wrapper">
 
-                                {{-- WEB KECAMATAN --}}
                                 @if(auth()->guard('pengguna')->check())
 
                                 @if(strtolower($tampil->status) == 'proses')
 
                                 <a href="{{ route('galeribidangumum.edit', $tampil->id) }}"
-                                    class="btn btn-sm btn-review-custom d-flex align-items-center gap-1 px-3 py-2 border-0 rounded"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    title="Review Data">
+                                    class="btn btn-sm btn-review-custom d-flex align-items-center gap-1 px-3 py-2 border-0 rounded">
 
                                     <i class="bi bi-search"></i>
 
@@ -403,8 +358,6 @@
 
                                 @endif
 
-
-                                {{-- WEB KABUPATEN --}}
                                 @if(auth()->guard('web')->check())
 
                                 @if(
@@ -413,10 +366,7 @@
                                 )
 
                                 <a href="{{ route('galeribidangumum.edit', $tampil->id) }}"
-                                    class="btn btn-sm btn-review-custom d-flex align-items-center gap-1 px-3 py-2 border-0 rounded"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    title="Publish Data">
+                                    class="btn btn-sm btn-review-custom d-flex align-items-center gap-1 px-3 py-2 border-0 rounded">
 
                                     <i class="bi bi-search"></i>
 
@@ -426,8 +376,6 @@
 
                                 @endif
 
-
-                                {{-- HAPUS --}}
                                 <form action="{{ route('galeribidangumum.destroy', $tampil->id)}}"
                                     method="POST"
                                     class="d-inline delete-form">
@@ -437,10 +385,7 @@
 
                                     <button type="button"
                                         class="btn btn-sm btn-delete-custom d-flex align-items-center justify-content-center px-3 py-2 border-0 rounded"
-                                        onclick="confirmDelete(this)"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="Hapus Data">
+                                        onclick="confirmDelete(this)">
 
                                         <i class="bi bi-trash"></i>
 
@@ -483,9 +428,78 @@
 
 </main>
 
+{{-- MODAL CETAK GALERI BIDANG UMUM --}}
+<div class="modal fade" id="modalCetak" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 12px;">
+      <div class="modal-header">
+        <h5 class="modal-title" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Cetak Laporan Galeri</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      {{-- Form ini akan menembak rute cetak yang ada di Controller (Fungsi 'cetak' yang cerdas tadi) --}}
+      <form action="{{ route('galeribidangumum.cetak') }}" method="GET" target="_blank">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Tipe Cetak <span class="text-danger">*</span></label>
+            <select name="tipe_cetak" id="tipeCetak" class="form-select" required>
+              <option value="tahunan">Tahunan</option>
+              <option value="perbulan">Per Bulan</option>
+            </select>
+          </div>
+          
+          {{-- Pilihan Bulan (Hanya muncul jika "Per Bulan" dipilih) --}}
+          <div class="mb-3" id="wrapBulan" style="display: none;">
+            <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Bulan <span class="text-danger">*</span></label>
+            <select name="bulan" id="bulanSelect" class="form-select">
+              <option value="">-- Pilih Bulan --</option>
+              <option value="1">Januari</option><option value="2">Februari</option>
+              <option value="3">Maret</option><option value="4">April</option>
+              <option value="5">Mei</option><option value="6">Juni</option>
+              <option value="7">Juli</option><option value="8">Agustus</option>
+              <option value="9">September</option><option value="10">Oktober</option>
+              <option value="11">November</option><option value="12">Desember</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;">Tahun <span class="text-danger">*</span></label>
+            <select name="tahun" class="form-select" required>
+              <option value="">-- Pilih Tahun --</option>
+              @for ($year = now()->year; $year >= 2021; $year--)
+                <option value="{{ $year }}">{{ $year }}</option>
+              @endfor
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-success" onclick="bootstrap.Modal.getInstance(document.getElementById('modalCetak')).hide()">
+            <i class="bi bi-printer"></i> Cetak PDF
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    // Logic untuk toggle pilihan bulan
+    document.getElementById('tipeCetak').addEventListener('change', function() {
+        const wrapBulan = document.getElementById('wrapBulan');
+        const inputBulan = document.getElementById('bulanSelect');
+        
+        if(this.value === 'perbulan'){
+            wrapBulan.style.display = 'block';
+            inputBulan.setAttribute('required', 'required');
+        } else {
+            wrapBulan.style.display = 'none';
+            inputBulan.removeAttribute('required');
+            inputBulan.value = '';
+        }
+    });
+
     function confirmDelete(button) {
 
         Swal.fire({
@@ -504,99 +518,6 @@
             }
 
         });
-
-    }
-
-    function submitFilter() {
-
-        const bulan = document.getElementById('bulan').value;
-        const tahun = document.getElementById('tahun').value;
-
-        if (!bulan && !tahun) {
-            alert('Silakan pilih bulan atau tahun terlebih dahulu');
-            return;
-        }
-
-        const tableRows = document.querySelectorAll('.table-ttd tbody tr');
-
-        let visibleCount = 0;
-
-        tableRows.forEach(row => {
-
-            const tanggalCell = row.querySelectorAll('td')[4];
-
-            if (!tanggalCell) return;
-
-            const tanggalText = tanggalCell.textContent.trim();
-
-            let isVisible = true;
-
-            const tanggalParts = tanggalText.split(' ')[0].split('-');
-
-            const rowBulan = tanggalParts[1];
-            const rowTahun = tanggalParts[2];
-
-            if (bulan && tahun) {
-
-                isVisible = (rowBulan === bulan && rowTahun === tahun);
-
-            } else if (bulan) {
-
-                isVisible = (rowBulan === bulan);
-
-            } else if (tahun) {
-
-                isVisible = (rowTahun === tahun);
-
-            }
-
-            if (isVisible) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-
-        });
-
-    }
-
-    function resetFilter() {
-
-        document.getElementById('bulan').value = '';
-        document.getElementById('tahun').value = '';
-
-        const tableRows = document.querySelectorAll('.table-ttd tbody tr');
-
-        tableRows.forEach(row => {
-            row.style.display = '';
-        });
-
-    }
-
-    function cetakGaleri() {
-
-        const bulan = document.getElementById('bulan').value;
-        const tahun = document.getElementById('tahun').value;
-
-        let url = '{{ route("galeribidangumum.filter") }}?';
-
-        if (bulan && tahun) {
-
-            url += 'search=' + tahun + '-' + bulan;
-
-        } else if (tahun) {
-
-            url += 'search2=' + tahun;
-
-        } else {
-
-            alert('Silakan pilih filter terlebih dahulu');
-            return;
-
-        }
-
-        window.location.href = url;
 
     }
 </script>

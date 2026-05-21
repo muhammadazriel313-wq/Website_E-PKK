@@ -28,6 +28,8 @@ use App\Http\Controllers\backend\Pokja4ExportController;
 use App\Http\Controllers\backend\PosyanduController;
 use App\Http\Controllers\backend\RekapTahunanController;
 use App\Http\Controllers\backend\KegiatanPokja4Controller;
+use App\Http\Controllers\backend\GaleriBidangUmumController;
+
 
 
 /*
@@ -83,6 +85,15 @@ require __DIR__ . '/auth.php';
 | Semua route di dalam blok ini dilindungi dengan aman.
 */
 Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function () {
+
+    // =========================================================================
+    // 🚨 PINDAHAN ROUTE CETAK DARI BAWAH KE SINI AGAR AMAN DARI TABRAKAN 🚨
+    // =========================================================================
+    Route::get('/cetak-pokja2', [App\Http\Controllers\backend\Pokja2Controller::class, 'cetak'])->name('pokja2.cetak');
+    Route::get('/cetak-pokja3', [App\Http\Controllers\backend\Pokja3Controller::class, 'cetak'])->name('pokja3.cetak');
+    Route::get('/cetak-pokja4', [App\Http\Controllers\backend\Pokja4Controller::class, 'cetak'])->name('pokja4.cetak');
+    Route::get('/export-pokja4', [App\Http\Controllers\backend\Pokja4Controller::class, 'getExportData'])->name('pokja4.exportJson');
+    Route::get('/galeribidangumum/cetak', [GaleriBidangUmumController::class, 'cetak'])->name('galeribidangumum.cetak');
 
     // === MENIMPA ROUTE LOGOUT AGAR BISA DIAKSES 2 AKUN ===
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
@@ -185,7 +196,10 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     Route::resource('galerikesehatan', App\Http\Controllers\backend\GaleriKesehatanController::class);
     Route::resource('galerikelestarian', App\Http\Controllers\backend\GaleriKelestarianController::class);
     Route::resource('galeriperencanaan', App\Http\Controllers\backend\GaleriPerencanaanController::class);
-    Route::resource('galeribidangumum', App\Http\Controllers\backend\GaleriBidangUmumController::class);
+    
+    // Resource galeribidangumum ditaruh sesudah rute cetak di atas
+    Route::resource('galeribidangumum', App\Http\Controllers\backend\GaleriBidangUmumController::class)->except(['show']);
+    
     Route::resource('galerilaporanpokja1', App\Http\Controllers\backend\GaleriLaporanPokja1Controller::class);
     Route::resource('galerilaporanpokja3', App\Http\Controllers\backend\GaleriLaporanPokja3Controller::class);
     Route::resource('galerilaporanpokja4', App\Http\Controllers\backend\GaleriLaporanPokja4Controller::class);
@@ -475,7 +489,6 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     |--------------------------------------------------------------------------
     */
     Route::post('/export-pokja1', [Pokja1ExportController::class, 'exportToSheet'])->name('export.pokja1');
-    Route::get('/cetak-pokja1', [App\Http\Controllers\backend\Pokja1Controller::class, 'cetak'])->name('pokja1.cetak');
     Route::get('/pokja1/filter', [App\Http\Controllers\backend\Pokja1Controller::class, 'filter'])->name('pokja1.filter');
     Route::get('/api-export/pokja1', [App\Http\Controllers\backend\Pokja1Controller::class, 'getExportData'])->name('pokja1.exportJson');
 
@@ -496,9 +509,13 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
         Route::resource('input_berita', App\Http\Controllers\backend\InputBeritaController::class);
         Route::resource('input_pengumuman', App\Http\Controllers\backend\InputPengumumanController::class);
     });
-});
+    
 
-Route::get('/cetak-pokja2', [App\Http\Controllers\backend\Pokja2Controller::class, 'cetak'])->name('pokja2.cetak');
-Route::get('/cetak-pokja3', [App\Http\Controllers\backend\Pokja3Controller::class, 'cetak'])->name('pokja3.cetak');
-Route::get('/cetak-pokja4', [App\Http\Controllers\backend\Pokja4Controller::class, 'cetak'])->name('pokja4.cetak');
-Route::get('/export-pokja4', [App\Http\Controllers\backend\Pokja4Controller::class, 'getExportData'])->name('pokja4.exportJson');
+
+
+    // === TAMBAHKAN RUTE INI KE DALAM MIDDLEWARE ===
+    Route::get('/cetak-pokja1', [App\Http\Controllers\backend\Pokja1Controller::class, 'cetak'])->name('pokja1.cetak');
+
+    
+    // ... rute lainnya ...
+});

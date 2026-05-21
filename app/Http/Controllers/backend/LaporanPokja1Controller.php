@@ -109,51 +109,6 @@ class LaporanPokja1Controller extends Controller
             'catatan'   => $request->catatan,
         ]);
 
-        $user = DB::table('users_mobile')
-            ->where('id', $data->id_user)
-            ->first();
-
-        if ($user && $user->fcm_token) {
-
-            try {
-
-                $firebase = new FirebaseService();
-
-                // ACC Kecamatan
-                if ($status == 'Disetujui1') {
-
-                    $totalAcc = DB::table('laporan_kader_pokja1')
-                        ->where('id_user', $data->id_user)
-                        ->where('status', 'Disetujui1')
-                        ->count();
-
-                    $firebase->sendNotification(
-                        $user->fcm_token,
-                        'Laporan Disetujui Kecamatan',
-                        "$totalAcc laporan Anda telah disetujui Kecamatan"
-                    );
-                }
-
-                // ACC Kabupaten
-                if ($status == 'Disetujui2') {
-
-                    $totalAcc = DB::table('laporan_kader_pokja1')
-                        ->where('id_user', $data->id_user)
-                        ->where('status', 'Disetujui2')
-                        ->count();
-
-                    $firebase->sendNotification(
-                        $user->fcm_token,
-                        'Laporan Disetujui Kabupaten',
-                        "$totalAcc laporan Anda telah disetujui Kabupaten"
-                    );
-                }
-            } catch (\Exception $e) {
-
-                dd($e->getMessage());
-            }
-        }
-
         return redirect()->route('laporanpokja1.index')->with(['success' => 'Berhasil Mengubah Status']);
     }
 

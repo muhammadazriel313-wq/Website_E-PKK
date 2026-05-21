@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class GaleriBidangUmumController extends Controller
@@ -28,11 +29,11 @@ class GaleriBidangUmumController extends Controller
                         $q->where('galerys.id_role', 1)
                             ->whereIn('galerys.status', ['upload1', 'upload2']);
                     })
-                    // DATA DARI MOBILE KECAMATAN
-                    ->orWhere(function ($q) {
-                        $q->where('galerys.id_role', 2)
-                            ->whereIn('galerys.status', ['Proses', 'upload2']);
-                    });
+                        // DATA DARI MOBILE KECAMATAN
+                        ->orWhere(function ($q) {
+                            $q->where('galerys.id_role', 2)
+                                ->whereIn('galerys.status', ['Proses', 'upload2']);
+                        });
                 })
                 ->select('galerys.*')
                 ->latest('galerys.created_at')
@@ -109,7 +110,7 @@ class GaleriBidangUmumController extends Controller
     }
 
     // Biarkan fungsi filter lama sebagai fallback (walaupun jarang dipakai)
-// Biarkan fungsi filter lama sebagai fallback
+    // Biarkan fungsi filter lama sebagai fallback
     public function filter(Request $request)
     {
         // Gunakan filled() agar mengabaikan parameter 'search' yang kosong
@@ -122,7 +123,6 @@ class GaleriBidangUmumController extends Controller
             $wakil = Ttd::where('jabatan', 'Ketua')->get();
 
             return view('backend.cetak_galeri_bulan_bidangumum', compact('bidangumum', 'bidangumum1', 'tanggal', 'tanggal2', 'ketua', 'wakil'));
-            
         } elseif ($request->filled('search2')) {
             $tahun = $request->input('search2');
 
@@ -145,7 +145,7 @@ class GaleriBidangUmumController extends Controller
             $ketua = Ttd::where('jabatan', 'Sekretaris')->where('pokja', 'Bidang Umum')->get();
             $wakil = Ttds::where('jabatan', 'Wakil Ketua I')->get();
 
-            return view('backend.cetak_galeri_tahun_bidangumum', compact('jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des','tanggal','tanggal2','ketua','wakil'));
+            return view('backend.cetak_galeri_tahun_bidangumum', compact('jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des', 'tanggal', 'tanggal2', 'ketua', 'wakil'));
         }
 
         // Kembalikan ke halaman sebelumnya jika tidak ada input
@@ -157,97 +157,176 @@ class GaleriBidangUmumController extends Controller
     | FUNGSI CETAK GALERI BIDANG UMUM (SUPER CERDAS)
     |--------------------------------------------------------------------------
     */
-public function cetak(Request $request)
-{
-    // 1. Ambil input (fleksibel: mendukung form baru 'bulan'/'tahun' atau form lama 'search'/'search2')
-    $tipeCetak = $request->input('tipe_cetak', 'tahunan');
-    $bulan     = $request->input('bulan', $request->input('search')); 
-    $tahun     = $request->input('tahun', $request->input('search2', date('Y'))); 
+    public function cetak(Request $request)
+    {
+        $tipeCetak = $request->input('tipe_cetak', 'tahunan');
+        $bulan     = $request->input('bulan', date('m'));
+        $tahun     = $request->input('tahun', date('Y'));
 
-    // 2. Query dasar (ditambahkan filter 'pokja' dan 'status' agar sama dengan data filter lama)
-    $query = Galeri::where('bidang', 'Laporan Umum')
-                   ->where('pokja', 'Kader Pokja I')
-                   ->where('status', 'Upload');
+        // =====================================================
+        // QUERY DASAR
+        // =====================================================
 
-    // Filter bulanan
-    if ($tipeCetak == 'perbulan' && $bulan) {
-        $query->whereMonth('created_at', $bulan)
-              ->whereYear('created_at', $tahun);
-    } else {
-        // Tahunan
-        $query->whereYear('created_at', $tahun);
-    }
+        $query = Galeri::leftJoin(
+            'users_mobile',
+            'galerys.id_user',
+            '=',
+            'users_mobile.id'
+        )
+            ->leftJoin(
+                'subdistrict',
+                'users_mobile.id_subdistrict',
+                '=',
+                'subdistrict.id'
+            )
+            ->select(
+                'galerys.*',
+                'subdistrict.name as nama_kec'
+            )
+            ->where('galerys.bidang', 'Laporan Umum');
 
-    $data = $query->orderBy('created_at', 'ASC')->get();
+        // =====================================================
+        // FILTER LOGIN
+        // =====================================================
 
-    // Nama bulan Indonesia
-    $namaBulan = [
-        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
-        '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
-        '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
-        '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
-    ];
+        // =====================================
+        // WEB KABUPATEN
+        // =====================================
 
-    // Untuk judul halaman cetak
-    $tanggal  = ($tipeCetak == 'perbulan') ? ($namaBulan[$bulan] ?? '-') : $tahun;
-    $tanggal2 = $tahun;
+        if (Auth::guard('web')->check()) {
 
-    // Ambil data tanda tangan
-    $ketua = Ttd::where('jabatan', 'Sekretaris')
-                ->where('pokja', 'Bidang Umum')
+            $query->whereIn(
+                'galerys.status',
+                ['upload2', 'UPLOAD2']
+            );
+        }
+
+        // =====================================
+        // WEB KECAMATAN
+        // =====================================
+
+        elseif (Auth::guard('pengguna')->check()) {
+
+            $user = Auth::guard('pengguna')->user();
+
+            if ($user->id_role == 2) {
+
+                $query->where('users_mobile.id_subdistrict', $user->id_subdistrict)
+                    ->where('galerys.id_role', 1)
+                    ->whereIn(
+                        'galerys.status',
+                        ['upload1', 'UPLOAD1']
+                    );
+            }
+        }
+
+        // =====================================================
+        // FILTER BULAN / TAHUN
+        // =====================================================
+
+        if ($tipeCetak == 'perbulan') {
+
+            $query->whereMonth('galerys.created_at', $bulan)
+                ->whereYear('galerys.created_at', $tahun);
+        } else {
+
+            $query->whereYear('galerys.created_at', $tahun);
+        }
+
+        // =====================================================
+        // EKSEKUSI QUERY
+        // =====================================================
+
+        $data = $query
+            ->orderBy('galerys.created_at', 'desc')
+            ->get();
+
+        // =====================================================
+        // FORMAT TANGGAL
+        // =====================================================
+
+        $tanggal = ($tipeCetak == 'perbulan')
+            ? Carbon::createFromDate($tahun, $bulan)->isoFormat('MMMM Y')
+            : $tahun;
+
+        $formattedDate = Carbon::now()->isoFormat('d MMMM Y');
+
+        // =====================================================
+        // TANDA TANGAN
+        // =====================================================
+
+        $wakil = DB::table('ttds')
+            ->where('pokja', 'Kelompok Kerja I')
+            ->where(function ($q) {
+                $q->where('jabatan', 'like', '%Wakil%')
+                    ->orWhere('jabatan', 'like', '%Sekretaris%');
+            })
+            ->get();
+
+        $ketua = DB::table('ttds')
+            ->where('pokja', 'Bidang Umum')
+            ->where('jabatan', 'Sekretaris')
+            ->get();
+
+        // =====================================================
+        // VIEW
+        // =====================================================
+
+        $viewName = ($tipeCetak == 'perbulan')
+            ? 'backend.cetak_galeri_bulan_bidangumum'
+            : 'backend.cetak_galeri_tahun_bidangumum';
+
+        // =====================================================
+        // CETAK BULANAN
+        // =====================================================
+
+        if ($tipeCetak == 'perbulan') {
+
+            return view($viewName, [
+                'bidangumum'  => $data,
+                'wakil'       => $wakil,
+                'ketua'       => $ketua,
+                'tanggal'     => $tanggal,
+                'tanggal2'    => $tahun,
+                'formattedDate' => $formattedDate,
+            ]);
+        }
+
+        // =====================================================
+        // CETAK TAHUNAN
+        // =====================================================
+
+        $getData = function ($month) use ($tahun, $query) {
+
+            return (clone $query)
+                ->whereMonth('galerys.created_at', $month)
+                ->whereYear('galerys.created_at', $tahun)
+                ->orderBy('galerys.created_at', 'desc')
                 ->get();
+        };
 
-    $wakil = Ttds::where('jabatan', 'Wakil Ketua I')->get();
+        return view($viewName, [
+            'jan' => $getData(1),
+            'feb' => $getData(2),
+            'mar' => $getData(3),
+            'apr' => $getData(4),
+            'mei' => $getData(5),
+            'jun' => $getData(6),
+            'jul' => $getData(7),
+            'agu' => $getData(8),
+            'sep' => $getData(9),
+            'okt' => $getData(10),
+            'nov' => $getData(11),
+            'des' => $getData(12),
 
-    // =====================================
-    // PROSES CETAK BULANAN
-    // =====================================
-    if ($tipeCetak == 'perbulan') {
-        return view('backend.cetak_galeri_bulan_bidangumum', [
-            'bidangumum' => $data, // DIUBAH KE 'bidangumum' AGAR COMPATIBLE DENGAN BLADE
-            'tanggal'    => $tanggal,
-            'tanggal2'   => $tanggal2,
-            'ketua'      => $ketua,
-            'wakil'      => $wakil
+            'wakil'        => $wakil,
+            'ketua'        => $ketua,
+            'tanggal'      => $tanggal,
+            'tanggal2' => $tahun,
+            'formattedDate' => $formattedDate,
         ]);
     }
-
-    // =====================================
-    // PROSES CETAK TAHUNAN
-    // =====================================
-    $getData = function($month) use ($tahun) {
-        return Galeri::where('bidang', 'Laporan Umum')
-            ->where('pokja', 'Kader Pokja I')
-            ->where('status', 'Upload')
-            ->whereMonth('created_at', $month)
-            ->whereYear('created_at', $tahun)
-            ->orderBy('created_at', 'ASC')
-            ->get();
-    };
-
-    return view('backend.cetak_galeri_tahun_bidangumum', [
-        'jan' => $getData(1),
-        'feb' => $getData(2),
-        'mar' => $getData(3),
-        'apr' => $getData(4),
-        'mei' => $getData(5),
-        'jun' => $getData(6),
-        'jul' => $getData(7),
-        'agu' => $getData(8),
-        'sep' => $getData(9),
-        'okt' => $getData(10),
-        'nov' => $getData(11),
-        'des' => $getData(12),
-
-        'tanggal'  => $tanggal,
-        'tanggal2' => $tanggal2,
-        'ketua'    => $ketua,
-        'wakil'    => $wakil
-    ]);
-}
-public function show($id)
+    public function show($id)
     {
         return redirect()->route('galeribidangumum.index');
     }

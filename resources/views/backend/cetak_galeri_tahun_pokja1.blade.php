@@ -1,400 +1,435 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Cetak Galeri Pokja II</title>
+    <title>Cetak Galeri Tahunan Pokja I</title>
+
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px; /* Tambahan jarak antar tabel bulan */
-        }
-
-        th, td {
-            padding: 8px;
-            border: 1px solid black;
-        }
-
         body {
             font-family: Arial, sans-serif;
+            color: #000;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
-            width: 800px;
-            margin: 0 auto;
+            width: 1000px;
+            margin: auto;
+            padding: 20px;
         }
+
+        /* =========================
+           HEADER
+        ========================= */
 
         .header {
+            width: 100%;
             margin-bottom: 20px;
         }
 
-        .logo-container {
+        .logo-wrapper {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
         }
 
         .logo {
-            max-width: 100px;
-            height: auto;
-            margin-right: 20px;
+            width: 85px;
+            margin-right: 18px;
         }
 
-        .header h1 {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            font-size: 14px;
+        .instansi h2 {
             margin: 0;
+            font-size: 20px;
+            font-weight: bold;
         }
+
+        .instansi p {
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        /* =========================
+           JUDUL
+        ========================= */
+
+        .judul {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 25px;
+        }
+
+        .judul h1 {
+            margin: 0;
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .judul h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .judul h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           GARIS
+        ========================= */
 
         .separator {
-            margin-bottom: 10px;
             border-top: 2px solid #000;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
-        .signature {
-            margin-top: 40px;
+        /* =========================
+           TANGGAL CETAK
+        ========================= */
+
+        .tanggal-cetak {
             text-align: right;
+            font-size: 16px;
+            margin-bottom: 20px;
         }
 
-        .signature p {
-            margin-bottom: 5px;
-        }
+        /* =========================
+           JUDUL BULAN
+        ========================= */
 
-        .container-grid {
+        .judul-bulan {
             width: 100%;
-            border: none;
-            padding: 5px;
-            margin-top: 50px;
+            background: #b5b5b5;
+            text-align: center;
+            padding: 12px;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 15px;
             box-sizing: border-box;
-            display: grid;
-            grid-template-columns: 50% 50%;
+        }
+
+        /* =========================
+           TABEL
+        ========================= */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        table th {
+            background: #d9d9d9;
+            border: 1px solid #000;
+            padding: 12px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        table td {
+            border: 1px solid #000;
+            padding: 12px;
+            font-size: 15px;
+            vertical-align: top;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        /* =========================
+           TTD
+        ========================= */
+
+        .ttd-wrapper {
+            width: 100%;
+            margin-top: 70px;
+        }
+
+        .ttd {
+            width: 320px;
+            margin-left: auto;
+            text-align: center;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        .nama-ttd {
+            margin-top: 80px;
+            font-weight: bold;
+            text-decoration: underline;
         }
     </style>
+
 </head>
+
 <body>
-<div class="container">
-    <div class="header">
-        <div class="logo-container">
-            <img class="logo" src="{{ asset('frontend/assets/img/favicon.png') }}" alt="Logo PKK">
-            <div>
-                <h1>Pemberdayaan Kesejahteraan Keluarga</h1>
-                <p>Kab. Nganjuk, Jawa Timur</p>
+
+    <div class="container">
+
+        {{-- =========================
+         HEADER
+    ========================== --}}
+
+        <div class="header">
+
+            <div class="logo-wrapper">
+
+                <img
+                    class="logo"
+                    src="{{ asset('frontend/assets/img/favicon.png') }}"
+                    alt="Logo PKK">
+
+                <div class="instansi">
+
+                    <h2>
+                        Pemberdayaan Kesejahteraan Keluarga
+                    </h2>
+
+                    <p>
+                        Kab. Nganjuk, Jawa Timur
+                    </p>
+
+                </div>
+
             </div>
-        </div>
-        <h2 style='font-size: 32px;' align="center">REKAPITULASI GALERI</h2>
-        <h4 style='font-size: 24px; font-weight: normal; line-height: 1.4;' align="center">
-            LAGU & DOKUMEN KEGIATAN KELOMPOK KERJA I (POKJA 1)<br>
-            @if(Auth::guard('pengguna')->check())
-                KECAMATAN {{ strtoupper(Auth::guard('pengguna')->user()->name ?? '') }}<br>
-            @endif
-            TAHUN {{ $tanggal2 }}<br>
-        </h4>
-    </div>
 
-    <div class="separator"></div>
-    <div class ="signature">
-        <p>Tanggal Cetak : 
-            <?php
-                echo '&nbsp;&nbsp;&nbsp;';
-                echo date('d F Y');
-            ?>
-        </p>
-    </div>
+            <div class="judul">
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Januari</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($jan as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                <h1>
+                    REKAPITULASI GALERI
+                </h1>
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Februari</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($feb as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                <h2>
+                    JADWAL KEGIATAN KELOMPOK KERJA I
+                </h2>
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Maret</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($mar as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                <h3>
+                    TIM PENGGERAK PKK
+                </h3>
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan April</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($apr as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                @if(Auth::guard('pengguna')->check())
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Mei</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($mei as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                <h3>
+                    KECAMATAN
+                    {{ strtoupper(Auth::guard('pengguna')->user()->name ?? '') }}
+                </h3>
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Juni</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($jun as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                @endif
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Juli</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($jul as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                <h3>
+                    TAHUN {{ $tanggal2 }}
+                </h3>
 
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Agustus</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($agu as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan September</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($sep as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Oktober</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($okt as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan November</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($nov as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <table align="center">
-        <thead>
-            <tr>
-                <td colspan="3" style='font-size: 28px; background-color: #A9A9A9; border: 1px #000; padding: 10px 25px;' align="center"><b>Bulan Desember</b></td>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($des as $item)
-            <tr>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 15px;' align="center">{{ $no++ }}.</td> 
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                <td style='font-size: 18px; border: 1px #000; padding: 10px 45px;'>{{ $item->deskripsi }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" style='font-size: 18px; border: 1px #000; padding: 10px;' align="center"><i>Tidak ada data pada bulan ini.</i></td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="container-grid">
-        <div style="text-align: left;">
-            <div style="text-align: center;">
-                <p></p>
             </div>
+
         </div>
 
-        <div style="text-align: right;">
-            <div style="text-align: center;">
-                @forelse($ketua as $ketuaa)
-                <a>Nganjuk, <?php echo date('d F Y'); ?></a><br>
-                <a>TP PKK Kabupaten Nganjuk</a><br>
-                <a>{{ $ketuaa->pokja }}</a><br>
-                <a>{{ $ketuaa->jabatan }}</a><br><br><br><br>
-                <a>{{ $ketuaa->nama_terang }}</a>
+        <div class="separator"></div>
+
+        {{-- =========================
+         TANGGAL CETAK
+    ========================== --}}
+
+        <div class="tanggal-cetak">
+
+            Tanggal Cetak :
+            {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+
+        </div>
+
+        {{-- =========================
+         ARRAY BULAN
+    ========================== --}}
+
+        @php
+
+        $bulanData = [
+
+        'Januari' => $jan,
+        'Februari' => $feb,
+        'Maret' => $mar,
+        'April' => $apr,
+        'Mei' => $mei,
+        'Juni' => $jun,
+        'Juli' => $jul,
+        'Agustus' => $agu,
+        'September' => $sep,
+        'Oktober' => $okt,
+        'November' => $nov,
+        'Desember' => $des,
+
+        ];
+
+        @endphp
+
+        {{-- =========================
+         LOOP BULAN
+    ========================== --}}
+
+        @foreach($bulanData as $namaBulan => $dataBulan)
+
+        <div class="judul-bulan">
+
+            Bulan {{ $namaBulan }}
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th width="5%">
+                        No
+                    </th>
+
+                    <th width="18%">
+                        Tanggal
+                    </th>
+
+                    <th width="27%">
+                        Bidang
+                    </th>
+
+                    <th width="20%">
+                        Lokasi Kegiatan
+                    </th>
+
+                    <th width="30%">
+                        Deskripsi
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @php
+                $no = 1;
+                @endphp
+
+                @forelse($dataBulan as $item)
+
+                <tr>
+
+                    <td class="center">
+
+                        {{ $no++ }}
+
+                    </td>
+
+                    <td class="center">
+
+                        {{ \Carbon\Carbon::parse($item->tanggal ?? $item->created_at)->locale('id')->translatedFormat('d F Y') }}
+
+                    </td>
+
+                    <td class="center">
+
+                        {{ $item->bidang ?? '-' }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $item->lokasi ?? '-' }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $item->deskripsi }}
+
+                    </td>
+
+                </tr>
+
                 @empty
-                <a>Tidak ada data pimpinan</a>
+
+                <tr>
+
+                    <td colspan="5" class="center">
+
+                        <i>
+                            Tidak ada data pada bulan ini.
+                        </i>
+
+                    </td>
+
+                </tr>
+
                 @endforelse
+
+            </tbody>
+
+        </table>
+
+        @endforeach
+
+        {{-- =========================
+         TANDA TANGAN
+    ========================== --}}
+
+        <div class="ttd-wrapper">
+
+            <div class="ttd">
+
+                @forelse($ketua as $ketuaa)
+
+                <div>
+
+                    Nganjuk,
+                    {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+
+                </div>
+
+                <div>
+                    TP PKK Kabupaten Nganjuk
+                </div>
+
+                <div>
+                    {{ $ketuaa->pokja }}
+                </div>
+
+                <div>
+                    {{ $ketuaa->jabatan }}
+                </div>
+
+                <div class="nama-ttd">
+
+                    {{ $ketuaa->nama_terang }}
+
+                </div>
+
+                @empty
+
+                <div>
+                    Tidak ada data pimpinan
+                </div>
+
+                @endforelse
+
             </div>
-         </div>
+
+        </div>
+
     </div>
 
     <script>
         window.onload = function() {
+
             window.print();
-        };
+
+        }
     </script>
-</div>
+
 </body>
+
 </html>

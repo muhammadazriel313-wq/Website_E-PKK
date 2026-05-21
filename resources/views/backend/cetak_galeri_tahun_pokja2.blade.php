@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Cetak Galeri Pokja II</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
 
-        th, td {
-            padding: 8px;
-            border: 1px solid black;
-        }
+<head>
+    <title>Cetak Galeri Tahunan Pokja II</title>
+
+    <style>
         body {
             font-family: Arial, sans-serif;
+            color: #000;
         }
 
         .container {
-            width: 800px;
-            margin: 0 auto;
+            width: 1000px;
+            margin: auto;
         }
+
+        /* =========================
+           HEADER
+        ========================= */
 
         .header {
             margin-bottom: 20px;
@@ -33,147 +30,402 @@
         }
 
         .logo {
-            max-width: 100px;
-            height: auto;
+            width: 90px;
             margin-right: 20px;
         }
 
-        .header h1 {
-            font-size: 16px;
-            margin-bottom: 5px;
+        .instansi h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
         }
 
-        .header p {
-            font-size: 14px;
-            margin: 0;
+        .instansi p {
+            margin: 5px 0 0;
+            font-size: 16px;
         }
+
+        /* =========================
+           JUDUL
+        ========================= */
+
+        .judul {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .judul h1 {
+            margin: 0;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .judul h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .judul h3 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           GARIS
+        ========================= */
 
         .separator {
-            margin-bottom: 10px;
             border-top: 2px solid #000;
+            margin: 20px 0;
         }
 
-        .signature {
-            margin-top: 20px;
+        /* =========================
+           TANGGAL CETAK
+        ========================= */
+
+        .tanggal-cetak {
             text-align: right;
+            margin-bottom: 20px;
+            font-size: 16px;
         }
 
-        .container-grid {
+        /* =========================
+           BOX BULAN
+        ========================= */
+
+        .judul-bulan {
+            background: #b5b5b5;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 12px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        /* =========================
+           TABEL
+        ========================= */
+
+        table {
             width: 100%;
-            border: none;
-            padding: 5px;
-            margin-top: 50px;
-            box-sizing: border-box;
-            display: grid;
-            grid-template-columns: 50% 50%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table th {
+            background: #d9d9d9;
+            border: 1px solid #000;
+            padding: 12px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        table td {
+            border: 1px solid #000;
+            padding: 12px;
+            font-size: 15px;
+            vertical-align: top;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        /* =========================
+           TTD
+        ========================= */
+
+        .ttd-wrapper {
+            width: 100%;
+            margin-top: 70px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .ttd {
+            width: 320px;
+            text-align: center;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        .nama-ttd {
+            margin-top: 80px;
+            font-weight: bold;
+            text-decoration: underline;
         }
     </style>
+
 </head>
+
 <body>
-<div class="container">
-    <div class="header">
-        <div class="logo-container">
-            <img class="logo" src="{{ asset('frontend/assets/img/favicon.png') }}" alt="Logo PKK">
-            <div>
-                <h1>Pemberdayaan Kesejahteraan Keluarga</h1>
-                <p>Kab. Nganjuk, Jawa Timur</p>
+
+    <div class="container">
+
+        {{-- =========================
+         HEADER
+        ========================== --}}
+
+        <div class="header">
+
+            <div class="logo-container">
+
+                <img
+                    class="logo"
+                    src="{{ asset('frontend/assets/img/favicon.png') }}"
+                    alt="Logo PKK">
+
+                <div class="instansi">
+
+                    <h2>
+                        Pemberdayaan Kesejahteraan Keluarga
+                    </h2>
+
+                    <p>
+                        Kab. Nganjuk, Jawa Timur
+                    </p>
+
+                </div>
+
             </div>
-        </div>
-        <h2 style='font-size: 28px;' align="center">REKAPITULASI GALERI</h2>
-        <h4 style='font-size: 20px; font-weight: normal; line-height: 1.4;' align="center">
-            LAGU & DOKUMEN KEGIATAN KELOMPOK KERJA II (POKJA 2)<br>
-            @if(Auth::guard('pengguna')->check())
-                KECAMATAN {{ strtoupper(Auth::guard('pengguna')->user()->name ?? '') }}<br>
-            @endif
-            TAHUN {{ $tanggal2 }}
-        </h4>
-    </div>
 
-    <div class="separator"></div>
-    <div class="signature">
-        <p>Tanggal Cetak : {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
-    </div>
+            <div class="judul">
 
-    @php
-        $daftarBulan = [
-            'Januari' => $jan, 'Februari' => $feb, 'Maret' => $mar, 'April' => $apr,
-            'Mei' => $mei, 'Juni' => $jun, 'Juli' => $jul, 'Agustus' => $agu,
-            'September' => $sep, 'Oktober' => $okt, 'November' => $nov, 'Desember' => $des
-        ];
-    @endphp
+                <h1>
+                    REKAPITULASI GALERI
+                </h1>
 
-    {{-- LOOPING PER BULAN --}}
-    @foreach($daftarBulan as $namaBulan => $dataBulan)
-        <table align="center">
-            <thead>
-                <tr>
-                    <td colspan="4" style='font-size: 20px; background-color: #A9A9A9; color: #000;' align="center">
-                        <b>Bulan {{ $namaBulan }}</b>
-                    </td>
-                </tr>
-                @if($dataBulan->isNotEmpty())
-                <tr style="background-color: #f2f2f2;">
-                    <th style="width: 50px;">No</th>
-                    <th style="width: 150px;">Tanggal</th>
-                    <th>Bidang</th>
-                    <th>Deskripsi</th>
-                </tr>
+                <h2>
+                    JADWAL KEGIATAN KELOMPOK KERJA II
+                </h2>
+
+                <h3>
+                    TIM PENGGERAK PKK
+                </h3>
+
+                @if(Auth::guard('pengguna')->check())
+
+                <h3>
+                    KECAMATAN
+                    {{ strtoupper(Auth::guard('pengguna')->user()->name ?? '') }}
+                </h3>
+
                 @endif
+
+                <h3>
+                    TAHUN {{ $tanggal2 }}
+                </h3>
+
+            </div>
+
+        </div>
+
+        <div class="separator"></div>
+
+        {{-- =========================
+         TANGGAL CETAK
+        ========================== --}}
+
+        <div class="tanggal-cetak">
+
+            Tanggal Cetak :
+            {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+
+        </div>
+
+        {{-- =========================
+         ARRAY BULAN
+        ========================== --}}
+
+        @php
+
+        $daftarBulan = [
+
+        'Januari' => $jan,
+        'Februari' => $feb,
+        'Maret' => $mar,
+        'April' => $apr,
+        'Mei' => $mei,
+        'Juni' => $jun,
+        'Juli' => $jul,
+        'Agustus' => $agu,
+        'September' => $sep,
+        'Oktober' => $okt,
+        'November' => $nov,
+        'Desember' => $des
+
+        ];
+
+        @endphp
+
+        {{-- =========================
+         LOOP BULAN
+        ========================== --}}
+
+        @foreach($daftarBulan as $namaBulan => $dataBulan)
+
+        <div class="judul-bulan">
+
+            Bulan {{ $namaBulan }}
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th width="5%">
+                        No
+                    </th>
+
+                    <th width="18%">
+                        Tanggal
+                    </th>
+
+                    <th width="27%">
+                        Bidang
+                    </th>
+
+                    <th width="20%">
+                        Lokasi Kegiatan
+                    </th>
+
+                    <th width="30%">
+                        Deskripsi
+                    </th>
+
+                </tr>
+
             </thead>
+
             <tbody>
-                @php $no = 1; @endphp
+
+                @php
+                $no = 1;
+                @endphp
+
                 @forelse($dataBulan as $tampil)
+
                 <tr>
-                    <td align="center">{{ $no++ }}.</td>
-                    <td align="center">{{ \Carbon\Carbon::parse($tampil->created_at)->isoFormat('D MMMM Y') }}</td>
-                    <td align="center">{{ $tampil->bidang }}</td>
-                    <td>{{ $tampil->deskripsi }}</td>
+
+                    <td class="center">
+
+                        {{ $no++ }}
+
+                    </td>
+
+                    <td class="center">
+
+                        {{ \Carbon\Carbon::parse($tampil->created_at)->translatedFormat('d F Y') }}
+
+                    </td>
+
+                    <td class="center">
+
+                        {{ $tampil->bidang }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $tampil->lokasi ?? '-' }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $tampil->deskripsi }}
+
+                    </td>
+
                 </tr>
+
                 @empty
+
                 <tr>
-                    <td colspan="4" align="center" style="padding: 15px;"><i>Tidak ada data galeri pada bulan ini.</i></td>
+
+                    <td colspan="5" class="center">
+
+                        <i>
+                            Tidak ada data galeri pada bulan ini.
+                        </i>
+
+                    </td>
+
                 </tr>
+
                 @endforelse
+
             </tbody>
+
         </table>
-    @endforeach
 
-    {{-- TANDA TANGAN --}}
-    <div class="container-grid">
-        <div style="text-align: center;">
-            @forelse($wakil as $wakill)
-                <a>Mengetahui</a><br>
-                <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                <a>{{ $wakill->jabatan }}</a><br><br><br><br>
-                <a style="text-decoration: underline; font-weight: bold;">{{ $wakill->nama_terang }}</a>
-            @empty
-                <a>Mengetahui</a><br>
-                <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                <a>Sekretaris / Wakil Ketua</a><br><br><br><br>
-                <a>( ......................................... )</a>
-            @endforelse
+        @endforeach
+
+        {{-- =========================
+         TANDA TANGAN
+        ========================== --}}
+
+        <div class="ttd-wrapper">
+
+            <div class="ttd">
+
+                @forelse($ketua as $ketuaa)
+
+                <div>
+
+                    Nganjuk,
+                    {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+
+                </div>
+
+                <div>
+                    TP PKK Kabupaten Nganjuk
+                </div>
+
+                <div>
+                    {{ $ketuaa->pokja }}
+                </div>
+
+                <div>
+                    {{ $ketuaa->jabatan }}
+                </div>
+
+                <div class="nama-ttd">
+
+                    {{ $ketuaa->nama_terang }}
+
+                </div>
+
+                @empty
+
+                <div>
+                    Tidak ada data pimpinan
+                </div>
+
+                @endforelse
+
+            </div>
+
         </div>
 
-        <div style="text-align: center;">
-            @forelse($ketua as $ketuaa)
-                <a>Nganjuk, {{ date('d F Y') }}</a><br>
-                <a>{{ $ketuaa->pokja ?? 'Ketua Umum' }}</a><br>
-                <a>{{ $ketuaa->jabatan }}</a><br><br><br><br>
-                <a style="text-decoration: underline; font-weight: bold;">{{ $ketuaa->nama_terang }}</a>
-            @empty
-                <a>Nganjuk, {{ date('d F Y') }}</a><br>
-                <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                <a>Ketua</a><br><br><br><br>
-                <a>( ......................................... )</a>
-            @endforelse
-        </div>
     </div>
-</div>
 
-<script>
-    window.onload = function() {
-        window.print();
-    };
-</script>
+    <script>
+        window.onload = function() {
+
+            window.print();
+
+        }
+    </script>
+
 </body>
+
 </html>

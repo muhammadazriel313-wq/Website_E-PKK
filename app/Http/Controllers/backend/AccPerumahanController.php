@@ -63,14 +63,14 @@ class AccPerumahanController extends Controller
 
             if ($user->id_role == 2) {
                 // Kecamatan: Menunggu = Proses | Selesai = Disetujui1
-                $lap1 = DB::table('laporan_perumahan')
+                $per1 = DB::table('laporan_perumahan')
                     ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     ->whereIn('laporan_perumahan.status', ['proses', 'Proses', 'PROSES'])
                     ->count();
 
-                $lap2 = DB::table('laporan_perumahan')
+                $per2 = DB::table('laporan_perumahan')
                     ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)

@@ -58,14 +58,14 @@ class AccKelestarianController extends Controller
 
             if ($user->id_role == 2) {
                 // Kecamatan: Menunggu = Proses | Selesai = Disetujui1
-                $kes1 = DB::table('laporan_kelestarian_lingkungan_hidup')
+                $kel1 = DB::table('laporan_kelestarian_lingkungan_hidup')
                     ->leftJoin('users_mobile', 'laporan_kelestarian_lingkungan_hidup.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     ->whereIn('laporan_kelestarian_lingkungan_hidup.status', ['proses', 'Proses', 'PROSES'])
                     ->count();
 
-                $kes2 = DB::table('laporan_kelestarian_lingkungan_hidup')
+                $kel2 = DB::table('laporan_kelestarian_lingkungan_hidup')
                     ->leftJoin('users_mobile', 'laporan_kelestarian_lingkungan_hidup.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)

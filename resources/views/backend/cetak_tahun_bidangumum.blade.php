@@ -91,7 +91,7 @@
                 <p>Kab. Nganjuk, Jawa Timur</p>
             </div>
         </div>
-        <h2>Laporan Pertahun - Bidang Umum</h2>
+        <h2>Laporan Pertahun</h2>
         <h4>Tahun : {{ $tanggal ?? date('Y') }}</h4>    
     </div>
 
@@ -102,7 +102,7 @@
 
     <table align="center">
         <thead>
-            <tr>
+            <tr style="background: #e0f2fe;">
                 <th align="center"><b>NO</b></th>
                 <th align="center"><b>Kecamatan</b></th>
                 <th align="center"><b>Dusun Lingkungan</b></th>
@@ -204,57 +204,65 @@
         </tfoot>
     </table>
 
-    {{-- KODE PENGAMAN: Menarik data langsung dari database jika Controller lupa mengirimnya --}}
     @php
-        if (!isset($wakil)) {
-            // Menarik data Sekretaris untuk Bidang Umum
-            $wakil = \Illuminate\Support\Facades\DB::table('ttds')
-                        ->where('pokja', 'Bidang Umum')
-                        ->get();
-        }
 
-        if (!isset($ketua)) {
-            // Menarik data Ketua Umum (pokja kosong/NULL)
-            $ketua = \Illuminate\Support\Facades\DB::table('ttds')
-                        ->where('jabatan', 'Ketua')
-                        ->whereNull('pokja')
-                        ->get();
-        }
-    @endphp
+        $wakil = \Illuminate\Support\Facades\DB::table('ttds')
+        ->whereNull('pokja')
+        ->first();
+
+        $ketua = \Illuminate\Support\Facades\DB::table('ttds')
+        ->where('pokja', 'Bidang Umum')
+        ->where('jabatan', 'Sekretaris')
+        ->first();
+
+        @endphp
 
     <div class="container-grid">
-        <div style="text-align: left;">
-            <div style="text-align: center;">
-                @forelse($wakil as $wakill)
-                    <a>Mengetahui</a><br>
-                    <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                    <a>{{ $wakill->jabatan }}</a><br><br><br><br>
-                    <a style="text-decoration: underline; font-weight: bold;">{{ $wakill->nama_terang }}</a>
-                @empty
-                    <a>Mengetahui</a><br>
-                    <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                    <a>Sekretaris / Wakil Ketua</a><br><br><br><br>
-                    <a>( ......................................... )</a>
-                @endforelse
-            </div>
-        </div>
 
-        <div style="text-align: right;">
-            <div style="text-align: center;">
-                @forelse($ketua as $ketuaa)
-                    <a>Nganjuk, {{ date('d F Y') }}</a><br>
-                    <a>{{ $ketuaa->pokja ?? 'Ketua Umum' }}</a><br>
-                    <a>{{ $ketuaa->jabatan }}</a><br><br><br><br>
-                    <a style="text-decoration: underline; font-weight: bold;">{{ $ketuaa->nama_terang }}</a>
-                @empty
-                    <a>Nganjuk, {{ date('d F Y') }}</a><br>
+            {{-- KIRI --}}
+            <div style="text-align: left;">
+                <div style="text-align: center;">
+
+                    @if($wakil)
+
+                    <a>Mengetahui</a><br>
                     <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                    <a>Ketua</a><br><br><br><br>
-                    <a>( ......................................... )</a>
-                @endforelse
+                    <a>{{ $wakil->jabatan }}</a><br><br><br><br>
+
+                    <a style="font-weight: bold; text-decoration: underline;">
+                        {{ $wakil->nama_terang }}
+                    </a>
+
+                    @endif
+
+                </div>
             </div>
-         </div>
-    </div>
+
+
+            {{-- KANAN --}}
+            <div style="text-align: right;">
+                <div style="text-align: center;">
+
+                    @if($ketua)
+
+                    <a>
+                        Nganjuk,
+                        {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+                    </a><br>
+
+                    <a>{{ $ketua->pokja }}</a><br>
+                    <a>{{ $ketua->jabatan }}</a><br><br><br><br>
+
+                    <a style="font-weight: bold; text-decoration: underline;">
+                        {{ $ketua->nama_terang }}
+                    </a>
+
+                    @endif
+
+                </div>
+            </div>
+
+        </div>
 
     <script>
         window.onload = function() {

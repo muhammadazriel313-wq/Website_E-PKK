@@ -14,315 +14,48 @@ class Galeri4Controller extends Controller
 {
     public function index()
     {
-        $pertama = 0;
-        $kedua = 0;
-        $ketiga = 0;
-        $keempat = 0;
-        $kelima = 0;
+        $pertama = 0; $kedua = 0; $ketiga = 0; $keempat = 0; $kelima = 0;
 
         // =====================================
+        // WEB KABUPATEN
+        // =====================================
         if (Auth::guard('web')->check()) {
+            $pertama = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Kesehatan')->where(function ($query) {
+                $query->where(function ($q) { $q->where('users_mobile.id_role', 1)->whereIn('galerys.status', ['upload1', 'upload2']); })
+                      ->orWhere(function ($q) { $q->where('users_mobile.id_role', 2)->whereIn('galerys.status', ['Proses', 'upload2']); });
+            })->count();
 
-            $pertama = Galeri::leftJoin(
-                'users_mobile',
-                'galerys.id_user',
-                '=',
-                'users_mobile.id'
-            )
+            $kedua = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Kelestarian Lingkungan Hidup')->where(function ($query) {
+                $query->where(function ($q) { $q->where('users_mobile.id_role', 1)->whereIn('galerys.status', ['upload1', 'upload2']); })
+                      ->orWhere(function ($q) { $q->where('users_mobile.id_role', 2)->whereIn('galerys.status', ['Proses', 'upload2']); });
+            })->count();
 
-                ->where('galerys.bidang', 'Kesehatan')
+            $ketiga = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Perencanaan Sehat')->where(function ($query) {
+                $query->where(function ($q) { $q->where('users_mobile.id_role', 1)->whereIn('galerys.status', ['upload1', 'upload2']); })
+                      ->orWhere(function ($q) { $q->where('users_mobile.id_role', 2)->whereIn('galerys.status', ['Proses', 'upload2']); });
+            })->count();
 
-                ->where(function ($query) {
+            $keempat = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Kader Pokja IV')->where(function ($query) {
+                $query->where(function ($q) { $q->where('users_mobile.id_role', 1)->whereIn('galerys.status', ['upload1', 'upload2']); })
+                      ->orWhere(function ($q) { $q->where('users_mobile.id_role', 2)->whereIn('galerys.status', ['Proses', 'upload2']); });
+            })->count();
 
-                    // DATA DESA YANG SUDAH DIREVIEW KEC
-                    $query->where(function ($q) {
-
-                        $q->where('users_mobile.id_role', 1)
-
-                            ->whereIn('galerys.status', [
-                                'upload1',
-                                'upload2'
-                            ]);
-                    })
-
-                        // DATA MOBILE KECAMATAN
-                        ->orWhere(function ($q) {
-
-                            $q->where('users_mobile.id_role', 2)
-
-                                ->whereIn('galerys.status', [
-                                    'Proses',
-                                    'upload2'
-                                ]);
-                        });
-                })
-
-                ->count();
-
-
-
-            $kedua = Galeri::leftJoin(
-                'users_mobile',
-                'galerys.id_user',
-                '=',
-                'users_mobile.id'
-            )
-
-                ->where('galerys.bidang', 'Kelestarian Lingkungan Hidup')
-
-                ->where(function ($query) {
-
-                    $query->where(function ($q) {
-
-                        $q->where('users_mobile.id_role', 1)
-
-                            ->whereIn('galerys.status', [
-                                'upload1',
-                                'upload2'
-                            ]);
-                    })
-
-                        ->orWhere(function ($q) {
-
-                            $q->where('users_mobile.id_role', 2)
-
-                                ->whereIn('galerys.status', [
-                                    'Proses',
-                                    'upload2'
-                                ]);
-                        });
-                })
-
-                ->count();
-            $ketiga = Galeri::leftJoin(
-                'users_mobile',
-                'galerys.id_user',
-                '=',
-                'users_mobile.id'
-            )
-
-                ->where('galerys.bidang', 'Perencanaan Sehat')
-
-                ->where(function ($query) {
-
-                    $query->where(function ($q) {
-
-                        $q->where('users_mobile.id_role', 1)
-
-                            ->whereIn('galerys.status', [
-                                'upload1',
-                                'upload2'
-                            ]);
-                    })
-
-                        ->orWhere(function ($q) {
-
-                            $q->where('users_mobile.id_role', 2)
-
-                                ->whereIn('galerys.status', [
-                                    'Proses',
-                                    'upload2'
-                                ]);
-                        });
-                })
-
-                ->count();
-            $keempat = Galeri::leftJoin(
-                'users_mobile',
-                'galerys.id_user',
-                '=',
-                'users_mobile.id'
-            )
-
-                ->where('galerys.bidang', 'Kader Pokja IV')
-
-                ->where(function ($query) {
-
-                    $query->where(function ($q) {
-
-                        $q->where('users_mobile.id_role', 1)
-
-                            ->whereIn('galerys.status', [
-                                'upload1',
-                                'upload2'
-                            ]);
-                    })
-
-                        ->orWhere(function ($q) {
-
-                            $q->where('users_mobile.id_role', 2)
-
-                                ->whereIn('galerys.status', [
-                                    'Proses',
-                                    'upload2'
-                                ]);
-                        });
-                })
-
-                ->count();
-            $kelima = Galeri::leftJoin(
-                'users_mobile',
-                'galerys.id_user',
-                '=',
-                'users_mobile.id'
-            )
-
-                ->whereIn('galerys.bidang', ['Inovasi Prioritas', 'Inovasi Unggulan'])
-
-                ->where(function ($query) {
-
-                    $query->where(function ($q) {
-
-                        $q->where('users_mobile.id_role', 1)
-
-                            ->whereIn('galerys.status', [
-                                'upload1',
-                                'upload2'
-                            ]);
-                    })
-
-                        ->orWhere(function ($q) {
-
-                            $q->where('users_mobile.id_role', 2)
-
-                                ->whereIn('galerys.status', [
-                                    'Proses',
-                                    'upload2'
-                                ]);
-                        });
-                })
-
-                ->count();
+            $kelima = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->whereIn('galerys.bidang', ['Inovasi Prioritas', 'Inovasi Unggulan'])->where(function ($query) {
+                $query->where(function ($q) { $q->where('users_mobile.id_role', 1)->whereIn('galerys.status', ['upload1', 'upload2']); })
+                      ->orWhere(function ($q) { $q->where('users_mobile.id_role', 2)->whereIn('galerys.status', ['Proses', 'upload2']); });
+            })->count();
         }
         // =====================================
         // WEB KECAMATAN
         // =====================================
         elseif (Auth::guard('pengguna')->check()) {
-
             $user = Auth::guard('pengguna')->user();
-
             if ($user->id_role == 2) {
-
-                $pertama = Galeri::leftJoin(
-                    'users_mobile',
-                    'galerys.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
-                    ->where('galerys.bidang', 'Kesehatan')
-
-                    // HANYA DATA DESA
-                    ->where('users_mobile.id_role', 1)
-
-                    ->where(
-                        'users_mobile.id_subdistrict',
-                        $user->id_subdistrict
-                    )
-
-                    ->whereIn('galerys.status', [
-                        'Proses',
-                        'upload1',
-                        'upload2'
-                    ])
-
-                    ->count();
-
-
-
-                $kedua = Galeri::leftJoin(
-                    'users_mobile',
-                    'galerys.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
-                    ->where('galerys.bidang', 'Kelestarian Lingkungan Hidup')
-
-                    // HANYA DATA DESA
-                    ->where('users_mobile.id_role', 1)
-
-                    ->where(
-                        'users_mobile.id_subdistrict',
-                        $user->id_subdistrict
-                    )
-
-                    ->whereIn('galerys.status', [
-                        'Proses',
-                        'upload1',
-                        'upload2'
-                    ])
-
-                    ->count();
-
-                $ketiga = Galeri::leftJoin(
-                    'users_mobile',
-                    'galerys.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
-                    ->where('galerys.bidang', 'Perencanaan Sehat')
-
-                    // HANYA DATA DESA
-                    ->where('users_mobile.id_role', 1)
-
-                    ->where(
-                        'users_mobile.id_subdistrict',
-                        $user->id_subdistrict
-                    )
-
-                    ->whereIn('galerys.status', [
-                        'Proses',
-                        'upload1',
-                        'upload2'
-                    ])
-
-                    ->count();
-
-                $keempat = Galeri::leftJoin(
-                    'users_mobile',
-                    'galerys.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
-                    ->where('galerys.bidang', 'Kader Pokja IV')
-
-                    // HANYA DATA DESA
-                    ->where('users_mobile.id_role', 1)
-
-                    ->where(
-                        'users_mobile.id_subdistrict',
-                        $user->id_subdistrict
-                    )
-
-                    ->whereIn('galerys.status', [
-                        'Proses',
-                        'upload1',
-                        'upload2'
-                    ])
-
-                    ->count();
-                $kelima = Galeri::leftJoin(
-                    'users_mobile',
-                    'galerys.id_user',
-                    '=',
-                    'users_mobile.id'
-                )
-                    ->whereIn('galerys.bidang', ['Inovasi Prioritas', 'Inovasi Unggulan'])
-
-                    // HANYA DATA DESA
-                    ->where('users_mobile.id_role', 1)
-
-                    ->where(
-                        'users_mobile.id_subdistrict',
-                        $user->id_subdistrict
-                    )
-
-                    ->whereIn('galerys.status', [
-                        'Proses',
-                        'upload1',
-                        'upload2'
-                    ])
-
-                    ->count();
+                $pertama = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Kesehatan')->where('users_mobile.id_role', 1)->where('users_mobile.id_subdistrict', $user->id_subdistrict)->whereIn('galerys.status', ['Proses', 'upload1', 'upload2'])->count();
+                $kedua = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Kelestarian Lingkungan Hidup')->where('users_mobile.id_role', 1)->where('users_mobile.id_subdistrict', $user->id_subdistrict)->whereIn('galerys.status', ['Proses', 'upload1', 'upload2'])->count();
+                $ketiga = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Perencanaan Sehat')->where('users_mobile.id_role', 1)->where('users_mobile.id_subdistrict', $user->id_subdistrict)->whereIn('galerys.status', ['Proses', 'upload1', 'upload2'])->count();
+                $keempat = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->where('galerys.bidang', 'Kader Pokja IV')->where('users_mobile.id_role', 1)->where('users_mobile.id_subdistrict', $user->id_subdistrict)->whereIn('galerys.status', ['Proses', 'upload1', 'upload2'])->count();
+                $kelima = Galeri::leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')->whereIn('galerys.bidang', ['Inovasi Prioritas', 'Inovasi Unggulan'])->where('users_mobile.id_role', 1)->where('users_mobile.id_subdistrict', $user->id_subdistrict)->whereIn('galerys.status', ['Proses', 'upload1', 'upload2'])->count();
             }
         }
 
@@ -331,92 +64,110 @@ class Galeri4Controller extends Controller
 
     public function filter(Request $request)
     {
-        if ($request->has('search')) {
-            $kesehatan = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Kesehatan')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-            $kelestarian = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Kelestarian Lingkungan Hidup')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-            $perencanaan = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Perencanaan Sehat')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-            $laporanpokja4 = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Kader Pokja IV')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+        return $this->cetak($request);
+    }
 
-            $kesehatan1 = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Kesehatan')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-            $kelestarian1 = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Kelestarian Lingkungan Hidup')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-            $perencanaan1 = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Perencanaan Sehat')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-            $laporanpokja41 = Galeri::where('created_at', 'LIKE', '%' . $request->search . '%')->where('pokja', 'pokja I')->where('bidang', 'Kader Pokja IV')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+    public function show(Request $request, string $id)
+    {
+        if($request->has('search') || $request->has('search2')){
+            return $this->cetak($request);
+        }
+        return redirect()->route('galeripokja4.index');
+    }
 
-            $tanggal = $request->input('search');
-            $carbonDate = Carbon::parse($tanggal);
-            $tanggal = $carbonDate->isoFormat('MMMM');
+    /*
+    |--------------------------------------------------------------------------
+    | FUNGSI CETAK GALERI POKJA 4
+    |--------------------------------------------------------------------------
+    */
+    public function cetak(Request $request)
+    {
+        $tipeCetak = $request->input('tipe_cetak', ($request->filled('search') ? 'perbulan' : 'tahunan')); 
+        $bulan = $request->input('search', $request->input('bulan')); 
+        $tahun = $request->input('search2', $request->input('tahun', date('Y')));
 
-            $tanggal2 = $request->input('search');
+        // 🚨 BUG FIX: Diubah dari 'pokja I' menjadi 'pokja IV'
+        $query = Galeri::where('pokja', 'pokja IV')->where('status', 'Upload'); 
 
-            $ketua = Ttd::where('jabatan', 'Ketua')->where('pokja', 'Kelompok Kerja IV')->get();
-            $wakil = Ttds::where('jabatan', 'Wakil Ketua I')->get();
+        // Filter Role (Kecamatan / Kabupaten)
+        if (Auth::guard('pengguna')->check()) {
+            $user = Auth::guard('pengguna')->user();
+            $query->where('id_user', $user->id);
+        }
 
-            return view('backend.cetak_galeri_bulan_pokja4', compact('kesehatan', 'kelestarian', 'perencanaan', 'laporanpokja4', 'kesehatan1', 'kelestarian1', 'perencanaan1', 'laporanpokja41', 'tanggal', 'tanggal2', 'ketua', 'wakil'));
-        } elseif ($request->has('search2')) {
-            $janu = 1;
-            $jan = Galeri::whereMonth('created_at', $janu)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+        $ketua = Ttd::where('jabatan', 'Ketua')->where('pokja', 'Kelompok Kerja IV')->get();
+        $wakil = Ttds::where('jabatan', 'Wakil Ketua I')->get();
 
-            $febr = 2;
-            $feb = Galeri::whereMonth('created_at', $febr)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+        $namaBulan = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+            '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+            '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+            '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+        ];
 
-            $mare = 3;
-            $mar = Galeri::whereMonth('created_at', $mare)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+        // =====================================
+        // JIKA CETAK PERBULAN
+        // =====================================
+        if ($tipeCetak == 'perbulan') {
+            if ($bulan) {
+                $query->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
+            }
+            
+            $allData = $query->orderBy('created_at', 'ASC')->get();
 
-            $apri = 4;
-            $apr = Galeri::whereMonth('created_at', $apri)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+            $kesehatan = $allData->where('bidang', 'Kesehatan');
+            $kelestarian = $allData->where('bidang', 'Kelestarian Lingkungan Hidup');
+            $perencanaan = $allData->where('bidang', 'Perencanaan Sehat');
+            $laporanpokja4 = $allData->filter(function($item) {
+                return in_array($item->bidang, ['Kader Pokja 4', 'Kader Pokja IV']);
+            });
+            $inovasi = $allData->whereIn('bidang', ['Inovasi Prioritas', 'Inovasi Unggulan']);
+            
+            $kesehatan1 = $kesehatan;
+            $kelestarian1 = $kelestarian;
+            $perencanaan1 = $perencanaan;
+            $laporanpokja41 = $laporanpokja4;
+            $inovasi1 = $inovasi;
 
-            $meii = 5;
-            $mei = Galeri::whereMonth('created_at', $meii)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+            $tanggal = $namaBulan[$bulan] ?? 'Bulan Tidak Dikenali';
+            $tanggal2 = $tahun;
 
-            $juni = 6;
-            $jun = Galeri::whereMonth('created_at', $juni)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+            return view('backend.cetak_galeri_bulan_pokja4', compact(
+                'kesehatan', 'kelestarian', 'perencanaan', 'laporanpokja4', 'inovasi',
+                'kesehatan1', 'kelestarian1', 'perencanaan1', 'laporanpokja41', 'inovasi1',
+                'tanggal', 'tanggal2', 'ketua', 'wakil'
+            ));
+        } 
+        
+        // =====================================
+        // JIKA CETAK TAHUNAN
+        // =====================================
+        else {
+            $query->whereYear('created_at', $tahun);
+            $allData = $query->orderBy('created_at', 'ASC')->get();
 
-            $juli = 7;
-            $jul = Galeri::whereMonth('created_at', $juli)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
+            $jan = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 1);
+            $feb = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 2);
+            $mar = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 3);
+            $apr = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 4);
+            $mei = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 5);
+            $jun = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 6);
+            $jul = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 7);
+            $agu = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 8);
+            $sep = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 9);
+            $okt = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 10);
+            $nov = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 11);
+            $des = $allData->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->month == 12);
 
-            $agus = 8;
-            $agu = Galeri::whereMonth('created_at', $agus)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-
-            $sept = 9;
-            $sep = Galeri::whereMonth('created_at', $sept)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-
-            $okto = 10;
-            $okt = Galeri::whereMonth('created_at', $okto)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-
-            $nove = 11;
-            $nov = Galeri::whereMonth('created_at', $nove)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-
-            $dese = 12;
-            $des = Galeri::whereMonth('created_at', $dese)->where('created_at', 'LIKE', '%' . $request->search2 . '%')->where('pokja', 'pokja I')->where('status', 'Upload')->orderBy('created_at', 'ASC')->get();
-
-            $currentDate = Carbon::now();
-            $formattedDate = $currentDate->isoFormat('dddd, D MMMM YYYY');
-            $tanggal = $request->input('search2');
-
-            $tanggal2 = $request->input('search2');
-
-            $ketua = Ttd::where('jabatan', 'Ketua')->where('pokja', 'Kelompok Kerja IV')->get();
-            $wakil = Ttds::where('jabatan', 'Wakil Ketua I')->get();
+            $tanggal = $tahun;
+            $tanggal2 = $tahun;
 
             return view('backend.cetak_galeri_tahun_pokja4', compact(
-                'jan',
-                'feb',
-                'mar',
-                'apr',
-                'mei',
-                'jun',
-                'jul',
-                'agu',
-                'sep',
-                'okt',
-                'nov',
-                'des',
-                'tanggal',
-                'tanggal2',
-                'ketua',
-                'wakil'
+                'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des', 
+                'tanggal', 'tanggal2', 'ketua', 'wakil'
             ));
-        } else {
         }
     }
 }

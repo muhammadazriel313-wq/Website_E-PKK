@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Cetak Laporan Perbulan - Bidang Umum</title>
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px; /* Dikecilkan sedikit agar muat di kertas cetak */
+            font-size: 12px;
+            /* Dikecilkan sedikit agar muat di kertas cetak */
         }
 
-        th, td {
+        th,
+        td {
             padding: 6px;
             border: 1px solid black;
         }
@@ -68,7 +71,7 @@
             width: 100%;
             border: none;
             padding: 5px;
-            margin-top: 30px; 
+            margin-top: 30px;
             box-sizing: border-box;
             display: grid;
             grid-template-columns: 50% 50%;
@@ -82,81 +85,82 @@
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="header">
-        <div class="logo-container">
-            <img class="logo" src="{{ asset('frontend/assets/img/favicon.png') }}" alt="Logo PKK">
-            <div>
-                <h1>Pemberdayaan Kesejahteraan Keluarga</h1>
-                <p>Kab. Nganjuk, Jawa Timur</p>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img class="logo" src="{{ asset('frontend/assets/img/favicon.png') }}" alt="Logo PKK">
+                <div>
+                    <h1>Pemberdayaan Kesejahteraan Keluarga</h1>
+                    <p>Kab. Nganjuk, Jawa Timur</p>
+                </div>
             </div>
+            <h2>Laporan Perbulan</h2>
+            {{-- Pengaman jika $tanggal kosong, otomatis pakai bulan-tahun saat ini --}}
+            <h4>Bulan : {{ $tanggal ?? date('F Y') }}</h4>
         </div>
-        <h2>Laporan Perbulan - Bidang Umum</h2>
-        {{-- Pengaman jika $tanggal kosong, otomatis pakai bulan-tahun saat ini --}}
-        <h4>Bulan : {{ $tanggal ?? date('m-Y') }}</h4>
-    </div>
 
-    <div class="separator"></div>
-    <div class ="signature">
-        {{-- Pengaman jika $formattedDate kosong --}}
-        <p>Tanggal Cetak : {{ $formattedDate ?? date('d F Y') }}</p>
-    </div>
+        <div class="separator"></div>
+        <div class="signature">
+            {{-- Pengaman jika $formattedDate kosong --}}
+            <p>Tanggal Cetak : {{ $formattedDate ?? date('d F Y') }}</p>
+        </div>
 
-    <table align="center">
-        <thead>
-            <tr style="background: #e0f2fe;">
-                <th align="center"><b>NO</b></th>
-                <th align="center"><b>Kecamatan</b></th>
-                <th align="center"><b>Dusun Lingkungan</b></th>
-                <th align="center"><b>PKK RW</b></th>
-                <th align="center"><b>Desa Wisma</b></th>
-                <th align="center"><b>KRT</b></th>
-                <th align="center"><b>KK</b></th>
-                <th align="center"><b>Jiwa Laki</b></th>
-                <th align="center"><b>Jiwa Perempuan</b></th>
-                <th align="center"><b>Anggota Laki</b></th>
-                <th align="center"><b>Anggota Perempuan</b></th>
-                <th align="center"><b>Umum Laki</b></th>
-                <th align="center"><b>Umum Perempuan</b></th>
-                <th align="center"><b>Khusus Laki</b></th>
-                <th align="center"><b>Khusus Perempuan</b></th>
-                <th align="center"><b>Honorer Laki</b></th>
-                <th align="center"><b>Honorer Perempuan</b></th>
-                <th align="center"><b>Bantuan Laki</b></th>
-                <th align="center"><b>Bantuan Perempuan</b></th>
-            </tr>
-        </thead>
+        <table align="center">
+            <thead>
+                <tr style="background: #e0f2fe;">
+                    <th align="center"><b>NO</b></th>
+                    <th align="center"><b>Kecamatan</b></th>
+                    <th align="center"><b>Dusun Lingkungan</b></th>
+                    <th align="center"><b>PKK RW</b></th>
+                    <th align="center"><b>Desa Wisma</b></th>
+                    <th align="center"><b>KRT</b></th>
+                    <th align="center"><b>KK</b></th>
+                    <th align="center"><b>Jiwa Laki</b></th>
+                    <th align="center"><b>Jiwa Perempuan</b></th>
+                    <th align="center"><b>Anggota Laki</b></th>
+                    <th align="center"><b>Anggota Perempuan</b></th>
+                    <th align="center"><b>Umum Laki</b></th>
+                    <th align="center"><b>Umum Perempuan</b></th>
+                    <th align="center"><b>Khusus Laki</b></th>
+                    <th align="center"><b>Khusus Perempuan</b></th>
+                    <th align="center"><b>Honorer Laki</b></th>
+                    <th align="center"><b>Honorer Perempuan</b></th>
+                    <th align="center"><b>Bantuan Laki</b></th>
+                    <th align="center"><b>Bantuan Perempuan</b></th>
+                </tr>
+            </thead>
 
-        <tbody>
-            @php
+            <tbody>
+                @php
                 $no = 1;
                 // INISIALISASI VARIABEL TOTAL UNTUK DIHITUNG OTOMATIS
                 $t_pkk_rw = 0; $t_desa_wisma = 0; $t_krt = 0; $t_kk = 0;
                 $t_jiwa_l = 0; $t_jiwa_p = 0; $t_anggota_l = 0; $t_anggota_p = 0;
                 $t_umum_l = 0; $t_umum_p = 0; $t_khusus_l = 0; $t_khusus_p = 0;
                 $t_honorer_l = 0; $t_honorer_p = 0; $t_bantuan_l = 0; $t_bantuan_p = 0;
-            @endphp
+                @endphp
 
-            @forelse($bidangumum as $item)
+                @forelse($bidangumum as $item)
                 @php
-                    // PENJUMLAHAN OTOMATIS SAAT LOOPING (TIDAK PERLU $total1 DLL)
-                    $t_pkk_rw += $item->PKK_RW ?? 0;
-                    $t_desa_wisma += $item->desa_wisma ?? 0;
-                    $t_krt += $item->KRT ?? 0;
-                    $t_kk += $item->KK ?? 0;
-                    $t_jiwa_l += $item->jiwa_laki ?? 0;
-                    $t_jiwa_p += $item->jiwa_perempuan ?? 0;
-                    $t_anggota_l += $item->anggota_laki ?? 0;
-                    $t_anggota_p += $item->anggota_perempuan ?? 0;
-                    $t_umum_l += $item->umum_laki ?? 0;
-                    $t_umum_p += $item->umum_perempuan ?? 0;
-                    $t_khusus_l += $item->khusus_laki ?? 0;
-                    $t_khusus_p += $item->khusus_perempuan ?? 0;
-                    $t_honorer_l += $item->honorer_laki ?? 0;
-                    $t_honorer_p += $item->honorer_perempuan ?? 0;
-                    $t_bantuan_l += $item->bantuan_laki ?? 0;
-                    $t_bantuan_p += $item->bantuan_perempuan ?? 0;
+                // PENJUMLAHAN OTOMATIS SAAT LOOPING (TIDAK PERLU $total1 DLL)
+                $t_pkk_rw += $item->PKK_RW ?? 0;
+                $t_desa_wisma += $item->desa_wisma ?? 0;
+                $t_krt += $item->KRT ?? 0;
+                $t_kk += $item->KK ?? 0;
+                $t_jiwa_l += $item->jiwa_laki ?? 0;
+                $t_jiwa_p += $item->jiwa_perempuan ?? 0;
+                $t_anggota_l += $item->anggota_laki ?? 0;
+                $t_anggota_p += $item->anggota_perempuan ?? 0;
+                $t_umum_l += $item->umum_laki ?? 0;
+                $t_umum_p += $item->umum_perempuan ?? 0;
+                $t_khusus_l += $item->khusus_laki ?? 0;
+                $t_khusus_p += $item->khusus_perempuan ?? 0;
+                $t_honorer_l += $item->honorer_laki ?? 0;
+                $t_honorer_p += $item->honorer_perempuan ?? 0;
+                $t_bantuan_l += $item->bantuan_laki ?? 0;
+                $t_bantuan_p += $item->bantuan_perempuan ?? 0;
                 @endphp
                 <tr>
                     <td align="center">{{ $no++ }}</td>
@@ -179,91 +183,92 @@
                     <td align="center">{{ $item->bantuan_laki }}</td>
                     <td align="center">{{ $item->bantuan_perempuan }}</td>
                 </tr>
-            @empty
+                @empty
                 <tr>
                     <td colspan="19" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
-            @endforelse
-        </tbody>
+                @endforelse
+            </tbody>
 
-        <tfoot>
-            <tr style="background-color: #f2f2f2;">
-                <td colspan="3" align="center"><b>TOTAL KESELURUHAN</b></td>
-                <td align="center"><b>{{ $t_pkk_rw }}</b></td>
-                <td align="center"><b>{{ $t_desa_wisma }}</b></td>
-                <td align="center"><b>{{ $t_krt }}</b></td>
-                <td align="center"><b>{{ $t_kk }}</b></td>
-                <td align="center"><b>{{ $t_jiwa_l }}</b></td>
-                <td align="center"><b>{{ $t_jiwa_p }}</b></td>
-                <td align="center"><b>{{ $t_anggota_l }}</b></td>
-                <td align="center"><b>{{ $t_anggota_p }}</b></td>
-                <td align="center"><b>{{ $t_umum_l }}</b></td>
-                <td align="center"><b>{{ $t_umum_p }}</b></td>
-                <td align="center"><b>{{ $t_khusus_l }}</b></td>
-                <td align="center"><b>{{ $t_khusus_p }}</b></td>
-                <td align="center"><b>{{ $t_honorer_l }}</b></td>
-                <td align="center"><b>{{ $t_honorer_p }}</b></td>
-                <td align="center"><b>{{ $t_bantuan_l }}</b></td>
-                <td align="center"><b>{{ $t_bantuan_p }}</b></td>
-            </tr>
-        </tfoot>
-    </table>
+            <tfoot>
+                <tr style="background-color: #f2f2f2;">
+                    <td colspan="3" align="center"><b>TOTAL KESELURUHAN</b></td>
+                    <td align="center"><b>{{ $t_pkk_rw }}</b></td>
+                    <td align="center"><b>{{ $t_desa_wisma }}</b></td>
+                    <td align="center"><b>{{ $t_krt }}</b></td>
+                    <td align="center"><b>{{ $t_kk }}</b></td>
+                    <td align="center"><b>{{ $t_jiwa_l }}</b></td>
+                    <td align="center"><b>{{ $t_jiwa_p }}</b></td>
+                    <td align="center"><b>{{ $t_anggota_l }}</b></td>
+                    <td align="center"><b>{{ $t_anggota_p }}</b></td>
+                    <td align="center"><b>{{ $t_umum_l }}</b></td>
+                    <td align="center"><b>{{ $t_umum_p }}</b></td>
+                    <td align="center"><b>{{ $t_khusus_l }}</b></td>
+                    <td align="center"><b>{{ $t_khusus_p }}</b></td>
+                    <td align="center"><b>{{ $t_honorer_l }}</b></td>
+                    <td align="center"><b>{{ $t_honorer_p }}</b></td>
+                    <td align="center"><b>{{ $t_bantuan_l }}</b></td>
+                    <td align="center"><b>{{ $t_bantuan_p }}</b></td>
+                </tr>
+            </tfoot>
+        </table>
 
-    {{-- KODE PENGAMAN: Menarik data langsung dari database jika Controller lupa mengirimnya --}}
-    @php
+        {{-- KODE PENGAMAN: Menarik data langsung dari database jika Controller lupa mengirimnya --}}
+        @php
         if (!isset($wakil)) {
-            $wakil = \Illuminate\Support\Facades\DB::table('ttds')
-                        ->where('pokja', 'Bidang Umum')
-                        ->get();
+        $wakil = \Illuminate\Support\Facades\DB::table('ttds')
+        ->where('pokja', 'Bidang Umum')
+        ->get();
         }
 
         if (!isset($ketua)) {
-            $ketua = \Illuminate\Support\Facades\DB::table('ttds')
-                        ->where('jabatan', 'Ketua')
-                        ->whereNull('pokja')
-                        ->get();
+        $ketua = \Illuminate\Support\Facades\DB::table('ttds')
+        ->where('jabatan', 'Ketua')
+        ->whereNull('pokja')
+        ->get();
         }
-    @endphp
+        @endphp
 
-    <div class="container-grid">
-        <div style="text-align: left;">
-            <div style="text-align: center;">
-                @forelse($wakil as $wakill)
+        <div class="container-grid">
+            <div style="text-align: left;">
+                <div style="text-align: center;">
+                    @forelse($wakil as $wakill)
                     <a>Mengetahui</a><br>
                     <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
                     <a>{{ $wakill->jabatan }}</a><br><br><br><br>
                     <a style="text-decoration: underline; font-weight: bold;">{{ $wakill->nama_terang }}</a>
-                @empty
+                    @empty
                     <a>Mengetahui</a><br>
                     <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
                     <a>Sekretaris / Wakil Ketua</a><br><br><br><br>
                     <a>( ......................................... )</a>
-                @endforelse
+                    @endforelse
+                </div>
             </div>
-        </div>
 
-        <div style="text-align: right;">
-            <div style="text-align: center;">
-                @forelse($ketua as $ketuaa)
+            <div style="text-align: right;">
+                <div style="text-align: center;">
+                    @forelse($ketua as $ketuaa)
                     <a>Nganjuk, {{ date('d F Y') }}</a><br>
                     <a>{{ $ketuaa->pokja ?? 'Ketua Umum' }}</a><br>
                     <a>{{ $ketuaa->jabatan }}</a><br><br><br><br>
                     <a style="text-decoration: underline; font-weight: bold;">{{ $ketuaa->nama_terang }}</a>
-                @empty
+                    @empty
                     <a>Nganjuk, {{ date('d F Y') }}</a><br>
                     <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
                     <a>Ketua</a><br><br><br><br>
                     <a>( ......................................... )</a>
-                @endforelse
+                    @endforelse
+                </div>
             </div>
-         </div>
-    </div>
+        </div>
 
-    <script>
-        window.onload = function() {
-            window.print();
-        };
-    </script>
-</div>
+        <script>
+            window.onload = function() {
+                window.print();
+            };
+        </script>
+    </div>
 </body>
+
 </html>

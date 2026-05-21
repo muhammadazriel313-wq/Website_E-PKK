@@ -77,7 +77,6 @@
         h3 {
             background-color: #f8f9fa;
             padding: 10px;
-            border-left: 5px solid #000;
             font-size: 16px;
         }
 
@@ -98,17 +97,16 @@
                     <p>Kab. Nganjuk, Jawa Timur</p>
                 </div>
             </div>
-            <h2>Laporan Pertahun - Kelompok Kerja (POKJA) 3</h2>
+            <h2>Laporan Pertahun</h2>
             <h4>Tahun : {{ $tanggal ?? date('Y') }}</h4>
         </div>
 
         <div class="separator"></div>
         <div class="signature">
-            <p>Tanggal Cetak : {{ $formattedDate ?? date('d F Y') }}</p>
+            <p>Tanggal Cetak : {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
         </div>
 
         {{-- JURUS KEBAL SAKLAR TABEL --}}
-        {{-- JURUS KEBAL ANTI ERROR --}}
         @php
         $bidang = $bidang ?? 'semua';
         $pangan = $pangan ?? [];
@@ -380,46 +378,64 @@
         @endif
 
         @php
-        if (!isset($wakil) || count($wakil) == 0) {
-        $wakil = \Illuminate\Support\Facades\DB::table('ttds')->where('pokja', 'Kelompok Kerja III')
-        ->where(function($q) { $q->where('jabatan', 'like', '%Wakil%')->orWhere('jabatan', 'like', '%Sekretaris%'); })->get();
-        }
-        if (!isset($ketua) || count($ketua) == 0) {
-        $ketua = \Illuminate\Support\Facades\DB::table('ttds')->where('pokja', 'Kelompok Kerja III')->where('jabatan', 'Ketua')->get();
-        }
+
+        $wakil = \Illuminate\Support\Facades\DB::table('ttds')
+        ->whereNull('pokja')
+        ->first();
+
+        $ketua = \Illuminate\Support\Facades\DB::table('ttds')
+        ->where('pokja', 'Kelompok Kerja III')
+        ->where('jabatan', 'Ketua')
+        ->first();
+
         @endphp
 
+        
         <div class="container-grid">
+
+            {{-- KIRI --}}
             <div style="text-align: left;">
                 <div style="text-align: center;">
-                    @forelse($wakil as $wakill)
+
+                    @if($wakil)
+
                     <a>Mengetahui</a><br>
                     <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                    <a>{{ $wakill->jabatan }}</a><br><br><br><br>
-                    <a style="text-decoration: underline; font-weight: bold;">{{ $wakill->nama_terang }}</a>
-                    @empty
-                    <a>Mengetahui</a><br>
-                    <a>TIM PENGGERAK PKK KABUPATEN NGANJUK</a><br>
-                    <a>Wakil Ketua</a><br><br><br><br>
-                    <a>( ......................................... )</a>
-                    @endforelse
+                    <a>{{ $wakil->jabatan }}</a><br><br><br><br>
+
+                    <a style="font-weight: bold; text-decoration: underline;">
+                        {{ $wakil->nama_terang }}
+                    </a>
+
+                    @endif
+
                 </div>
             </div>
+
+
+            {{-- KANAN --}}
             <div style="text-align: right;">
                 <div style="text-align: center;">
-                    @forelse($ketua as $ketuaa)
-                    <a>Nganjuk, {{ date('d F Y') }}</a><br>
-                    <a>{{ $ketuaa->pokja ?? 'Kelompok Kerja III' }}</a><br>
-                    <a>{{ $ketuaa->jabatan }}</a><br><br><br><br>
-                    <a style="text-decoration: underline; font-weight: bold;">{{ $ketuaa->nama_terang }}</a>
-                    @empty
-                    <a>Nganjuk, {{ date('d F Y') }}</a><br>
-                    <a>Kelompok Kerja III</a><br>
-                    <a>Ketua</a><br><br><br><br>
-                    <a>( ......................................... )</a>
-                    @endforelse
+
+                    @if($ketua)
+
+                    <a>
+                        Nganjuk,
+                        {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+                    </a><br>
+
+                    <a>{{ $ketua->pokja }}</a><br>
+                    <a>{{ $ketua->jabatan }}</a><br><br><br><br>
+
+                    <a style="font-weight: bold; text-decoration: underline;">
+                        {{ $ketua->nama_terang }}
+                    </a>
+
+                    @endif
+
                 </div>
             </div>
+
         </div>
 
         <script>

@@ -132,13 +132,14 @@
                     <th align="center"><b>Lumbung Hidup</b></th>
                     <th align="center"><b>Toga</b></th>
                     <th align="center"><b>Tanaman Keras</b></th>
+                    <th align="center"><b>Tanaman Lainnya</b></th>
                 </tr>
             </thead>
             <tbody>
                 @php
                 $no_png = 1;
                 $t_beras = 0; $t_nberas = 0; $t_ternak = 0; $t_ikan = 0;
-                $t_warung = 0; $t_lumbung = 0; $t_toga = 0; $t_keras = 0;
+                $t_warung = 0; $t_lumbung = 0; $t_toga = 0; $t_keras = 0; $t_lainnya = 0;
                 @endphp
                 @forelse($pangan as $item)
                 @php
@@ -146,22 +147,24 @@
                 $t_ternak += $item->peternakan ?? 0; $t_ikan += $item->perikanan ?? 0;
                 $t_warung += $item->warung_hidup ?? 0; $t_lumbung += $item->lumbung_hidup ?? 0;
                 $t_toga += $item->toga ?? 0; $t_keras += $item->tanaman_keras ?? 0;
+                $t_lainnya += $item->tanaman_lainnya ?? 0;
                 @endphp
                 <tr>
                     <td align="center">{{ $no_png++ }}</td>
                     <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->beras }}</td>
-                    <td align="center">{{ $item->non_beras }}</td>
-                    <td align="center">{{ $item->peternakan }}</td>
-                    <td align="center">{{ $item->perikanan }}</td>
-                    <td align="center">{{ $item->warung_hidup }}</td>
-                    <td align="center">{{ $item->lumbung_hidup }}</td>
-                    <td align="center">{{ $item->toga }}</td>
-                    <td align="center">{{ $item->tanaman_keras }}</td>
+                    <td align="center">{{ $item->beras ?? 0 }}</td>
+                    <td align="center">{{ $item->non_beras ?? 0 }}</td>
+                    <td align="center">{{ $item->peternakan ?? 0 }}</td>
+                    <td align="center">{{ $item->perikanan ?? 0 }}</td>
+                    <td align="center">{{ $item->warung_hidup ?? 0 }}</td>
+                    <td align="center">{{ $item->lumbung_hidup ?? 0 }}</td>
+                    <td align="center">{{ $item->toga ?? 0 }}</td>
+                    <td align="center">{{ $item->tanaman_keras ?? 0 }}</td>
+                    <td align="center">{{ $item->tanaman_lainnya ?? 0 }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="11" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
@@ -176,6 +179,7 @@
                     <td align="center"><b>{{ $t_lumbung }}</b></td>
                     <td align="center"><b>{{ $t_toga }}</b></td>
                     <td align="center"><b>{{ $t_keras }}</b></td>
+                    <td align="center"><b>{{ $t_lainnya }}</b></td>
                 </tr>
             </tfoot>
         </table>

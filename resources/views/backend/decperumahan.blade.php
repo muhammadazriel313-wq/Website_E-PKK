@@ -136,18 +136,21 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">NO</th>
                 @if (Auth::guard('web')->check())
-                  <th class="text-center align-middle" scope="col">Kecamatan</th>
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th class="text-center align-middle" rowspan="2" scope="col">KECAMATAN</th>
+                  <th class="text-center align-middle" rowspan="2" scope="col">DESA</th>
                 @elseif (Auth::guard('pengguna')->check())
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th class="text-center align-middle" rowspan="2" scope="col">DESA</th>
                 @endif
-                <th class="text-center align-middle" scope="col">Layak Huni</th>
-                <th class="text-center align-middle" scope="col">Tidak Layak</th>
-                <th scope="col" class="text-center align-middle">Status</th>
-                <th scope="col" class="text-center align-middle">Tanggal</th>
-                <th scope="col" class="text-center align-middle">Aksi</th>
+                <th scope="col" colspan="2" class="text-center header-group-title" style="background-color: #fff7ed; color: #9a3412;">JUMLAH RUMAH</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">STATUS</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">TANGGAL</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">AKSI</th>
+              </tr>
+              <tr>
+                <th class="text-center header-sub-title" scope="col" style="background-color: #fefce8;">SEHAT & LAYAK HUNI</th>
+                <th class="text-center header-sub-title" scope="col" style="background-color: #fefce8;">TIDAK SEHAT & TIDAK LAYAK HUNI</th>
               </tr>
             </thead>
             <tbody>

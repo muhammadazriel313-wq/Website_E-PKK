@@ -28,6 +28,16 @@ class OtpController extends Controller
             return back()->withErrors(['phone_number' => 'Nomor tidak ditemukan.']);
         }
 
+        // BYPASS OTP - HAPUS SETELAH PRESENTASI
+        if (env('OTP_BYPASS', false)) {
+            $otp = 1234;
+            $user->kode_otp = $otp;
+            $user->updated_at = now();
+            $user->save();
+
+            return redirect()->route('otp.verify.form')->with('phone_number', $request->phone_number);
+        }
+
         $otp = rand(1000, 9999);
         $user->kode_otp = $otp;
         $user->updated_at = now();

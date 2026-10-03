@@ -143,12 +143,12 @@
                 <tr>
                     <td align="center">{{ $no_ph++ }}</td>
                     <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->kisah_kegiatan }}</td><td align="center">{{ $item->kisah_vol }}</td><td align="center">{{ $item->kisah_metode }}</td><td align="center">{{ $item->kisah_sasaran }}</td>
-                    <td align="center">{{ $item->krisan_kegiatan }}</td><td align="center">{{ $item->krisan_vol }}</td><td align="center">{{ $item->krisan_metode }}</td><td align="center">{{ $item->krisan_sasaran }}</td>
-                    <td align="center">{{ $item->kilas_kegiatan }}</td><td align="center">{{ $item->kilas_vol }}</td><td align="center">{{ $item->kilas_metode }}</td><td align="center">{{ $item->kilas_sasaran }}</td>
-                    <td align="center">{{ $item->kiat_kegiatan }}</td><td align="center">{{ $item->kiat_vol }}</td><td align="center">{{ $item->kiat_metode }}</td><td align="center">{{ $item->kiat_sasaran }}</td>
-                    <td align="center">{{ $item->kisak_kegiatan }}</td><td align="center">{{ $item->kisak_vol }}</td><td align="center">{{ $item->kisak_metode }}</td><td align="center">{{ $item->kisak_sasaran }}</td>
-                    <td align="center">{{ $item->pkbn_kegiatan }}</td><td align="center">{{ $item->pkbn_vol }}</td><td align="center">{{ $item->pkbn_metode }}</td><td align="center">{{ $item->pkbn_sasaran }}</td>
+                    <td align="center">{{ $item->kisah_kegiatan ?? '-' }}</td><td align="center">{{ $item->kisah_vol ?? '-' }}</td><td align="center">{{ $item->kisah_metode ?? '-' }}</td><td align="center">{{ $item->kisah_sasaran ?? '-' }}</td>
+                    <td align="center">{{ $item->krisan_kegiatan ?? '-' }}</td><td align="center">{{ $item->krisan_vol ?? '-' }}</td><td align="center">{{ $item->krisan_metode ?? '-' }}</td><td align="center">{{ $item->krisan_sasaran ?? '-' }}</td>
+                    <td align="center">{{ $item->kilas_kegiatan ?? '-' }}</td><td align="center">{{ $item->kilas_vol ?? '-' }}</td><td align="center">{{ $item->kilas_metode ?? '-' }}</td><td align="center">{{ $item->kilas_sasaran ?? '-' }}</td>
+                    <td align="center">{{ $item->kiat_kegiatan ?? '-' }}</td><td align="center">{{ $item->kiat_vol ?? '-' }}</td><td align="center">{{ $item->kiat_metode ?? '-' }}</td><td align="center">{{ $item->kiat_sasaran ?? '-' }}</td>
+                    <td align="center">{{ $item->kisak_kegiatan ?? '-' }}</td><td align="center">{{ $item->kisak_vol ?? '-' }}</td><td align="center">{{ $item->kisak_metode ?? '-' }}</td><td align="center">{{ $item->kisak_sasaran ?? '-' }}</td>
+                    <td align="center">{{ $item->pkbn_kegiatan ?? '-' }}</td><td align="center">{{ $item->pkbn_vol ?? '-' }}</td><td align="center">{{ $item->pkbn_metode ?? '-' }}</td><td align="center">{{ $item->pkbn_sasaran ?? '-' }}</td>
                 </tr>
                 @empty
                 <tr>

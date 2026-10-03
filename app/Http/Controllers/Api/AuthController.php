@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -406,6 +406,16 @@ class AuthController extends Controller
                 'phone' => 'required',
                 'otp' => 'required'
             ]);
+
+            // BYPASS OTP - HAPUS SETELAH PRESENTASI
+            if (env('OTP_BYPASS', false)) {
+                return response()->json([
+                    'success' => true,
+                    'bypass' => true,
+                    'message' => 'OTP bypassed for presentation',
+                    'response' => ['status' => true, 'target' => $request->phone]
+                ]);
+            }
 
             $phone = $request->phone;
             $otp = $request->otp;

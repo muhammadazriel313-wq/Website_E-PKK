@@ -98,82 +98,102 @@
 
                 @csrf
                 @method('PUT')
+
                 <div class="form-outline mb-4">
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="id_kader_pokja3" class="form-label">ID Laporan Kader Pokja 3</label>
-                    <input type="text" name="id_kader_pokja3" id="id_kader_pokja3" class="form-control" required
-                      readonly oninvalid="this.setCustomValidity('Harap lengkapi id laporan kesehat')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->id_kader_pokja3 }}" />
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-outline mb-3">
+                        <label for="id_kader_pokja3" class="form-label fw-semibold text-secondary">
+                          <i class="bi bi-hash me-1 text-primary"></i> ID Laporan
+                        </label>
+                        <input type="text" name="id_kader_pokja3" id="id_kader_pokja3" class="form-control bg-light" required readonly value="{{ $data->id_kader_pokja3 }}" />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-outline mb-3">
+                        <label for="tanggal" class="form-label fw-semibold text-secondary">
+                          <i class="bi bi-calendar3 me-1 text-primary"></i> Tanggal Pengiriman
+                        </label>
+                        <input type="text" name="tanggal" id="tanggal" class="form-control bg-light" required readonly value="{{ \Carbon\Carbon::parse($data->created_at)->translatedFormat('d F Y, H:i') }}" />
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="pangan" class="form-label">Pangan</label>
-                    <input type="text" name="pangan" id="pangan" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi kategori laporan')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->pangan }}" />
+                  {{-- SECTION: JUMLAH KADER POKJA 3 --}}
+                  <h5 class="fw-bold mt-3 mb-3 pb-2 border-bottom" style="font-size: 16px; color: #1e293b;">
+                    <i class="bi bi-people-fill me-2" style="color: #0284c7;"></i> Jumlah Kader Pokja 3
+                  </h5>
+
+                  <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                      <div class="p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                        <label for="pangan" class="form-label fw-semibold text-dark mb-1">
+                          <i class="bi bi-basket me-1 text-warning"></i> Kader Pangan
+                        </label>
+                        <input type="text" name="pangan" id="pangan" class="form-control fw-bold fs-5 text-primary text-center bg-white" required readonly value="{{ $data->pangan ?? 0 }}" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                        <label for="sandang" class="form-label fw-semibold text-dark mb-1">
+                          <i class="bi bi-tag me-1 text-danger"></i> Kader Sandang
+                        </label>
+                        <input type="text" name="sandang" id="sandang" class="form-control fw-bold fs-5 text-primary text-center bg-white" required readonly value="{{ $data->sandang ?? 0 }}" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                        <label for="tata_laksana_rumah" class="form-label fw-semibold text-dark mb-1">
+                          <i class="bi bi-house-door me-1 text-success"></i> Kader Tata Laksana RT
+                        </label>
+                        <input type="text" name="tata_laksana_rumah" id="tata_laksana_rumah" class="form-control fw-bold fs-5 text-primary text-center bg-white" required readonly value="{{ $data->tata_laksana_rumah ?? 0 }}" />
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="sandang" class="form-label">Sandang</label>
-                    <input type="text" name="sandang" id="sandang" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah posyandu')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->sandang }}" />
-                  </div>
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="tata_laksana_rumah" class="form-label">Tata Laksana Rumah</label>
-                    <input type="text" name="tata_laksana_rumah" id="tata_laksana_rumah" class="form-control" required
-                      readonly oninvalid="this.setCustomValidity('Harap lengkapi jumlah tata laksana rumah')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->tata_laksana_rumah }}" />
-                  </div>
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="id_user" class="form-label">Id Pengguna</label>
-                    <input type="text" name="id_user" id="id_user" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi id pengguna')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->id_user }}" />
-                  </div>
+                  {{-- SECTION: STATUS & CATATAN --}}
+                  <h5 class="fw-bold mt-4 mb-3 pb-2 border-bottom" style="font-size: 16px; color: #1e293b;">
+                    <i class="bi bi-clipboard-check me-2" style="color: #4154f1;"></i> Status Verifikasi & Catatan
+                  </h5>
 
                   <div id="statusAlert" class="alert alert-danger d-none" role="alert">
                     Harap pilih status laporan.
                   </div>
 
-                  <div class="form-outline mb-4">
-                    <label for="status" class="form-label">Status</label>
-                    <select name="status" class="datepicker-trigger form-control hasDatepicker"
-                      onchange="exibeMsg(this.value);">
-                      <option value="">--Pilih--</option>
-                      <option value="Revisi">Revisi</option>
-                      @if(Auth::guard('pengguna')->check())
-              <option value="Disetujui1">Disetujui (Kecamatan)</option>
-            @else
-              <option value="Disetujui2">Disetujui (Admin)</option>
-            @endif
-                    </select>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="form-outline mb-3">
+                        <label for="status" class="form-label fw-semibold">Pilih Status Tindakan <span class="text-danger">*</span></label>
+                        <select name="status" class="form-select form-select-lg" required>
+                          <option value="">-- Pilih Status --</option>
+                          <option value="Revisi">Revisi</option>
+                          @if(Auth::guard('pengguna')->check())
+                            <option value="Disetujui1">Disetujui (Kecamatan)</option>
+                          @else
+                            <option value="Disetujui2">Disetujui (Kabupaten)</option>
+                          @endif
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-outline mb-3">
+                        <label for="catatan" class="form-label fw-semibold">Catatan Review</label>
+                        <input type="text" name="catatan" id="catatan" class="form-control form-control-lg" placeholder="Tuliskan catatan jika perlu perbaikan..." value="{{ $data->catatan }}" />
+                        <small class="text-muted d-block mt-1">*Catatan wajib diisi jika status laporan adalah <b>Revisi</b>.</small>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="form-outline mb-1 mt-3">
-                    <label for="catatan" class="form-label">Catatan</label>
-                    <input type="text" name="catatan" id="catatan" class="form-control" placeholder="Masukkan Catatan"
-                      value="{{ $data->catatan }}" />
-                  </div>
-                  <p class="mb-4">*Jika laporan perlu di revisi maka bisa menambahkan catatan dan catatan hanya di isi
-                    jika status laporan menjadi <b>Revisi</b></p>
+                  <input type="hidden" name="id_user" value="{{ $data->id_user }}" />
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="tanggal" class="form-label">Tanggal</label>
-                    <input type="text" name="tanggal" id="tanggal" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi judul')" oninput="this.setCustomValidity('')"
-                      placeholder="Masukkan Judul" value="{{ $data->created_at }}" />
+                  <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary px-4 py-2 fw-semibold">Kembali</a>
+                    <button class="btn btn-primary px-4 py-2 fw-semibold" type="submit">
+                      <i class="bi bi-check-lg me-1"></i> Simpan Hasil Review
+                    </button>
                   </div>
-
-                  <div class="text-end pt-1 pb-1 mt-4">
-                    <button class="btn btn-success ps-xxl-5 pe-xxl-5 mr-auto background-blue-1 mb-2 fw-semibold fs-5"
-                      type="submit">Upload</button>
-                  </div>
+                </div>
 
               </form>
             </div>

@@ -155,21 +155,23 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">No</th>
                 
                 @if (Auth::guard('web')->check())
-                  <th class="text-center align-middle" scope="col">Kecamatan</th>
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th scope="col" rowspan="2" class="text-center align-middle">Kecamatan</th>
+                  <th scope="col" rowspan="2" class="text-center align-middle">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th scope="col" rowspan="2" class="text-center align-middle">Desa</th>
                 @endif
                 
-                <th class="text-center align-middle" scope="col">PKBN</th>
-                <th class="text-center align-middle" scope="col">PKDRT</th>
-                <th class="text-center align-middle" scope="col">Pola Asuh</th>
-                <th class="text-center align-middle" scope="col">Status</th>
-                <th class="text-center align-middle" scope="col">Tanggal</th>
-                <th class="text-center align-middle" scope="col">Aksi</th>
+                <th scope="col" colspan="2" class="text-center align-middle">JML KADER</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Aksi</th>
+              </tr>
+              <tr>
+                <th scope="col" class="text-center align-middle">Umum</th>
+                <th scope="col" class="text-center align-middle">Khusus</th>
               </tr>
             </thead>
             <tbody>
@@ -185,9 +187,8 @@
                     <td class="text-center">{{ $got1->nama_desa }}</td>
                   @endif
                   
-                  <td class="text-center">{{ $got1->PKBN ?? '0' }}</td>
-                  <td class="text-center">{{ $got1->PKDRT ?? '0' }}</td>
-                  <td class="text-center">{{ $got1->pola_asuh ?? '0' }}</td>
+                  <td class="text-center">{{ $got1->kader_umum ?? '0' }}</td>
+                  <td class="text-center">{{ $got1->kader_khusus ?? '0' }}</td>
                   
                   <td class="text-center">
                     @if(in_array(strtolower($got1->status), ['proses', 'revisi']))

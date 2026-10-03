@@ -8,7 +8,6 @@ use App\Models\LaporanPokja1;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Services\FirebaseService;
 
 class LaporanPokja1Controller extends Controller
 {
@@ -129,8 +128,8 @@ class LaporanPokja1Controller extends Controller
             ->leftJoin('users_mobile', 'laporan_gotong_royong.id_user', '=', 'users_mobile.id')
             ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
             ->select('laporan_gotong_royong.*', 'subdistrict.name as nama_kec')
-            ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
-            ->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
+            ->when($bulan, fn($q) => $q->whereMonth('laporan_gotong_royong.created_at', $bulan))
+            ->when($tahun, fn($q) => $q->whereYear('laporan_gotong_royong.created_at', $tahun))
             ->whereIn('status', ['Disetujui2', 'disetujui2'])
             ->get();
 
@@ -138,8 +137,8 @@ class LaporanPokja1Controller extends Controller
             ->leftJoin('users_mobile', 'laporan_penghayatan_n_pengamalan.id_user', '=', 'users_mobile.id')
             ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
             ->select('laporan_penghayatan_n_pengamalan.*', 'subdistrict.name as nama_kec')
-            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
-            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
+            ->when($bulan, fn($q) => $q->whereMonth('laporan_penghayatan_n_pengamalan.created_at', $bulan))
+            ->when($tahun, fn($q) => $q->whereYear('laporan_penghayatan_n_pengamalan.created_at', $tahun))
             ->whereIn('status', ['Disetujui2', 'disetujui2'])
             ->get();
 
@@ -147,8 +146,8 @@ class LaporanPokja1Controller extends Controller
             ->leftJoin('users_mobile', 'laporan_kader_pokja1.id_user', '=', 'users_mobile.id')
             ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
             ->select('laporan_kader_pokja1.*', 'subdistrict.name as nama_kec')
-            ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
-            ->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
+            ->when($bulan, fn($q) => $q->whereMonth('laporan_kader_pokja1.created_at', $bulan))
+            ->when($tahun, fn($q) => $q->whereYear('laporan_kader_pokja1.created_at', $tahun))
             ->whereIn('status', ['Disetujui2', 'disetujui2'])
             ->get();
 
@@ -168,8 +167,8 @@ class LaporanPokja1Controller extends Controller
         try {
             if ($bidang == 'gotongroyong') {
                 $data = DB::table('laporan_gotong_royong')
-                    ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
-                    ->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
+                    ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
+                    ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
                     ->whereIn('status', ['Disetujui2', 'disetujui2'])->get();
             } elseif ($bidang == 'penghayatan') {
                 $data = DB::table('laporan_penghayatan_n_pengamalan')
@@ -178,8 +177,8 @@ class LaporanPokja1Controller extends Controller
                     ->whereIn('status', ['Disetujui2', 'disetujui2'])->get();
             } elseif ($bidang == 'kader') {
                 $data = DB::table('laporan_kader_pokja1')
-                    ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
-                    ->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
+                    ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
+                    ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
                     ->whereIn('status', ['Disetujui2', 'disetujui2'])->get();
             }
             return response()->json(['status' => 'success', 'bidang' => $bidang, 'data' => $data]);

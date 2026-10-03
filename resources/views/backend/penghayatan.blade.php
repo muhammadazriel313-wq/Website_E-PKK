@@ -226,35 +226,35 @@
                     <td class="text-center">{{ $peng1->nama_desa }}</td>
                   @endif
 
-                  <td class="text-center">{{ $peng1->kisah_kegiatan }}</td>
-                  <td class="text-center">{{ $peng1->kisah_vol }}</td>
-                  <td class="text-center">{{ $peng1->kisah_metode }}</td>
-                  <td class="text-center">{{ $peng1->kisah_sasaran }}</td>
+                  <td class="text-center">{{ $peng1->kisah_kegiatan ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kisah_vol ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kisah_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kisah_sasaran ?? '-' }}</td>
 
-                  <td class="text-center">{{ $peng1->krisan_kegiatan }}</td>
-                  <td class="text-center">{{ $peng1->krisan_vol }}</td>
-                  <td class="text-center">{{ $peng1->krisan_metode }}</td>
-                  <td class="text-center">{{ $peng1->krisan_sasaran }}</td>
+                  <td class="text-center">{{ $peng1->krisan_kegiatan ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->krisan_vol ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->krisan_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->krisan_sasaran ?? '-' }}</td>
 
-                  <td class="text-center">{{ $peng1->kilas_kegiatan }}</td>
-                  <td class="text-center">{{ $peng1->kilas_vol }}</td>
-                  <td class="text-center">{{ $peng1->kilas_metode }}</td>
-                  <td class="text-center">{{ $peng1->kilas_sasaran }}</td>
+                  <td class="text-center">{{ $peng1->kilas_kegiatan ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kilas_vol ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kilas_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kilas_sasaran ?? '-' }}</td>
 
-                  <td class="text-center">{{ $peng1->kiat_kegiatan }}</td>
-                  <td class="text-center">{{ $peng1->kiat_vol }}</td>
-                  <td class="text-center">{{ $peng1->kiat_metode }}</td>
-                  <td class="text-center">{{ $peng1->kiat_sasaran }}</td>
+                  <td class="text-center">{{ $peng1->kiat_kegiatan ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kiat_vol ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kiat_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kiat_sasaran ?? '-' }}</td>
 
-                  <td class="text-center">{{ $peng1->kisak_kegiatan }}</td>
-                  <td class="text-center">{{ $peng1->kisak_vol }}</td>
-                  <td class="text-center">{{ $peng1->kisak_metode }}</td>
-                  <td class="text-center">{{ $peng1->kisak_sasaran }}</td>
+                  <td class="text-center">{{ $peng1->kisak_kegiatan ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kisak_vol ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kisak_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->kisak_sasaran ?? '-' }}</td>
 
-                  <td class="text-center">{{ $peng1->pkbn_kegiatan }}</td>
-                  <td class="text-center">{{ $peng1->pkbn_vol }}</td>
-                  <td class="text-center">{{ $peng1->pkbn_metode }}</td>
-                  <td class="text-center">{{ $peng1->pkbn_sasaran }}</td>
+                  <td class="text-center">{{ $peng1->pkbn_kegiatan ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->pkbn_vol ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->pkbn_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $peng1->pkbn_sasaran ?? '-' }}</td>
 
                   <td class="text-center">
                     @if(in_array(strtolower($peng1->status), ['proses', 'revisi']))

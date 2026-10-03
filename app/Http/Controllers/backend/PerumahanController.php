@@ -17,18 +17,18 @@ class PerumahanController extends Controller
 
         // 1. JIKA YANG LOGIN ADMIN WEB (KABUPATEN)
         if (Auth::guard('web')->check()) {
-            $data = DB::table('laporan_sandang')
-                ->leftJoin('users_mobile', 'laporan_sandang.id_user', '=', 'users_mobile.id')
+            $data = DB::table('laporan_perumahan')
+                ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')
                 ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
                 ->leftJoin('village', 'users_mobile.id_village', '=', 'village.id')
-                ->select('laporan_sandang.*', 'subdistrict.name as nama_kec', 'village.name as nama_desa')
-                // KABUPATEN HANYA BISA MELIHAT DATA YANG SUDAH LEWAT KECAMATAN
+                ->select('laporan_perumahan.*', 'subdistrict.name as nama_kec', 'village.name as nama_desa')
+                // KABUPATEN HANYA BISA MELIHAT DATA YANG SUDAH LEWAT KECAMATAN ATAU DARI KECAMATAN
                 ->where(function ($query) {
                     // LAPORAN DARI DESA
                     $query->where(function ($q) {
                         $q->where('users_mobile.id_role', 1)
                             ->whereIn(
-                                'laporan_sandang.status',
+                                'laporan_perumahan.status',
                                 ['Disetujui1', 'disetujui1', 'DISETUJUI1']
                             );
                     })
@@ -36,15 +36,15 @@ class PerumahanController extends Controller
                         ->orWhere(function ($q) {
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
-                                    'laporan_sandang.status',
+                                    'laporan_perumahan.status',
                                     ['Proses', 'proses', 'PROSES']
                                 );
                         });
                 })
-                ->orderBy('laporan_sandang.id_pokja3_bidang2', 'desc')
+                ->orderBy('laporan_perumahan.id_pokja3_bidang3', 'desc')
                 ->get();
 
-            return view('backend.sandang', compact('data'));
+            return view('backend.perumahan', compact('data'));
         } 
 
         // 2. JIKA YANG LOGIN PENGGUNA MOBILE (KECAMATAN / DESA)

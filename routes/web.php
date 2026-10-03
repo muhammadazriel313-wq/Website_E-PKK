@@ -175,6 +175,7 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     Route::resource('acclaporanpokja3', App\Http\Controllers\backend\AccLaporanPokja3Controller::class);
     Route::resource('acclaporanpokja4', App\Http\Controllers\backend\AccLaporanPokja4Controller::class);
     Route::resource('accbidangumum', App\Http\Controllers\backend\AccBidangUmumController::class);
+    Route::resource('accpangansandang', App\Http\Controllers\backend\AccPanganSandangController::class);
 
     // === RESOURCES LAINNYA ===
     Route::resource('bidangumum', App\Http\Controllers\backend\BidangUmumController::class);
@@ -184,6 +185,8 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     Route::resource('pengembangan', App\Http\Controllers\backend\PengembanganController::class);
     Route::resource('sandang', App\Http\Controllers\backend\SandangController::class);
     Route::resource('pangan', App\Http\Controllers\backend\PanganController::class);
+    Route::resource('pangansandang', App\Http\Controllers\backend\PanganSandangController::class);
+    Route::resource('decpangansandang', App\Http\Controllers\backend\DecPanganSandangController::class);
     Route::resource('perumahan', App\Http\Controllers\backend\PerumahanController::class);
 
     Route::resource('galeripenghayatan', App\Http\Controllers\backend\GaleriPenghayatanController::class);

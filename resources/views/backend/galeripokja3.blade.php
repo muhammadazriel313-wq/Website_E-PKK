@@ -28,27 +28,21 @@
 
         <div class="row" style="margin-bottom: 30px;">
             <div class="col-md-6 mb-3">
-                <a href="{{ route('galeripangan.index') }}" style="text-decoration: none;">
-                    <div class="form-card gallery-card" style="padding: 16px; transition: all 0.3s; cursor: pointer; min-height: 140px; display: flex; flex-direction: column;">
-                        <div style="background-color: #fef9c3; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; flex-shrink: 0;">
-                            <i class="bi bi-basket2-fill" style="font-size: 22px; color: #ca8a04;"></i>
-                        </div>
-                        <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; color: #2d3748; margin-bottom: 6px; line-height: 1.3; flex-grow: 1;">Program Pangan</h5>
-                        <p style="font-family: 'Poppins', sans-serif; font-size: 11px; color: #6b7280; margin: 0;">{{ $pertama }} Data Galeri</p>
+                <div class="form-card gallery-card" style="padding: 16px; transition: all 0.3s; min-height: 140px; display: flex; flex-direction: column;">
+                    <div style="background: linear-gradient(135deg, #fef9c3, #fce7f3); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; flex-shrink: 0;">
+                        <i class="bi bi-basket2-fill" style="font-size: 22px; color: #ca8a04;"></i>
                     </div>
-                </a>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <a href="{{ route('galerisandang.index') }}" style="text-decoration: none;">
-                    <div class="form-card gallery-card" style="padding: 16px; transition: all 0.3s; cursor: pointer; min-height: 140px; display: flex; flex-direction: column;">
-                        <div style="background-color: #fce7f3; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; flex-shrink: 0;">
-                            <i class="bi bi-bag-heart-fill" style="font-size: 22px; color: #db2777;"></i>
-                        </div>
-                        <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; color: #2d3748; margin-bottom: 6px; flex-grow: 1;">Program Industri Rumah Tangga</h5>
-                        <p style="font-family: 'Poppins', sans-serif; font-size: 11px; color: #6b7280; margin: 0;">{{ $kedua }} Data Galeri</p>
+                    <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; color: #2d3748; margin-bottom: 6px; line-height: 1.3; flex-grow: 1;">Program Pangan & Industri Rumah Tangga</h5>
+                    <p style="font-family: 'Poppins', sans-serif; font-size: 11px; color: #6b7280; margin: 0;">{{ ($pertama ?? 0) + ($kedua ?? 0) }} Data Galeri</p>
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="{{ route('galeripangan.index') }}" class="btn btn-sm btn-outline-warning" style="font-size:11px; padding:4px 10px; border-radius:6px;">
+                            <i class="bi bi-basket2 me-1"></i>Pangan
+                        </a>
+                        <a href="{{ route('galerisandang.index') }}" class="btn btn-sm btn-outline-danger" style="font-size:11px; padding:4px 10px; border-radius:6px;">
+                            <i class="bi bi-bag-heart me-1"></i>Industri RT
+                        </a>
                     </div>
-                </a>
+                </div>
             </div>
 
             <div class="col-md-6 mb-3">

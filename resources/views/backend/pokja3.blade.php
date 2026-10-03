@@ -21,36 +21,18 @@
     {{-- CARDS LAPORAN --}}
     <div class="row mb-3">
       
-      {{-- PANGAN --}}
+      {{-- PANGAN & INDUSTRI RUMAH TANGGA (GABUNGAN) --}}
       <div class="col-md-6 col-lg-3 mb-3">
-        <a href="{{ route('accpangan.index') }}" style="text-decoration:none;">
+        <a href="{{ route('accpangansandang.index') }}" style="text-decoration:none;">
           <div class="form-card pokja-card" style="background:white; border-radius:16px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,0.08); transition:all 0.3s; cursor:pointer; height: 100%;">
             <div class="d-flex align-items-center mb-3">
-              <div style="background:#fef9c3; width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
+              <div style="background:linear-gradient(135deg, #fef9c3, #fce7f3); width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
                 <i class="bi bi-basket2-fill" style="font-size:26px; color:#ca8a04;"></i>
               </div>
-              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Program Pangan</h5>
+              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Program Pangan & Industri Rumah Tangga</h5>
             </div>
             <div class="d-flex align-items-center gap-3">
-              <span style="font-size:28px; font-weight:600; color:#0369a1;">{{ $modelPertama ?? 0 }}</span>
-              <span style="font-size:13px; color:#94a3b8;">Jumlah total laporan</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      {{-- SANDANG --}}
-      <div class="col-md-6 col-lg-3 mb-3">
-        <a href="{{ route('accsandang.index') }}" style="text-decoration:none;">
-          <div class="form-card pokja-card" style="background:white; border-radius:16px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,0.08); transition:all 0.3s; cursor:pointer; height: 100%;">
-            <div class="d-flex align-items-center mb-3">
-              <div style="background:#fce7f3; width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                <i class="bi bi-bag-heart-fill" style="font-size:26px; color:#db2777;"></i>
-              </div>
-              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Program Industri Rumah Tangga</h5>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-              <span style="font-size:28px; font-weight:600; color:#0369a1;">{{ $modelKedua ?? 0 }}</span>
+              <span style="font-size:28px; font-weight:600; color:#0369a1;">{{ ($modelPertama ?? 0) + ($modelKedua ?? 0) }}</span>
               <span style="font-size:13px; color:#94a3b8;">Jumlah total laporan</span>
             </div>
           </div>

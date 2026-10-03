@@ -136,69 +136,62 @@
                   {{-- ============================================ --}}
                   {{-- SECTION: PANGAN --}}
                   {{-- ============================================ --}}
-                  <h5 class="section-header">
-                    <i class="bi bi-basket2-fill me-1" style="color:#ca8a04;"></i> Data Pangan
+                  <h5 class="section-header" style="font-size: 16px; color: #1e293b; border-bottom: 2px solid #ca8a04;">
+                    <i class="bi bi-basket2-fill me-1" style="color:#ca8a04;"></i> Data Program Pangan
                   </h5>
 
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="beras" class="form-label">Beras</label>
-                        <input type="text" name="beras" id="beras" class="form-control" required readonly value="{{ $data->beras }}" />
+                  {{-- SUB-SECTION: MAKANAN POKOK --}}
+                  <div class="p-3 mb-3 rounded-3" style="background-color: #fefce8; border: 1px solid #fef08a;">
+                    <h6 class="fw-bold mb-2 text-dark" style="font-size: 13px;">
+                      <i class="bi bi-circle-fill text-warning me-1" style="font-size: 8px;"></i> MAKANAN POKOK
+                    </h6>
+                    <div class="row g-2">
+                      <div class="col-md-6">
+                        <label for="beras" class="form-label fw-semibold text-secondary mb-1">Beras</label>
+                        <input type="text" name="beras" id="beras" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->beras ?? 0 }}" />
                       </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="non_beras" class="form-label">Non Beras</label>
-                        <input type="text" name="non_beras" id="non_beras" class="form-control" required readonly value="{{ $data->non_beras }}" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="peternakan" class="form-label">Peternakan</label>
-                        <input type="text" name="peternakan" id="peternakan" class="form-control" required readonly value="{{ $data->peternakan }}" />
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="perikanan" class="form-label">Perikanan</label>
-                        <input type="text" name="perikanan" id="perikanan" class="form-control" required readonly value="{{ $data->perikanan }}" />
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="warung_hidup" class="form-label">Warung Hidup</label>
-                        <input type="text" name="warung_hidup" id="warung_hidup" class="form-control" required readonly value="{{ $data->warung_hidup }}" />
+                      <div class="col-md-6">
+                        <label for="non_beras" class="form-label fw-semibold text-secondary mb-1">Non Beras</label>
+                        <input type="text" name="non_beras" id="non_beras" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->non_beras ?? 0 }}" />
                       </div>
                     </div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-md-3">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="lumbung_hidup" class="form-label">Lumbung Hidup</label>
-                        <input type="text" name="lumbung_hidup" id="lumbung_hidup" class="form-control" required readonly value="{{ $data->lumbung_hidup }}" />
+                  {{-- SUB-SECTION: PEMANFAATAN PEKARANGAN / HATINYA PKK --}}
+                  <div class="p-3 mb-3 rounded-3" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
+                    <h6 class="fw-bold mb-2 text-dark" style="font-size: 13px;">
+                      <i class="bi bi-circle-fill text-success me-1" style="font-size: 8px;"></i> PEMANFAATAN PEKARANGAN / HATINYA PKK
+                    </h6>
+                    <div class="row g-2 mb-2">
+                      <div class="col-md-4">
+                        <label for="peternakan" class="form-label fw-semibold text-secondary mb-1">Peternakan</label>
+                        <input type="text" name="peternakan" id="peternakan" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->peternakan ?? 0 }}" />
+                      </div>
+                      <div class="col-md-4">
+                        <label for="perikanan" class="form-label fw-semibold text-secondary mb-1">Perikanan</label>
+                        <input type="text" name="perikanan" id="perikanan" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->perikanan ?? 0 }}" />
+                      </div>
+                      <div class="col-md-4">
+                        <label for="warung_hidup" class="form-label fw-semibold text-secondary mb-1">Warung Hidup</label>
+                        <input type="text" name="warung_hidup" id="warung_hidup" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->warung_hidup ?? 0 }}" />
                       </div>
                     </div>
-                    <div class="col-md-3">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="toga" class="form-label">Toga</label>
-                        <input type="text" name="toga" id="toga" class="form-control" required readonly value="{{ $data->toga }}" />
+                    <div class="row g-2">
+                      <div class="col-md-3">
+                        <label for="lumbung_hidup" class="form-label fw-semibold text-secondary mb-1">Lumbung Hidup</label>
+                        <input type="text" name="lumbung_hidup" id="lumbung_hidup" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->lumbung_hidup ?? 0 }}" />
                       </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="tanaman_keras" class="form-label">Tanaman Keras</label>
-                        <input type="text" name="tanaman_keras" id="tanaman_keras" class="form-control" required readonly value="{{ $data->tanaman_keras }}" />
+                      <div class="col-md-3">
+                        <label for="toga" class="form-label fw-semibold text-secondary mb-1">Toga</label>
+                        <input type="text" name="toga" id="toga" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->toga ?? 0 }}" />
                       </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="tanaman_lainnya" class="form-label">Tanaman Lainnya</label>
-                        <input type="text" name="tanaman_lainnya" id="tanaman_lainnya" class="form-control" required readonly value="{{ $data->tanaman_lainnya }}" />
+                      <div class="col-md-3">
+                        <label for="tanaman_keras" class="form-label fw-semibold text-secondary mb-1">Tan. Keras</label>
+                        <input type="text" name="tanaman_keras" id="tanaman_keras" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->tanaman_keras ?? 0 }}" />
+                      </div>
+                      <div class="col-md-3">
+                        <label for="tanaman_lainnya" class="form-label fw-semibold text-secondary mb-1">Tan. Lainnya</label>
+                        <input type="text" name="tanaman_lainnya" id="tanaman_lainnya" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->tanaman_lainnya ?? 0 }}" />
                       </div>
                     </div>
                   </div>
@@ -206,27 +199,23 @@
                   {{-- ============================================ --}}
                   {{-- SECTION: INDUSTRI RUMAH TANGGA --}}
                   {{-- ============================================ --}}
-                  <h5 class="section-header">
+                  <h5 class="section-header mt-4" style="font-size: 16px; color: #1e293b; border-bottom: 2px solid #db2777;">
                     <i class="bi bi-bag-heart-fill me-1" style="color:#db2777;"></i> Data Industri Rumah Tangga
                   </h5>
 
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="industri_pangan" class="form-label">Pangan</label>
-                        <input type="text" name="industri_pangan" id="industri_pangan" class="form-control" required readonly value="{{ $data->industri_pangan }}" />
+                  <div class="p-3 mb-3 rounded-3" style="background-color: #fdf2f8; border: 1px solid #fbcfe8;">
+                    <div class="row g-2">
+                      <div class="col-md-4">
+                        <label for="industri_pangan" class="form-label fw-semibold text-secondary mb-1">Pangan</label>
+                        <input type="text" name="industri_pangan" id="industri_pangan" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->industri_pangan ?? 0 }}" />
                       </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="industri_sandang" class="form-label">Sandang</label>
-                        <input type="text" name="industri_sandang" id="industri_sandang" class="form-control" required readonly value="{{ $data->industri_sandang }}" />
+                      <div class="col-md-4">
+                        <label for="industri_sandang" class="form-label fw-semibold text-secondary mb-1">Sandang</label>
+                        <input type="text" name="industri_sandang" id="industri_sandang" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->industri_sandang ?? 0 }}" />
                       </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-outline mb-4 mt-3">
-                        <label for="jasa" class="form-label">Jasa</label>
-                        <input type="text" name="jasa" id="jasa" class="form-control" required readonly value="{{ $data->jasa }}" />
+                      <div class="col-md-4">
+                        <label for="jasa" class="form-label fw-semibold text-secondary mb-1">Jasa</label>
+                        <input type="text" name="jasa" id="jasa" class="form-control text-center fw-bold bg-white" required readonly value="{{ $data->jasa ?? 0 }}" />
                       </div>
                     </div>
                   </div>
@@ -234,89 +223,41 @@
                   {{-- ============================================ --}}
                   {{-- SECTION: STATUS & CATATAN --}}
                   {{-- ============================================ --}}
-                  <h5 class="section-header">
-                    <i class="bi bi-clipboard-check me-1" style="color:#4154f1;"></i> Status & Catatan
+                  <h5 class="section-header mt-4" style="font-size: 16px; color: #1e293b; border-bottom: 2px solid #4154f1;">
+                    <i class="bi bi-clipboard-check me-1" style="color:#4154f1;"></i> Status Verifikasi & Catatan
                   </h5>
 
-                  <div id="statusAlert"
-                    class="alert alert-danger d-none mt-3"
-                    role="alert">
+                  <div id="statusAlert" class="alert alert-danger d-none mt-3" role="alert">
                     Harap pilih status laporan.
                   </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="status" class="form-label">
-                      Status
-                    </label>
+                  <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                      <label for="status" class="form-label fw-semibold">Pilih Status Tindakan <span class="text-danger">*</span></label>
+                      <select name="status" class="form-select form-select-lg" onchange="toggleCatatan(this.value);" required>
+                        <option value="">-- Pilih Status --</option>
+                        <option value="Revisi">Revisi</option>
+                        @if(Auth::guard('pengguna')->check())
+                          <option value="Disetujui1">Disetujui (Kecamatan)</option>
+                        @else
+                          <option value="Disetujui2">Disetujui (Kabupaten)</option>
+                        @endif
+                      </select>
+                    </div>
 
-                    <select name="status"
-                      class="datepicker-trigger form-control hasDatepicker"
-                      onchange="toggleCatatan(this.value);">
-
-                      <option value="">--Pilih--</option>
-
-                      <option value="Revisi">
-                        Revisi
-                      </option>
-
-                      @if(Auth::guard('pengguna')->check())
-                      <option value="Disetujui1">
-                        Disetujui (Kecamatan)
-                      </option>
-                      @else
-                      <option value="Disetujui2">
-                        Disetujui (Admin)
-                      </option>
-                      @endif
-
-                    </select>
+                    <div class="col-md-6">
+                      <label for="catatan" class="form-label fw-semibold">Catatan Review</label>
+                      <input type="text" name="catatan" id="catatan" class="form-control form-control-lg" placeholder="Tuliskan catatan jika perlu perbaikan..." value="{{ $data->catatan }}" />
+                      <small class="text-muted d-block mt-1">*Catatan wajib diisi jika status laporan adalah <b>Revisi</b>.</small>
+                    </div>
                   </div>
 
-                </div>
-
-                <div class="form-outline mb-1 mt-3">
-
-                  <label for="catatan" class="form-label">
-                    Catatan
-                  </label>
-
-                  <input type="text"
-                    name="catatan"
-                    id="catatan"
-                    class="form-control"
-                    placeholder="Masukkan Catatan"
-                    value="{{ $data->catatan }}" />
-
-                </div>
-
-                <p class="mb-4">
-                  *Jika laporan perlu di revisi maka bisa menambahkan
-                  catatan dan catatan hanya di isi jika status laporan menjadi
-                  <b>Revisi</b>
-                </p>
-
-                <div class="form-outline mb-4 mt-3">
-
-                  <label for="tanggal" class="form-label">
-                    Tanggal
-                  </label>
-
-                  <input type="text"
-                    name="tanggal"
-                    id="tanggal"
-                    class="form-control"
-                    required readonly
-                    value="{{ $data->created_at }}" />
-                </div>
-
-                <div class="text-end pt-1 pb-1 mt-4">
-
-                  <button
-                    class="btn btn-success ps-xxl-5 pe-xxl-5 mr-auto background-blue-1 mb-2 fw-semibold fs-5"
-                    type="submit">
-                    Upload
-                  </button>
-
+                  <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary px-4 py-2 fw-semibold">Kembali</a>
+                    <button class="btn btn-primary px-4 py-2 fw-semibold" type="submit">
+                      <i class="bi bi-check-lg me-1"></i> Simpan Hasil Review
+                    </button>
+                  </div>
                 </div>
 
               </form>

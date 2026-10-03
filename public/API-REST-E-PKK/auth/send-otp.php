@@ -11,6 +11,16 @@ if (!isset($data['otp']) || !isset($data['phone'])) {
     exit;
 }
 
+// BYPASS OTP - HAPUS SETELAH PRESENTASI
+if (isset($data['bypass']) || getenv('OTP_BYPASS') === 'true') {
+    echo json_encode([
+        'success' => true,
+        'message' => 'OTP bypassed for presentation',
+        'response' => ['status' => true, 'target' => $data['phone']]
+    ]);
+    exit;
+}
+
 $token = "4mQ9kBGudtLxTPQYPAKT"; // token dari device kamu
 $noHp = $data['phone'];
 $kodeOtp = $data['otp'];

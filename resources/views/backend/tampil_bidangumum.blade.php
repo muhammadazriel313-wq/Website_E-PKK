@@ -275,7 +275,7 @@
                     <label for="tanggal" class="form-label">Tanggal</label>
                     <input type="text" name="tanggal" id="tanggal" class="form-control" required readonly
                       oninvalid="this.setCustomValidity('Harap lengkapi judul')" oninput="this.setCustomValidity('')"
-                      placeholder="Masukkan Judul" value="{{ $data->tanggal }}" />
+                      placeholder="Masukkan Judul" value="{{ $data->created_at ?? $data->tanggal ?? '-' }}" />
                   </div>
 
                   <div class="text-end pt-1 pb-1 mt-4">

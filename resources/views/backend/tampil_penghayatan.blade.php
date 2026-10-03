@@ -112,109 +112,109 @@
                     <div class="col-12 mt-4 mb-2"><h5>KISAH</h5><hr></div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Kegiatan</label>
-                      <input type="text" class="form-control" value="{{ $data->kisah_kegiatan }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisah_kegiatan ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Vol. Keg</label>
-                      <input type="text" class="form-control" value="{{ $data->kisah_vol }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisah_vol ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Metode</label>
-                      <input type="text" class="form-control" value="{{ $data->kisah_metode }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisah_metode ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Jml Sasaran</label>
-                      <input type="text" class="form-control" value="{{ $data->kisah_sasaran }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisah_sasaran ?? '-' }}" readonly />
                     </div>
 
                     <div class="col-12 mt-4 mb-2"><h5>KRISAN</h5><hr></div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Kegiatan</label>
-                      <input type="text" class="form-control" value="{{ $data->krisan_kegiatan }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->krisan_kegiatan ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Vol. Keg</label>
-                      <input type="text" class="form-control" value="{{ $data->krisan_vol }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->krisan_vol ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Metode</label>
-                      <input type="text" class="form-control" value="{{ $data->krisan_metode }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->krisan_metode ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Jml Sasaran</label>
-                      <input type="text" class="form-control" value="{{ $data->krisan_sasaran }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->krisan_sasaran ?? '-' }}" readonly />
                     </div>
 
                     <div class="col-12 mt-4 mb-2"><h5>KILAS</h5><hr></div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Kegiatan</label>
-                      <input type="text" class="form-control" value="{{ $data->kilas_kegiatan }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kilas_kegiatan ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Vol. Keg</label>
-                      <input type="text" class="form-control" value="{{ $data->kilas_vol }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kilas_vol ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Metode</label>
-                      <input type="text" class="form-control" value="{{ $data->kilas_metode }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kilas_metode ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Jml Sasaran</label>
-                      <input type="text" class="form-control" value="{{ $data->kilas_sasaran }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kilas_sasaran ?? '-' }}" readonly />
                     </div>
 
                     <div class="col-12 mt-4 mb-2"><h5>KIAT</h5><hr></div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Kegiatan</label>
-                      <input type="text" class="form-control" value="{{ $data->kiat_kegiatan }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kiat_kegiatan ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Vol. Keg</label>
-                      <input type="text" class="form-control" value="{{ $data->kiat_vol }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kiat_vol ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Metode</label>
-                      <input type="text" class="form-control" value="{{ $data->kiat_metode }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kiat_metode ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Jml Sasaran</label>
-                      <input type="text" class="form-control" value="{{ $data->kiat_sasaran }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kiat_sasaran ?? '-' }}" readonly />
                     </div>
 
                     <div class="col-12 mt-4 mb-2"><h5>KISAK</h5><hr></div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Kegiatan</label>
-                      <input type="text" class="form-control" value="{{ $data->kisak_kegiatan }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisak_kegiatan ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Vol. Keg</label>
-                      <input type="text" class="form-control" value="{{ $data->kisak_vol }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisak_vol ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Metode</label>
-                      <input type="text" class="form-control" value="{{ $data->kisak_metode }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisak_metode ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Jml Sasaran</label>
-                      <input type="text" class="form-control" value="{{ $data->kisak_sasaran }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->kisak_sasaran ?? '-' }}" readonly />
                     </div>
 
                     <div class="col-12 mt-4 mb-2"><h5>PKBN</h5><hr></div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Kegiatan</label>
-                      <input type="text" class="form-control" value="{{ $data->pkbn_kegiatan }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->pkbn_kegiatan ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Vol. Keg</label>
-                      <input type="text" class="form-control" value="{{ $data->pkbn_vol }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->pkbn_vol ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Metode</label>
-                      <input type="text" class="form-control" value="{{ $data->pkbn_metode }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->pkbn_metode ?? '-' }}" readonly />
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Jml Sasaran</label>
-                      <input type="text" class="form-control" value="{{ $data->pkbn_sasaran }}" readonly />
+                      <input type="text" class="form-control" value="{{ $data->pkbn_sasaran ?? '-' }}" readonly />
                     </div>
                   </div>
 

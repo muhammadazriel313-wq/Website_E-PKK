@@ -485,66 +485,58 @@ class ReportController extends Controller
     }
 
     // PENGHAYATAN DAN PENGALAMAN PANCASILA
-    public function insertPenghayatan(Request $request)
+        public function insertPenghayatan(Request $request)
     {
         try {
             $request->validate([
-                'jumlah_kel_simulasi1' => 'required',
-                'jumlah_anggota1' => 'required',
-                'jumlah_kel_simulasi2' => 'required',
-                'jumlah_anggota2' => 'required',
-                'jumlah_kel_simulasi3' => 'required',
-                'jumlah_anggota3' => 'required',
-                'jumlah_kel_simulasi4' => 'required',
-                'jumlah_anggota4' => 'required',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
             ]);
 
-            // UUID sama seperti native kamu
             $uuid = 'KP1B1-' . strtoupper(Str::random(6));
 
-            // INSERT
             DB::table('laporan_penghayatan_n_pengamalan')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'jumlah_kel_simulasi1' => $request->jumlah_kel_simulasi1,
-                'jumlah_anggota1' => $request->jumlah_anggota1,
-                'jumlah_kel_simulasi2' => $request->jumlah_kel_simulasi2,
-                'jumlah_anggota2' => $request->jumlah_anggota2,
-                'jumlah_kel_simulasi3' => $request->jumlah_kel_simulasi3,
-                'jumlah_anggota3' => $request->jumlah_anggota3,
-                'jumlah_kel_simulasi4' => $request->jumlah_kel_simulasi4,
-                'jumlah_anggota4' => $request->jumlah_anggota4,
-                'status' => 'Proses',
+                'kisah_kegiatan' => $request->kisah_kegiatan,
+                'kisah_vol' => $request->kisah_vol,
+                'kisah_metode' => $request->kisah_metode,
+                'kisah_sasaran' => $request->kisah_sasaran,
+                'krisan_kegiatan' => $request->krisan_kegiatan,
+                'krisan_vol' => $request->krisan_vol,
+                'krisan_metode' => $request->krisan_metode,
+                'krisan_sasaran' => $request->krisan_sasaran,
+                'kilas_kegiatan' => $request->kilas_kegiatan,
+                'kilas_vol' => $request->kilas_vol,
+                'kilas_metode' => $request->kilas_metode,
+                'kilas_sasaran' => $request->kilas_sasaran,
+                'kiat_kegiatan' => $request->kiat_kegiatan,
+                'kiat_vol' => $request->kiat_vol,
+                'kiat_metode' => $request->kiat_metode,
+                'kiat_sasaran' => $request->kiat_sasaran,
+                'kisak_kegiatan' => $request->kisak_kegiatan,
+                'kisak_vol' => $request->kisak_vol,
+                'kisak_metode' => $request->kisak_metode,
+                'kisak_sasaran' => $request->kisak_sasaran,
+                'pkbn_kegiatan' => $request->pkbn_kegiatan,
+                'pkbn_vol' => $request->pkbn_vol,
+                'pkbn_metode' => $request->pkbn_metode,
+                'pkbn_sasaran' => $request->pkbn_sasaran,
+                'status' => 'Menunggu',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'id_role' => $request->id_role,
-                'id_organization' => $request->id_organization
+                'id_organization' => $request->id_organization,
+                'catatan' => $request->catatan
             ]);
 
-            // SELECT + JOIN (SAMA PERSIS LOGIKA LAMA)
             $data = DB::table('laporan_penghayatan_n_pengamalan')
                 ->leftJoin('role_users_mobile', 'laporan_penghayatan_n_pengamalan.id_role', '=', 'role_users_mobile.id')
                 ->leftJoin('role_organization', 'laporan_penghayatan_n_pengamalan.id_organization', '=', 'role_organization.id')
                 ->where('laporan_penghayatan_n_pengamalan.uuid', $uuid)
                 ->select(
-                    'laporan_penghayatan_n_pengamalan.id_pokja1_bidang1',
-                    'laporan_penghayatan_n_pengamalan.uuid',
-                    'laporan_penghayatan_n_pengamalan.id_user',
-                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi1',
-                    'laporan_penghayatan_n_pengamalan.jumlah_anggota1',
-                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi2',
-                    'laporan_penghayatan_n_pengamalan.jumlah_anggota2',
-                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi3',
-                    'laporan_penghayatan_n_pengamalan.jumlah_anggota3',
-                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi4',
-                    'laporan_penghayatan_n_pengamalan.jumlah_anggota4',
-                    'laporan_penghayatan_n_pengamalan.catatan',
-                    'laporan_penghayatan_n_pengamalan.status',
-                    'laporan_penghayatan_n_pengamalan.created_at',
-                    'laporan_penghayatan_n_pengamalan.updated_at',
+                    'laporan_penghayatan_n_pengamalan.*',
                     'role_users_mobile.id AS role_id',
                     'role_users_mobile.uuid AS role_uuid',
                     'role_users_mobile.name AS role_name',
@@ -561,43 +553,57 @@ class ReportController extends Controller
                     "id_pokja1_bidang1" => $data->id_pokja1_bidang1,
                     "uuid" => $data->uuid,
                     "id_user" => $data->id_user,
-                    "jumlah_kel_simulasi1" => $data->jumlah_kel_simulasi1,
-                    "jumlah_anggota1" => $data->jumlah_anggota1,
-                    "jumlah_kel_simulasi2" => $data->jumlah_kel_simulasi2,
-                    "jumlah_anggota2" => $data->jumlah_anggota2,
-                    "jumlah_kel_simulasi3" => $data->jumlah_kel_simulasi3,
-                    "jumlah_anggota3" => $data->jumlah_anggota3,
-                    "jumlah_kel_simulasi4" => $data->jumlah_kel_simulasi4,
-                    "jumlah_anggota4" => $data->jumlah_anggota4,
+                    "kisah_kegiatan" => $data->kisah_kegiatan,
+                    "kisah_vol" => $data->kisah_vol,
+                    "kisah_metode" => $data->kisah_metode,
+                    "kisah_sasaran" => $data->kisah_sasaran,
+                    "krisan_kegiatan" => $data->krisan_kegiatan,
+                    "krisan_vol" => $data->krisan_vol,
+                    "krisan_metode" => $data->krisan_metode,
+                    "krisan_sasaran" => $data->krisan_sasaran,
+                    "kilas_kegiatan" => $data->kilas_kegiatan,
+                    "kilas_vol" => $data->kilas_vol,
+                    "kilas_metode" => $data->kilas_metode,
+                    "kilas_sasaran" => $data->kilas_sasaran,
+                    "kiat_kegiatan" => $data->kiat_kegiatan,
+                    "kiat_vol" => $data->kiat_vol,
+                    "kiat_metode" => $data->kiat_metode,
+                    "kiat_sasaran" => $data->kiat_sasaran,
+                    "kisak_kegiatan" => $data->kisak_kegiatan,
+                    "kisak_vol" => $data->kisak_vol,
+                    "kisak_metode" => $data->kisak_metode,
+                    "kisak_sasaran" => $data->kisak_sasaran,
+                    "pkbn_kegiatan" => $data->pkbn_kegiatan,
+                    "pkbn_vol" => $data->pkbn_vol,
+                    "pkbn_metode" => $data->pkbn_metode,
+                    "pkbn_sasaran" => $data->pkbn_sasaran,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
                     "updated_at" => $data->updated_at,
                     "role" => [
                         "id" => $data->role_id,
-                        "uuid" => $data->role_uuid,
+                        "uuid"=> $data->role_uuid,
                         "name" => $data->role_name
                     ],
                     "organization" => [
                         "id" => $data->organization_id,
                         "uuid" => $data->organization_uuid,
                         "name" => $data->organization_name
-                    ],
+                    ]
                 ],
                 'error' => null
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'statusCode' => 500,
-                'message' => 'Failed to upload report penghayatan',
+                'message' => 'Failed to upload report kader pokja 1',
                 'data' => null,
                 'error' => ['message' => $e->getMessage()]
-            ], 500);
+            ]);
         }
     }
 
-    // POKJA 2 //
-    // PENDIDIKAN DAN KETERAMPILAN (POKJA 2)
     public function insertPendidikanKeterampilan(Request $request)
     {
         try {

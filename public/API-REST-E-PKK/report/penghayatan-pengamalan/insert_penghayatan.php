@@ -20,14 +20,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $jml_kel_simulasi1 = $input['jumlah_kel_simulasi1'];
-    $jml_anggota1 = $input['jumlah_anggota1'];
-    $jml_kel_simulasi2 = $input['jumlah_kel_simulasi2'];
-    $jml_anggota2 = $input['jumlah_anggota2'];
-    $jml_kel_simulasi3 = $input['jumlah_kel_simulasi3'];
-    $jml_anggota3 = $input['jumlah_anggota3'];
-    $jml_kel_simulasi4 = $input['jumlah_kel_simulasi4'];
-    $jml_anggota4 = $input['jumlah_anggota4'];
+    $kisah_kegiatan = $input['kisah_kegiatan'] ?? null;
+    $kisah_vol = $input['kisah_vol'] ?? null;
+    $kisah_metode = $input['kisah_metode'] ?? null;
+    $kisah_sasaran = $input['kisah_sasaran'] ?? null;
+
+    $krisan_kegiatan = $input['krisan_kegiatan'] ?? null;
+    $krisan_vol = $input['krisan_vol'] ?? null;
+    $krisan_metode = $input['krisan_metode'] ?? null;
+    $krisan_sasaran = $input['krisan_sasaran'] ?? null;
+
+    $kilas_kegiatan = $input['kilas_kegiatan'] ?? null;
+    $kilas_vol = $input['kilas_vol'] ?? null;
+    $kilas_metode = $input['kilas_metode'] ?? null;
+    $kilas_sasaran = $input['kilas_sasaran'] ?? null;
+
+    $kiat_kegiatan = $input['kiat_kegiatan'] ?? null;
+    $kiat_vol = $input['kiat_vol'] ?? null;
+    $kiat_metode = $input['kiat_metode'] ?? null;
+    $kiat_sasaran = $input['kiat_sasaran'] ?? null;
+
+    $kisak_kegiatan = $input['kisak_kegiatan'] ?? null;
+    $kisak_vol = $input['kisak_vol'] ?? null;
+    $kisak_metode = $input['kisak_metode'] ?? null;
+    $kisak_sasaran = $input['kisak_sasaran'] ?? null;
+
+    $pkbn_kegiatan = $input['pkbn_kegiatan'] ?? null;
+    $pkbn_vol = $input['pkbn_vol'] ?? null;
+    $pkbn_metode = $input['pkbn_metode'] ?? null;
+    $pkbn_sasaran = $input['pkbn_sasaran'] ?? null;
+
     $id_user = $input['id_user'];
     $id_role = $input['id_role'];
     $id_organization = $input['id_organization'];
@@ -40,12 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $uuid = generateCustomUUID();
 
     try {
-        $query = "INSERT INTO laporan_penghayatan_n_pengamalan (uuid, id_user, jumlah_kel_simulasi1, jumlah_anggota1, 
-                    jumlah_kel_simulasi2, jumlah_anggota2, jumlah_kel_simulasi3, jumlah_anggota3,
-                    jumlah_kel_simulasi4, jumlah_anggota4, status, created_at, updated_at, id_role, id_organization) 
-        VALUES ('$uuid', '$id_user', '$jml_kel_simulasi1', '$jml_anggota1', '$jml_kel_simulasi2', '$jml_anggota2',
-                '$jml_kel_simulasi3', '$jml_anggota3', '$jml_kel_simulasi4', '$jml_anggota4',
-                'Proses', '$created_at', '$updated_at', '$id_role', '$id_organization')";
+        $query = "INSERT INTO laporan_penghayatan_n_pengamalan (uuid, id_user, kisah_kegiatan, kisah_vol, kisah_metode, kisah_sasaran, krisan_kegiatan, krisan_vol, krisan_metode, krisan_sasaran, kilas_kegiatan, kilas_vol, kilas_metode, kilas_sasaran, kiat_kegiatan, kiat_vol, kiat_metode, kiat_sasaran, kisak_kegiatan, kisak_vol, kisak_metode, kisak_sasaran, pkbn_kegiatan, pkbn_vol, pkbn_metode, pkbn_sasaran, status, created_at, updated_at, id_role, id_organization)
+        VALUES ('$uuid', '$id_user', '$kisah_kegiatan', '$kisah_vol', '$kisah_metode', '$kisah_sasaran', '$krisan_kegiatan', '$krisan_vol', '$krisan_metode', '$krisan_sasaran', '$kilas_kegiatan', '$kilas_vol', '$kilas_metode', '$kilas_sasaran', '$kiat_kegiatan', '$kiat_vol', '$kiat_metode', '$kiat_sasaran', '$kisak_kegiatan', '$kisak_vol', '$kisak_metode', '$kisak_sasaran', '$pkbn_kegiatan', '$pkbn_vol', '$pkbn_metode', '$pkbn_sasaran', 'Proses', '$created_at', '$updated_at', '$id_role', '$id_organization')";
 
         $result = mysqli_query($koneksi, $query);
         $check = mysqli_affected_rows($koneksi);
@@ -56,14 +74,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     laporan_penghayatan_n_pengamalan.id_pokja1_bidang1,
                     laporan_penghayatan_n_pengamalan.uuid,
                     laporan_penghayatan_n_pengamalan.id_user,
-                    laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi1,
-                    laporan_penghayatan_n_pengamalan.jumlah_anggota1,
-                    laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi2,
-                    laporan_penghayatan_n_pengamalan.jumlah_anggota2,
-                    laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi3,
-                    laporan_penghayatan_n_pengamalan.jumlah_anggota3,
-                    laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi4,
-                    laporan_penghayatan_n_pengamalan.jumlah_anggota4,
+                    laporan_penghayatan_n_pengamalan.kisah_kegiatan,
+                    laporan_penghayatan_n_pengamalan.kisah_vol,
+                    laporan_penghayatan_n_pengamalan.kisah_metode,
+                    laporan_penghayatan_n_pengamalan.kisah_sasaran,
+                    laporan_penghayatan_n_pengamalan.krisan_kegiatan,
+                    laporan_penghayatan_n_pengamalan.krisan_vol,
+                    laporan_penghayatan_n_pengamalan.krisan_metode,
+                    laporan_penghayatan_n_pengamalan.krisan_sasaran,
+                    laporan_penghayatan_n_pengamalan.kilas_kegiatan,
+                    laporan_penghayatan_n_pengamalan.kilas_vol,
+                    laporan_penghayatan_n_pengamalan.kilas_metode,
+                    laporan_penghayatan_n_pengamalan.kilas_sasaran,
+                    laporan_penghayatan_n_pengamalan.kiat_kegiatan,
+                    laporan_penghayatan_n_pengamalan.kiat_vol,
+                    laporan_penghayatan_n_pengamalan.kiat_metode,
+                    laporan_penghayatan_n_pengamalan.kiat_sasaran,
+                    laporan_penghayatan_n_pengamalan.kisak_kegiatan,
+                    laporan_penghayatan_n_pengamalan.kisak_vol,
+                    laporan_penghayatan_n_pengamalan.kisak_metode,
+                    laporan_penghayatan_n_pengamalan.kisak_sasaran,
+                    laporan_penghayatan_n_pengamalan.pkbn_kegiatan,
+                    laporan_penghayatan_n_pengamalan.pkbn_vol,
+                    laporan_penghayatan_n_pengamalan.pkbn_metode,
+                    laporan_penghayatan_n_pengamalan.pkbn_sasaran,
                     laporan_penghayatan_n_pengamalan.catatan,
                     laporan_penghayatan_n_pengamalan.status,
                     laporan_penghayatan_n_pengamalan.created_at,
@@ -89,14 +123,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "id_pokja1_bidang1" => $data['id_pokja1_bidang1'],
                 "uuid" => $data['uuid'],
                 "id_user" => $data['id_user'],
-                "jumlah_kel_simulasi1" => $data['jumlah_kel_simulasi1'],
-                "jumlah_anggota1" => $data['jumlah_anggota1'],
-                "jumlah_kel_simulasi2" => $data['jumlah_kel_simulasi2'],
-                "jumlah_anggota2" => $data['jumlah_anggota2'],
-                "jumlah_kel_simulasi3" => $data['jumlah_kel_simulasi3'],
-                "jumlah_anggota3" => $data['jumlah_anggota3'],
-                "jumlah_kel_simulasi4" => $data['jumlah_kel_simulasi4'],
-                "jumlah_anggota4" => $data['jumlah_anggota4'],
+                "kisah_kegiatan" => $data['kisah_kegiatan'],
+                "kisah_vol" => $data['kisah_vol'],
+                "kisah_metode" => $data['kisah_metode'],
+                "kisah_sasaran" => $data['kisah_sasaran'],
+                "krisan_kegiatan" => $data['krisan_kegiatan'],
+                "krisan_vol" => $data['krisan_vol'],
+                "krisan_metode" => $data['krisan_metode'],
+                "krisan_sasaran" => $data['krisan_sasaran'],
+                "kilas_kegiatan" => $data['kilas_kegiatan'],
+                "kilas_vol" => $data['kilas_vol'],
+                "kilas_metode" => $data['kilas_metode'],
+                "kilas_sasaran" => $data['kilas_sasaran'],
+                "kiat_kegiatan" => $data['kiat_kegiatan'],
+                "kiat_vol" => $data['kiat_vol'],
+                "kiat_metode" => $data['kiat_metode'],
+                "kiat_sasaran" => $data['kiat_sasaran'],
+                "kisak_kegiatan" => $data['kisak_kegiatan'],
+                "kisak_vol" => $data['kisak_vol'],
+                "kisak_metode" => $data['kisak_metode'],
+                "kisak_sasaran" => $data['kisak_sasaran'],
+                "pkbn_kegiatan" => $data['pkbn_kegiatan'],
+                "pkbn_vol" => $data['pkbn_vol'],
+                "pkbn_metode" => $data['pkbn_metode'],
+                "pkbn_sasaran" => $data['pkbn_sasaran'],
                 "catatan" => $data['catatan'],
                 "status" => $data['status'],
                 "created_at" => $data['created_at'],

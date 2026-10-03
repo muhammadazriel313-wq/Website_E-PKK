@@ -16,9 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $perintah = "
         SELECT 
             laporan_kader_pokja1.uuid AS uuid_laporan, 
-            laporan_kader_pokja1.PKBN, 
-            laporan_kader_pokja1.PKDRT, 
-            laporan_kader_pokja1.pola_asuh,
+            laporan_kader_pokja1.kader_umum,
+            laporan_kader_pokja1.kader_khusus,
             laporan_kader_pokja1.catatan, 
             laporan_kader_pokja1.status, 
             laporan_kader_pokja1.created_at, 
@@ -49,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         while ($ambil = mysqli_fetch_assoc($eksekusi)) {
             $F = array(
                 "id" => $ambil['uuid_laporan'],
-                "PKBN" => $ambil['PKBN'],
-                "PKDRT" => $ambil['PKDRT'],
-                "pola_asuh" => $ambil['pola_asuh'],
+                "kader_umum" => $ambil['kader_umum'],
+                "kader_khusus" => $ambil['kader_khusus'],
                 "catatan" => $ambil['catatan'],
                 "status" => $ambil['status'],
                 "created_at" => $ambil['created_at'],

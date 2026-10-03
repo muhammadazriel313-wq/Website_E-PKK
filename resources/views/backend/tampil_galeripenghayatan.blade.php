@@ -7,7 +7,7 @@
     <section class="section">
 
         <h1 class="page-heading">
-            Review Galeri
+            Review Kegiatan
         </h1>
 
         <div class="form-card">
@@ -65,6 +65,19 @@
                         placeholder="Masukkan Deskripsi"
                         value="{{ $data->deskripsi }}" />
 
+                </div>
+
+                <div class="form-group">
+                    <label for="nama_peserta" class="form-label">
+                        Nama Peserta :
+                    </label>
+                    @php
+                        $pesertaArr = json_decode($data->nama_peserta, true);
+                        $pesertaText = (!empty($pesertaArr) && is_array($pesertaArr)) ? implode("
+", $pesertaArr) : ($data->nama_peserta ?? '');
+                    @endphp
+                    <textarea name="nama_peserta" id="nama_peserta" class="form-control" rows="3" placeholder="Daftar nama peserta (satu per baris)">{{ $pesertaText }}</textarea>
+                    <small class="text-muted">Daftar nama peserta (satu nama per baris)</small>
                 </div>
 
                 <div class="form-group">

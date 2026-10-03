@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Cetak Galeri Tahunan</title>
+    <title>Cetak Kegiatan Tahunan</title>
 
     <style>
         body {

@@ -404,8 +404,8 @@ class Pokja1Controller extends Controller
             }
 
             // ==========================================
-            // 🧹 JURUS RAPI: BERSIHKAN KOLOM DATABASE
-            // ==========================================
+            // 🧹 [PERUBAHAN 03-10-2026] Merapikan pemetaan kolom ekspor Pokja 1; kode lama di bawah dinonaktifkan
+            /*
             $data->transform(function ($item) {
                 // 1. Daftar kolom 'dapur' yang tidak boleh masuk ke Excel
                 $kolomSampah = ['uuid', 'id_user', 'id_role', 'id_organization', 'created_at', 'updated_at'];
@@ -429,6 +429,63 @@ class Pokja1Controller extends Controller
                 }
 
                 return $item;
+            });
+            */
+            $no = 1;
+            $data = $data->map(function ($item) use (&$no, $bidang) {
+                $row = [
+                    'No' => $no++,
+                    'Tanggal Laporan' => !empty($item->created_at) ? date('d-m-Y', strtotime($item->created_at)) : '-',
+                    'Kecamatan' => !empty($item->nama_kecamatan) ? ucwords(strtolower($item->nama_kecamatan)) : '-',
+                    'Desa / Kelurahan' => !empty($item->nama_desa) ? ucwords(strtolower($item->nama_desa)) : '-',
+                ];
+
+                if ($bidang == 'penghayatan') {
+                    $row['KISAH: Kegiatan'] = $item->kisah_kegiatan ?? '-';
+                    $row['KISAH: Vol'] = $item->kisah_vol ?? 0;
+                    $row['KISAH: Metode'] = $item->kisah_metode ?? '-';
+                    $row['KISAH: Sasaran'] = $item->kisah_sasaran ?? 0;
+
+                    $row['KRISAN: Kegiatan'] = $item->krisan_kegiatan ?? '-';
+                    $row['KRISAN: Vol'] = $item->krisan_vol ?? 0;
+                    $row['KRISAN: Metode'] = $item->krisan_metode ?? '-';
+                    $row['KRISAN: Sasaran'] = $item->krisan_sasaran ?? 0;
+
+                    $row['KILAS: Kegiatan'] = $item->kilas_kegiatan ?? '-';
+                    $row['KILAS: Vol'] = $item->kilas_vol ?? 0;
+                    $row['KILAS: Metode'] = $item->kilas_metode ?? '-';
+                    $row['KILAS: Sasaran'] = $item->kilas_sasaran ?? 0;
+
+                    $row['KIAT: Kegiatan'] = $item->kiat_kegiatan ?? '-';
+                    $row['KIAT: Vol'] = $item->kiat_vol ?? 0;
+                    $row['KIAT: Metode'] = $item->kiat_metode ?? '-';
+                    $row['KIAT: Sasaran'] = $item->kiat_sasaran ?? 0;
+
+                    $row['KISAK: Kegiatan'] = $item->kisak_kegiatan ?? '-';
+                    $row['KISAK: Vol'] = $item->kisak_vol ?? 0;
+                    $row['KISAK: Metode'] = $item->kisak_metode ?? '-';
+                    $row['KISAK: Sasaran'] = $item->kisak_sasaran ?? 0;
+
+                    $row['PKBN: Kegiatan'] = $item->pkbn_kegiatan ?? '-';
+                    $row['PKBN: Vol'] = $item->pkbn_vol ?? 0;
+                    $row['PKBN: Metode'] = $item->pkbn_metode ?? '-';
+                    $row['PKBN: Sasaran'] = $item->pkbn_sasaran ?? 0;
+                } elseif ($bidang == 'gotongroyong') {
+                    $row['Kerja Bakti'] = $item->kerja_bakti ?? 0;
+                    $row['Rukun Kematian'] = $item->rukun_kematian ?? 0;
+                    $row['Keagamaan'] = $item->keagamaan ?? 0;
+                    $row['Jimpitan'] = $item->jimpitan ?? 0;
+                    $row['Arisan'] = $item->arisan ?? 0;
+                } elseif ($bidang == 'kader') {
+                    $row['Kader PKBN'] = $item->PKBN ?? 0;
+                    $row['Kader PKDRT'] = $item->PKDRT ?? 0;
+                    $row['Kader Pola Asuh'] = $item->pola_asuh ?? 0;
+                }
+
+                $row['Catatan'] = $item->catatan ?? '-';
+                $row['Status'] = !empty($item->status) ? ucfirst(strtolower($item->status)) : '-';
+
+                return $row;
             });
             // ==========================================
 

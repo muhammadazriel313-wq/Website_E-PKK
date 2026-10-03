@@ -21,15 +21,15 @@
 
     {{-- CARDS LAPORAN --}}
     <div class="row mb-3">
-      {{-- PENGHAYATAN --}}
-      <div class="col-md-4 mb-3">
+      {{-- PENGHAYATAN DAN GOTONG ROYONG --}}
+      <div class="col-md-6 mb-3">
         <a href="{{ route('accpenghayatan.index') }}" style="text-decoration:none;">
           <div class="form-card pokja-card" style="background:white; border-radius:16px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,0.08); transition:all 0.3s; cursor:pointer;">
             <div class="d-flex align-items-center mb-3">
               <div style="background:#e0f2fe; width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
                 <i class="bi bi-shield-fill-check" style="font-size:26px; color:#0284c7;"></i>
               </div>
-              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Penghayatan Dan Pengamalan Pancasila</h5>
+              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Penghayatan Dan Pengamalan Pancasila - Gotong Royong</h5>
             </div>
             <div class="d-flex align-items-center gap-3">
               <span style="font-size:28px; font-weight:600; color:#0369a1;">{{ $modelPertama ?? 0 }}</span>
@@ -39,26 +39,8 @@
         </a>
       </div>
 
-      {{-- GOTONG ROYONG --}}
-      <div class="col-md-4 mb-3">
-        <a href="{{ route('accgotongroyong.index') }}" style="text-decoration:none;">
-          <div class="form-card pokja-card" style="background:white; border-radius:16px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,0.08); transition:all 0.3s; cursor:pointer;">
-            <div class="d-flex align-items-center mb-3">
-              <div style="background:#dcfce7; width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                <i class="bi bi-people-fill" style="font-size:26px; color:#16a34a;"></i>
-              </div>
-              <h5 style="font-weight:600; font-size:14px; color:#1e293b; margin:0; line-height:1.4;">Gotong Royong</h5>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-              <span style="font-size:28px; font-weight:600; color:#0369a1;">{{ $modelKedua ?? 0 }}</span>
-              <span style="font-size:13px; color:#94a3b8;">Jumlah total laporan</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
       {{-- KADER POKJA 1 --}}
-      <div class="col-md-4 mb-3">
+      <div class="col-md-6 mb-3">
         <a href="{{ route('acclaporanpokja1.index') }}" style="text-decoration:none;">
           <div class="form-card pokja-card" style="background:white; border-radius:16px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,0.08); transition:all 0.3s; cursor:pointer;">
             <div class="d-flex align-items-center mb-3">
@@ -128,8 +110,7 @@
             <select name="bidang" class="form-select" required>
               <option value="">-- Pilih Bidang --</option>
               <option value="semua">Semua Bidang (Rekap Total)</option>
-              <option value="penghayatan">Penghayatan & Pengamalan Pancasila</option>
-              <option value="gotongroyong">Gotong Royong</option>
+              <option value="penghayatan">Penghayatan & Pengamalan Pancasila - Gotong Royong</option>
               <option value="kader">Kader Pokja 1</option>
             </select>
           </div>

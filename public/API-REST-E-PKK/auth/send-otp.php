@@ -32,8 +32,6 @@ curl_setopt_array($curl, [
     CURLOPT_HTTPHEADER => [
         "Authorization: $token"
     ],
-    CURLOPT_SSL_VERIFYPEER => false,
-    CURLOPT_SSL_VERIFYHOST => false,
 ]);
 
 $response = curl_exec($curl);

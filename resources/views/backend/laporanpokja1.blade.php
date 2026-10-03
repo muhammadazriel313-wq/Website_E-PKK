@@ -140,19 +140,21 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" class="text-center align-middle" style="width:60px;">No</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width:60px;">No</th>
                 @if (Auth::guard('web')->check())
-                <th scope="col" class="text-center align-middle" style="width:120px;">Kecamatan</th>
-                <th scope="col" class="text-center align-middle" style="width:120px;">Desa</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width:120px;">Kecamatan</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width:120px;">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                <th scope="col" class="text-center align-middle" style="width:120px;">Desa</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width:120px;">Desa</th>
                 @endif
-                <th scope="col" class="text-center align-middle">PKBN</th>
-                <th scope="col" class="text-center align-middle">PKDRT</th>
-                <th scope="col" class="text-center align-middle">Pola Asuh</th>
-                <th scope="col" class="text-center align-middle" style="width:100px;">Status</th>
-                <th scope="col" class="text-center align-middle" style="width:140px;">Tanggal</th>
-                <th scope="col" class="text-center align-middle" style="width:120px;">Aksi</th>
+                <th scope="col" colspan="2" class="text-center align-middle">JML KADER</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width:100px;">Status</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width:140px;">Tanggal</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width:120px;">Aksi</th>
+              </tr>
+              <tr>
+                <th scope="col" class="text-center align-middle">Umum</th>
+                <th scope="col" class="text-center align-middle">Khusus</th>
               </tr>
             </thead>
             <tbody>
@@ -166,9 +168,8 @@
                 @elseif (Auth::guard('pengguna')->check())
                 <td class="text-center">{{ $got1->nama_desa }}</td>
                 @endif
-                <td class="text-center">{{ $got1->PKBN ?? '0' }}</td>
-                <td class="text-center">{{ $got1->PKDRT ?? '0' }}</td>
-                <td class="text-center">{{ $got1->pola_asuh ?? '0' }}</td>
+                <td class="text-center">{{ $got1->kader_umum ?? '0' }}</td>
+                <td class="text-center">{{ $got1->kader_khusus ?? '0' }}</td>
                 <td class="text-center">
                   @if(in_array(strtolower($got1->status), ['proses', 'revisi']))
                   <span class="badge bg-warning text-dark">{{ $got1->status }}</span>

@@ -111,114 +111,50 @@
         $bidang = $bidang ?? 'semua';
         @endphp
 
-        @if($bidang == 'semua' || $bidang == 'gotongroyong')
-        <h3>Laporan Gotong Royong</h3>
-        <table align="center">
-            <thead>
-                <tr style="background: #e0f2fe;">
-                    <th align="center"><b>NO</b></th>
-                    <th align="center"><b>Kecamatan</b></th>
-                    <th align="center"><b>Kerja Bakti</b></th>
-                    <th align="center"><b>Rukun Kematian</b></th>
-                    <th align="center"><b>Keagamaan</b></th>
-                    <th align="center"><b>Jimpitan</b></th>
-                    <th align="center"><b>Arisan</b></th>
-                </tr>
-            </thead>
-            <tbody>
-                @php $no_gr = 1; $t_kerja_bakti = 0; $t_rukun = 0; $t_agama = 0; $t_jimpitan = 0; $t_arisan = 0; @endphp
-                @forelse($gotongroyong as $item)
-                @php
-                $t_kerja_bakti += $item->kerja_bakti ?? 0; $t_rukun += $item->rukun_kematian ?? 0;
-                $t_agama += $item->keagamaan ?? 0; $t_jimpitan += $item->jimpitan ?? 0; $t_arisan += $item->arisan ?? 0;
-                @endphp
-                <tr>
-                    <td align="center">{{ $no_gr++ }}</td>
-                    <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->kerja_bakti }}</td>
-                    <td align="center">{{ $item->rukun_kematian }}</td>
-                    <td align="center">{{ $item->keagamaan }}</td>
-                    <td align="center">{{ $item->jimpitan }}</td>
-                    <td align="center">{{ $item->arisan }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
-                </tr>
-                @endforelse
-            </tbody>
-            <tfoot>
-                <tr style="background-color: #f2f2f2;">
-                    <td colspan="2" align="center"><b>TOTAL</b></td>
-                    <td align="center"><b>{{ $t_kerja_bakti }}</b></td>
-                    <td align="center"><b>{{ $t_rukun }}</b></td>
-                    <td align="center"><b>{{ $t_agama }}</b></td>
-                    <td align="center"><b>{{ $t_jimpitan }}</b></td>
-                    <td align="center"><b>{{ $t_arisan }}</b></td>
-                </tr>
-            </tfoot>
-        </table>
-        @endif
+
 
         @if($bidang == 'semua' || $bidang == 'penghayatan')
         <h3>Laporan Penghayatan Dan Pengamalan Pancasila</h3>
-        <table align="center">
+        <table align="center" style="font-size:10px;">
             <thead>
                 <tr style="background: #e0f2fe;">
-                    <th align="center"><b>NO</b></th>
-                    <th align="center"><b>Kecamatan</b></th>
-                    <th align="center"><b>Jumlah Kel Simulasi 1</b></th>
-                    <th align="center"><b>Jumlah Anggota 1</b></th>
-                    <th align="center"><b>Jumlah Kel Simulasi 2</b></th>
-                    <th align="center"><b>Jumlah Anggota 2</b></th>
-                    <th align="center"><b>Jumlah Kel Simulasi 3</b></th>
-                    <th align="center"><b>Jumlah Anggota 3</b></th>
-                    <th align="center"><b>Jumlah Kel Simulasi 4</b></th>
-                    <th align="center"><b>Jumlah Anggota 4</b></th>
+                    <th align="center" rowspan="2"><b>NO</b></th>
+                    <th align="center" rowspan="2"><b>Kecamatan</b></th>
+                    <th align="center" colspan="4"><b>KISAH</b></th>
+                    <th align="center" colspan="4"><b>KRISAN</b></th>
+                    <th align="center" colspan="4"><b>KILAS</b></th>
+                    <th align="center" colspan="4"><b>KIAT</b></th>
+                    <th align="center" colspan="4"><b>KISAK</b></th>
+                    <th align="center" colspan="4"><b>PKBN</b></th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
                 </tr>
             </thead>
             <tbody>
-                @php
-                $no_ph = 1; $t_kel1 = 0; $t_ang1 = 0; $t_kel2 = 0; $t_ang2 = 0; $t_kel3 = 0; $t_ang3 = 0; $t_kel4 = 0; $t_ang4 = 0;
-                @endphp
+                @php $no_ph = 1; @endphp
                 @forelse($penghayatan as $item)
-                @php
-                $t_kel1 += $item->jumlah_kel_simulasi1 ?? 0; $t_ang1 += $item->jumlah_anggota1 ?? 0;
-                $t_kel2 += $item->jumlah_kel_simulasi2 ?? 0; $t_ang2 += $item->jumlah_anggota2 ?? 0;
-                $t_kel3 += $item->jumlah_kel_simulasi3 ?? 0; $t_ang3 += $item->jumlah_anggota3 ?? 0;
-                $t_kel4 += $item->jumlah_kel_simulasi4 ?? 0; $t_ang4 += $item->jumlah_anggota4 ?? 0;
-                @endphp
                 <tr>
                     <td align="center">{{ $no_ph++ }}</td>
                     <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->jumlah_kel_simulasi1 }}</td>
-                    <td align="center">{{ $item->jumlah_anggota1 }}</td>
-                    <td align="center">{{ $item->jumlah_kel_simulasi2 }}</td>
-                    <td align="center">{{ $item->jumlah_anggota2 }}</td>
-                    <td align="center">{{ $item->jumlah_kel_simulasi3 }}</td>
-                    <td align="center">{{ $item->jumlah_anggota3 }}</td>
-                    <td align="center">{{ $item->jumlah_kel_simulasi4 }}</td>
-                    <td align="center">{{ $item->jumlah_anggota4 }}</td>
+                    <td align="center">{{ $item->kisah_kegiatan }}</td><td align="center">{{ $item->kisah_vol }}</td><td align="center">{{ $item->kisah_metode }}</td><td align="center">{{ $item->kisah_sasaran }}</td>
+                    <td align="center">{{ $item->krisan_kegiatan }}</td><td align="center">{{ $item->krisan_vol }}</td><td align="center">{{ $item->krisan_metode }}</td><td align="center">{{ $item->krisan_sasaran }}</td>
+                    <td align="center">{{ $item->kilas_kegiatan }}</td><td align="center">{{ $item->kilas_vol }}</td><td align="center">{{ $item->kilas_metode }}</td><td align="center">{{ $item->kilas_sasaran }}</td>
+                    <td align="center">{{ $item->kiat_kegiatan }}</td><td align="center">{{ $item->kiat_vol }}</td><td align="center">{{ $item->kiat_metode }}</td><td align="center">{{ $item->kiat_sasaran }}</td>
+                    <td align="center">{{ $item->kisak_kegiatan }}</td><td align="center">{{ $item->kisak_vol }}</td><td align="center">{{ $item->kisak_metode }}</td><td align="center">{{ $item->kisak_sasaran }}</td>
+                    <td align="center">{{ $item->pkbn_kegiatan }}</td><td align="center">{{ $item->pkbn_vol }}</td><td align="center">{{ $item->pkbn_metode }}</td><td align="center">{{ $item->pkbn_sasaran }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="26" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
-            <tfoot>
-                <tr style="background-color: #f2f2f2;">
-                    <td colspan="2" align="center"><b>TOTAL</b></td>
-                    <td align="center"><b>{{ $t_kel1 }}</b></td>
-                    <td align="center"><b>{{ $t_ang1 }}</b></td>
-                    <td align="center"><b>{{ $t_kel2 }}</b></td>
-                    <td align="center"><b>{{ $t_ang2 }}</b></td>
-                    <td align="center"><b>{{ $t_kel3 }}</b></td>
-                    <td align="center"><b>{{ $t_ang3 }}</b></td>
-                    <td align="center"><b>{{ $t_kel4 }}</b></td>
-                    <td align="center"><b>{{ $t_ang4 }}</b></td>
-                </tr>
-            </tfoot>
         </table>
         @endif
 
@@ -227,38 +163,38 @@
         <table align="center">
             <thead>
                 <tr style="background: #e0f2fe;">
-                    <th align="center"><b>NO</b></th>
-                    <th align="center"><b>Kecamatan</b></th>
-                    <th align="center"><b>PKBN</b></th>
-                    <th align="center"><b>PKDRT</b></th>
-                    <th align="center"><b>Pola Asuh</b></th>
+                    <th align="center" rowspan="2"><b>NO</b></th>
+                    <th align="center" rowspan="2"><b>Kecamatan</b></th>
+                    <th align="center" colspan="2"><b>JML KADER</b></th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th align="center">Umum</th>
+                    <th align="center">Khusus</th>
                 </tr>
             </thead>
             <tbody>
-                @php $no_pk = 1; $t_pkbn = 0; $t_pkdrt = 0; $t_pola = 0; @endphp
+                @php $no_pk = 1; $t_umum = 0; $t_khusus = 0; @endphp
                 @forelse($laporanpokja1 as $item)
                 @php
-                $t_pkbn += $item->PKBN ?? 0; $t_pkdrt += $item->PKDRT ?? 0; $t_pola += $item->pola_asuh ?? 0;
+                $t_umum += $item->kader_umum ?? 0; $t_khusus += $item->kader_khusus ?? 0;
                 @endphp
                 <tr>
                     <td align="center">{{ $no_pk++ }}</td>
                     <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->PKBN }}</td>
-                    <td align="center">{{ $item->PKDRT }}</td>
-                    <td align="center">{{ $item->pola_asuh }}</td>
+                    <td align="center">{{ $item->kader_umum }}</td>
+                    <td align="center">{{ $item->kader_khusus }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="4" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
             <tfoot>
                 <tr style="background-color: #f2f2f2;">
                     <td colspan="2" align="center"><b>TOTAL</b></td>
-                    <td align="center"><b>{{ $t_pkbn }}</b></td>
-                    <td align="center"><b>{{ $t_pkdrt }}</b></td>
-                    <td align="center"><b>{{ $t_pola }}</b></td>
+                    <td align="center"><b>{{ $t_umum }}</b></td>
+                    <td align="center"><b>{{ $t_khusus }}</b></td>
                 </tr>
             </tfoot>
         </table>

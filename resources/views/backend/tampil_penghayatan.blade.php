@@ -108,69 +108,114 @@
                       value="{{ $data->id_pokja1_bidang1 }}" />
                   </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_kel_simulasi1" class="form-label">Jumlah Kelompok Simulasi 1</label>
-                    <input type="text" name="jumlah_kel_simulasi1" id="jumlah_kel_simulasi1" class="form-control"
-                      required readonly oninvalid="this.setCustomValidity('Harap lengkapi kategori laporan')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_kel_simulasi1 }}" />
-                  </div>
+                  <div class="row">
+                    <div class="col-12 mt-4 mb-2"><h5>KISAH</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->kisah_kegiatan }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->kisah_vol }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->kisah_metode }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->kisah_sasaran }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_anggota1" class="form-label">Jumlah Anggota 1</label>
-                    <input type="text" name="jumlah_anggota1" id="jumlah_anggota1" class="form-control" required
-                      readonly oninvalid="this.setCustomValidity('Harap lengkapi jumlah posyandu')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_anggota1 }}" />
-                  </div>
+                    <div class="col-12 mt-4 mb-2"><h5>KRISAN</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->krisan_kegiatan }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->krisan_vol }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->krisan_metode }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->krisan_sasaran }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_kel_simulasi2" class="form-label">Jumlah Kelompok Simulasi 2</label>
-                    <input type="text" name="jumlah_kel_simulasi2" id="jumlah_kel_simulasi2" class="form-control"
-                      required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah posyandu terintegrasi')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_kel_simulasi2 }}" />
-                  </div>
+                    <div class="col-12 mt-4 mb-2"><h5>KILAS</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->kilas_kegiatan }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->kilas_vol }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->kilas_metode }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->kilas_sasaran }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_anggota2" class="form-label">Jumlah Anggota 2</label>
-                    <input type="text" name="jumlah_anggota2" id="jumlah_anggota2" class="form-control" required
-                      readonly oninvalid="this.setCustomValidity('Harap lengkapi jumlah klp')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_anggota2 }}" />
-                  </div>
+                    <div class="col-12 mt-4 mb-2"><h5>KIAT</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->kiat_kegiatan }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->kiat_vol }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->kiat_metode }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->kiat_sasaran }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_kel_simulasi3" class="form-label">Jumlah Kelompok Simulasi 3</label>
-                    <input type="text" name="jumlah_kel_simulasi3" id="jumlah_kel_simulasi3" class="form-control"
-                      required readonly oninvalid="this.setCustomValidity('Harap lengkapi jumlah anggota')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_kel_simulasi3 }}" />
-                  </div>
+                    <div class="col-12 mt-4 mb-2"><h5>KISAK</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->kisak_kegiatan }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->kisak_vol }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->kisak_metode }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->kisak_sasaran }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_anggota3" class="form-label">Jumlah Anggota 3</label>
-                    <input type="text" name="jumlah_anggota3" id="jumlah_anggota3" class="form-control" required
-                      readonly oninvalid="this.setCustomValidity('Harap lengkapi jumlah anggota')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_anggota3 }}" />
-                  </div>
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_kel_simulasi4" class="form-label">Jumlah Kelompok Simulasi 4</label>
-                    <input type="text" name="jumlah_kel_simulasi4" id="jumlah_kel_simulasi4" class="form-control"
-                      required readonly oninvalid="this.setCustomValidity('Harap lengkapi jumlah anggota')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_kel_simulasi4 }}" />
-                  </div>
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jumlah_anggota4" class="form-label">Jumlah Anggota 4</label>
-                    <input type="text" name="jumlah_anggota4" id="jumlah_anggota4" class="form-control" required
-                      readonly oninvalid="this.setCustomValidity('Harap lengkapi jumlah anggota')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->jumlah_anggota4 }}" />
+                    <div class="col-12 mt-4 mb-2"><h5>PKBN</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->pkbn_kegiatan }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->pkbn_vol }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->pkbn_metode }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->pkbn_sasaran }}" readonly />
+                    </div>
                   </div>
 
                   <div class="form-outline mb-4 mt-3">

@@ -4,9 +4,8 @@ require '../../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     parse_str(file_get_contents("php://input"), $_PUT);
-    $PKBN = $_PUT['PKBN'];
-    $PKDRT = $_PUT['PKDRT'];
-    $pola_asuh = $_PUT['pola_asuh'];
+    $kader_umum = $_PUT['kader_umum'] ?? null;
+    $kader_khusus = $_PUT['kader_khusus'] ?? null;
     $id = $_PUT['id']; 
 
     date_default_timezone_set('Asia/Jakarta');
@@ -14,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $updated_at = date("Y-m-d H:i:s", $timestamp);
 
     try {
-        $selectQuery = "SELECT PKBN, PKDRT, pola_asuh FROM laporan_kader_pokja1 WHERE uuid = '$id'";
+        $selectQuery = "SELECT kader_umum, kader_khusus FROM laporan_kader_pokja1 WHERE uuid = '$id'";
         $selectResult = mysqli_query($koneksi, $selectQuery);
         $data = mysqli_fetch_assoc($selectResult);
 
         if ($data) {
-            if ($data['PKBN'] == $PKBN && $data['PKDRT'] == $PKDRT && $data['pola_asuh'] == $pola_asuh) {
+            if ($data['kader_umum'] == $kader_umum && $data['kader_khusus'] == $kader_khusus) {
                 $response = [
                     'statusCode' => 304,
                     'message' => "No changes detected, the data is the same as before.",
@@ -28,9 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                 ];
             } else {
                 $query = "UPDATE laporan_kader_pokja1 SET 
-                            PKBN = '$PKBN', 
-                            PKDRT = '$PKDRT', 
-                            pola_asuh = '$pola_asuh', 
+                            kader_umum = '$kader_umum',
+                            kader_khusus = '$kader_khusus',
                             catatan = '', 
                             status = 'Proses', 
                             updated_at = '$updated_at' 
@@ -49,9 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         'message' => "Kader Pokja I report successfully updated",
                         'data' => [
                             "id" => $updatedData['uuid'],
-                            "PKBN" => $updatedData['PKBN'],
-                            "PKDRT" => $updatedData['PKDRT'],
-                            "pola_asuh" => $updatedData['pola_asuh'],
+                            "kader_umum" => $updatedData['kader_umum'],
+                            "kader_khusus" => $updatedData['kader_khusus'],
                             "catatan" => $updatedData['catatan'],
                             "status" => $updatedData['status'],
                             "created_at" => $updatedData['created_at'],

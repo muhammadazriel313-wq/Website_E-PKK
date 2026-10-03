@@ -109,25 +109,17 @@
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="PKBN" class="form-label">PKBN</label>
-                    <input type="text" name="PKBN" id="PKBN" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi kategori laporan')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->PKBN }}" />
+                    <label for="kader_umum" class="form-label">Kader Umum</label>
+                    <input type="text" name="kader_umum" id="kader_umum" class="form-control" required readonly
+                      oninvalid="this.setCustomValidity('Harap lengkapi kader umum')"
+                      oninput="this.setCustomValidity('')" placeholder="Kader Umum" value="{{ $data->kader_umum }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="PKDRT" class="form-label">PKDRT</label>
-                    <input type="text" name="PKDRT" id="PKDRT" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah posyandu')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->PKDRT }}" />
-                  </div>
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="pola_asuh" class="form-label">Pola Asuh</label>
-                    <input type="text" name="pola_asuh" id="pola_asuh" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah posyandu terintegrasi')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->pola_asuh }}" />
+                    <label for="kader_khusus" class="form-label">Kader Khusus</label>
+                    <input type="text" name="kader_khusus" id="kader_khusus" class="form-control" required readonly
+                      oninvalid="this.setCustomValidity('Harap lengkapi kader khusus')"
+                      oninput="this.setCustomValidity('')" placeholder="Kader Khusus" value="{{ $data->kader_khusus }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">

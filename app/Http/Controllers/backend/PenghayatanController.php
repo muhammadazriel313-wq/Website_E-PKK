@@ -95,14 +95,6 @@ class PenghayatanController extends Controller
         }
 
         $data->update([
-            'jumlah_kel_simulasi1' => $request->jumlah_kel_simulasi1,
-            'jumlah_anggota1' => $request->jumlah_anggota1,
-            'jumlah_kel_simulasi2' => $request->jumlah_kel_simulasi2,
-            'jumlah_anggota2' => $request->jumlah_anggota2,
-            'jumlah_kel_simulasi3' => $request->jumlah_kel_simulasi3,
-            'jumlah_anggota3' => $request->jumlah_anggota3,
-            'jumlah_kel_simulasi4' => $request->jumlah_kel_simulasi4,
-            'jumlah_anggota4' => $request->jumlah_anggota4,
             'status' => $status,
             'catatan' => $request->catatan,
         ]);

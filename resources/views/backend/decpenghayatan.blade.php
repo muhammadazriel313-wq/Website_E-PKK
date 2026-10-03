@@ -165,33 +165,54 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" rowspan="2" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">No</th>
                 
                 @if (Auth::guard('web')->check())
-                  <th scope="col" rowspan="2" class="text-center align-middle">Kecamatan</th>
-                  <th scope="col" rowspan="2" class="text-center align-middle">Desa</th>
+                  <th scope="col" rowspan="3" class="text-center align-middle">Kecamatan</th>
+                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                  <th scope="col" rowspan="2" class="text-center align-middle">Desa</th>
+                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
                 @endif
                 
-                <th scope="col" colspan="2" class="text-center header-group-title">Simulasi & Anggota 1</th>
-                <th scope="col" colspan="2" class="text-center header-group-title">Simulasi & Anggota 2</th>
-                <th scope="col" colspan="2" class="text-center header-group-title">Simulasi & Anggota 3</th>
-                <th scope="col" colspan="2" class="text-center header-group-title">Simulasi & Anggota 4</th>
+                <th scope="col" colspan="24" class="text-center header-group-title">PENGHAYATAN DAN PENGAMALAN PANCASILA - GOTONG ROYONG</th>
                 
-                <th scope="col" rowspan="2" class="text-center align-middle">Status</th>
-                <th scope="col" rowspan="2" class="text-center align-middle">Tanggal</th>
-                <th scope="col" rowspan="2" class="text-center align-middle">Aksi</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
               </tr>
               <tr>
-                <th scope="col" class="text-center">J. Kel Simulasi 1</th>
-                <th scope="col" class="text-center">J. Anggota 1</th>
-                <th scope="col" class="text-center">J. Kel Simulasi 2</th>
-                <th scope="col" class="text-center">J. Anggota 2</th>
-                <th scope="col" class="text-center">J. Kel Simulasi 3</th>
-                <th scope="col" class="text-center">J. Anggota 3</th>
-                <th scope="col" class="text-center">J. Kel Simulasi 4</th>
-                <th scope="col" class="text-center">J. Anggota 4</th>
+                <th scope="col" colspan="4" class="text-center">KISAH</th>
+                <th scope="col" colspan="4" class="text-center">KRISAN</th>
+                <th scope="col" colspan="4" class="text-center">KILAS</th>
+                <th scope="col" colspan="4" class="text-center">KIAT</th>
+                <th scope="col" colspan="4" class="text-center">KISAK</th>
+                <th scope="col" colspan="4" class="text-center">PKBN</th>
+              </tr>
+              <tr>
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
               </tr>
             </thead>
             <tbody>
@@ -207,14 +228,35 @@
                     <td class="text-center">{{ $peng1->nama_desa }}</td>
                   @endif
 
-                  <td class="text-center">{{ $peng1->jumlah_kel_simulasi1 ?? '0' }}</td>
-                  <td class="text-center">{{ $peng1->jumlah_anggota1 ?? '0' }}</td>
-                  <td class="text-center">{{ $peng1->jumlah_kel_simulasi2 ?? '0' }}</td>
-                  <td class="text-center">{{ $peng1->jumlah_anggota2 ?? '0' }}</td>
-                  <td class="text-center">{{ $peng1->jumlah_kel_simulasi3 ?? '0' }}</td>
-                  <td class="text-center">{{ $peng1->jumlah_anggota3 ?? '0' }}</td>
-                  <td class="text-center">{{ $peng1->jumlah_kel_simulasi4 ?? '0' }}</td>
-                  <td class="text-center">{{ $peng1->jumlah_anggota4 ?? '0' }}</td>
+                  <td class="text-center">{{ $peng1->kisah_kegiatan }}</td>
+                  <td class="text-center">{{ $peng1->kisah_vol }}</td>
+                  <td class="text-center">{{ $peng1->kisah_metode }}</td>
+                  <td class="text-center">{{ $peng1->kisah_sasaran }}</td>
+
+                  <td class="text-center">{{ $peng1->krisan_kegiatan }}</td>
+                  <td class="text-center">{{ $peng1->krisan_vol }}</td>
+                  <td class="text-center">{{ $peng1->krisan_metode }}</td>
+                  <td class="text-center">{{ $peng1->krisan_sasaran }}</td>
+
+                  <td class="text-center">{{ $peng1->kilas_kegiatan }}</td>
+                  <td class="text-center">{{ $peng1->kilas_vol }}</td>
+                  <td class="text-center">{{ $peng1->kilas_metode }}</td>
+                  <td class="text-center">{{ $peng1->kilas_sasaran }}</td>
+
+                  <td class="text-center">{{ $peng1->kiat_kegiatan }}</td>
+                  <td class="text-center">{{ $peng1->kiat_vol }}</td>
+                  <td class="text-center">{{ $peng1->kiat_metode }}</td>
+                  <td class="text-center">{{ $peng1->kiat_sasaran }}</td>
+
+                  <td class="text-center">{{ $peng1->kisak_kegiatan }}</td>
+                  <td class="text-center">{{ $peng1->kisak_vol }}</td>
+                  <td class="text-center">{{ $peng1->kisak_metode }}</td>
+                  <td class="text-center">{{ $peng1->kisak_sasaran }}</td>
+
+                  <td class="text-center">{{ $peng1->pkbn_kegiatan }}</td>
+                  <td class="text-center">{{ $peng1->pkbn_vol }}</td>
+                  <td class="text-center">{{ $peng1->pkbn_metode }}</td>
+                  <td class="text-center">{{ $peng1->pkbn_sasaran }}</td>
 
                   <td class="text-center">
                     @if(in_array(strtolower($peng1->status), ['proses', 'revisi']))
@@ -240,7 +282,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="14" class="text-center py-5">
+                  <td colspan="30" class="text-center py-5">
                     <div class="alert alert-danger mb-0">
                       <i class="bi bi-exclamation-triangle-fill me-2"></i> 
                       Tidak ada data laporan penghayatan dan pengamalan pancasila

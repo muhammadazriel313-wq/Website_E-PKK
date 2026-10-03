@@ -20,9 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $PKBN = $input['PKBN'];
-    $PKDRT = $input['PKDRT'];
-    $pola_asuh = $input['pola_asuh'];
+    $kader_umum = $input['kader_umum'] ?? null;
+    $kader_khusus = $input['kader_khusus'] ?? null;
     $id_user = $input['id_user'];
     $id_role = $input['id_role'];
     $id_organization = $input['id_organization'];
@@ -36,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         // Insert data ke dalam database
-        $query = "INSERT INTO laporan_kader_pokja1 (uuid, id_user, PKBN, PKDRT, pola_asuh, status, created_at, updated_at, id_role, id_organization) 
-                  VALUES ('$uuid', '$id_user', '$PKBN', '$PKDRT', '$pola_asuh', 'Proses', '$created_at', '$updated_at', '$id_role', '$id_organization')";
+        $query = "INSERT INTO laporan_kader_pokja1 (uuid, id_user, kader_umum, kader_khusus, status, created_at, updated_at, id_role, id_organization)
+                  VALUES ('$uuid', '$id_user', '$kader_umum', '$kader_khusus', 'Proses', '$created_at', '$updated_at', '$id_role', '$id_organization')";
 
         $result = mysqli_query($koneksi, $query);
         $check = mysqli_affected_rows($koneksi);
@@ -48,9 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     laporan_kader_pokja1.id_kader_pokja1,
                     laporan_kader_pokja1.uuid,
                     laporan_kader_pokja1.id_user,
-                    laporan_kader_pokja1.PKBN,
-                    laporan_kader_pokja1.PKDRT,
-                    laporan_kader_pokja1.pola_asuh,
+                    laporan_kader_pokja1.kader_umum,
+                    laporan_kader_pokja1.kader_khusus,
                     laporan_kader_pokja1.catatan,
                     laporan_kader_pokja1.status,
                     laporan_kader_pokja1.created_at,
@@ -76,9 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "id_kader_pokja1" => $data['id_kader_pokja1'],
                 "uuid" => $data['uuid'],
                 "id_user" => $data['id_user'],
-                "PKBN" => $data['PKBN'],
-                "PKDRT" => $data['PKDRT'],
-                "pola_asuh" => $data['pola_asuh'],
+                "kader_umum" => $data['kader_umum'],
+                "kader_khusus" => $data['kader_khusus'],
                 "catatan" => $data['catatan'],
                 "status" => $data['status'],
                 "created_at" => $data['created_at'],

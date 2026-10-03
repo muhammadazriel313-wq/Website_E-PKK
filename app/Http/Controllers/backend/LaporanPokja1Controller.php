@@ -101,10 +101,6 @@ class LaporanPokja1Controller extends Controller
         }
 
         $data->update([
-            'PKBN'      => $request->PKBN ?? $data->PKBN,
-            'PKDRT'     => $request->PKDRT ?? $data->PKDRT,
-            'pola_asuh' => $request->pola_asuh ?? $data->pola_asuh,
-            'tanggal'   => $request->tanggal ?? $data->tanggal,
             'status'    => $status,
             'catatan'   => $request->catatan,
         ]);

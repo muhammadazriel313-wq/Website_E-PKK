@@ -17,7 +17,9 @@ class ReportController extends Controller
 
             // VALIDASI
             $request->validate([
-                'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif',
+                // [PERUBAHAN 03-10-2026] Menambahkan format webp pada validasi mimes; kode lama di bawah dinonaktifkan
+                // 'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif',
+                'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif,webp',
                 'id_user' => 'required',
                 'deskripsi' => 'required',
                 'pokja' => 'required',
@@ -25,7 +27,8 @@ class ReportController extends Controller
                 'id_role' => 'required',
                 'id_organization' => 'required',
 
-                // TAMBAHAN LOKASI
+                // TAMBAHAN NAMA PESERTA & LOKASI
+                'nama_peserta' => 'nullable',
                 'lokasi' => 'nullable|string',
                 'latitude' => 'nullable',
                 'longitude' => 'nullable',
@@ -75,6 +78,20 @@ class ReportController extends Controller
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
                 'deskripsi' => $request->deskripsi,
+                // [PERUBAHAN 03-10-2026] Menyimpan nama_peserta (JSON)
+                'nama_peserta' => (function() use ($request) {
+                    $val = $request->nama_peserta;
+                    if (is_array($val)) {
+                        return json_encode(array_values(array_filter(array_map('trim', $val))));
+                    } elseif (is_string($val) && trim($val) !== '') {
+                        $decoded = json_decode($val, true);
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                            return json_encode(array_values(array_filter(array_map('trim', $decoded))));
+                        }
+                        return json_encode([trim($val)]);
+                    }
+                    return null;
+                })(),
                 'gambar' => $fileName,
                 'pokja' => $request->pokja,
                 'bidang' => $request->bidang,
@@ -135,6 +152,7 @@ class ReportController extends Controller
                     'uuid' => $data->uuid,
                     'id_user' => $data->id_user,
                     'deskripsi' => $data->deskripsi,
+                    'nama_peserta' => $data->nama_peserta,
                     'gambar' => $data->gambar,
                     'pokja' => $data->pokja,
                     'bidang' => $data->bidang,
@@ -522,8 +540,9 @@ class ReportController extends Controller
                 'pkbn_kegiatan' => $request->pkbn_kegiatan,
                 'pkbn_vol' => $request->pkbn_vol,
                 'pkbn_metode' => $request->pkbn_metode,
-                'pkbn_sasaran' => $request->pkbn_sasaran,
-                'status' => 'Menunggu',
+                // [PERUBAHAN 03-10-2026] disamakan dengan endpoint lain ('Proses'); kode lama di bawah dinonaktifkan
+                // 'status' => 'Menunggu',
+                'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'id_role' => $request->id_role,

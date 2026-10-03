@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Cetak Galeri Bulanan Pokja IV</title>
+    <title>Cetak Kegiatan Bulanan Pokja IV</title>
 
     <style>
         body {
@@ -252,7 +252,8 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="45%">Deskripsi</th>
+                    <th width="30%">Deskripsi</th>
+                    <th width="25%">Nama Peserta</th>
 
                 </tr>
 
@@ -317,7 +318,8 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="45%">Deskripsi</th>
+                    <th width="30%">Deskripsi</th>
+                    <th width="25%">Nama Peserta</th>
 
                 </tr>
 
@@ -382,7 +384,8 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="45%">Deskripsi</th>
+                    <th width="30%">Deskripsi</th>
+                    <th width="25%">Nama Peserta</th>
 
                 </tr>
 
@@ -447,7 +450,8 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="45%">Deskripsi</th>
+                    <th width="30%">Deskripsi</th>
+                    <th width="25%">Nama Peserta</th>
 
                 </tr>
 

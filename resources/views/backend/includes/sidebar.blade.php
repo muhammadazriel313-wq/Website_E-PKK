@@ -46,7 +46,7 @@
                 data-bs-toggle="collapse"
                 href="#">
                 <i class="bi bi-image"></i>
-                <span>Galeri</span>
+                <span>Kegiatan</span>
             </a>
             <ul id="galeri_nav"
                 class="nav-content collapse {{ request()->routeIs('galeribidangumum.*','galeripokja1.*','galeripokja2.*','galeripokja3.*','galeripokja4.*') ? 'show' : '' }}">

@@ -810,6 +810,9 @@ class Pokja4Controller extends Controller
                 return response()->json(['status' => 'empty', 'message' => 'Tidak ada data laporan yang valid pada periode tersebut.']);
             }
 
+            // ==========================================
+            // 🧹 [PERUBAHAN 03-10-2026] Merapikan pemetaan kolom ekspor Pokja 4; kode lama di bawah dinonaktifkan
+            /*
             $data->transform(function ($item) {
                 $kolomSampah = ['uuid', 'id_user', 'id_role', 'id_organization', 'created_at', 'updated_at'];
                 foreach ($kolomSampah as $kolom) {
@@ -825,6 +828,156 @@ class Pokja4Controller extends Controller
             });
 
             return response()->json(['status' => 'success', 'bidang' => strtoupper($bidang), 'data' => $data]);
+            */
+            $no = 1;
+            $data = $data->map(function ($item) use (&$no, $bidang, $subBidang) {
+                $row = [
+                    'No' => $no++,
+                    'Tanggal Laporan' => !empty($item->created_at) ? date('d-m-Y', strtotime($item->created_at)) : '-',
+                    'Kecamatan' => !empty($item->nama_kecamatan) ? ucwords(strtolower($item->nama_kecamatan)) : '-',
+                    'Desa / Kelurahan' => !empty($item->nama_desa) ? ucwords(strtolower($item->nama_desa)) : '-',
+                ];
+
+                if ($bidang == 'kesehatan') {
+                    $row['Posyandu'] = $item->jumlah_posyandu ?? 0;
+                    $row['Posyandu Terintegrasi'] = $item->jumlah_posyandu_iterasi ?? 0;
+                    $row['Kelompok Lansia'] = $item->jumlah_klp ?? 0;
+                    $row['Anggota Lansia'] = $item->jumlah_anggota ?? 0;
+                    $row['Kartu Berobat Gratis'] = $item->jumlah_kartu_gratis ?? 0;
+                } elseif ($bidang == 'kelestarian') {
+                    $row['Jamban'] = $item->jamban ?? 0;
+                    $row['SPAL'] = $item->spal ?? 0;
+                    $row['TPS'] = $item->tps ?? 0;
+                    $row['MCK'] = $item->mck ?? 0;
+                    $row['PDAM'] = $item->pdam ?? 0;
+                    $row['Sumur'] = $item->sumur ?? 0;
+                    $row['Lainnya'] = $item->dll ?? 0;
+                } elseif ($bidang == 'perencanaan') {
+                    $row['Pasangan Usia Subur'] = $item->J_Psubur ?? 0;
+                    $row['Wanita Usia Subur'] = $item->J_Wsubur ?? 0;
+                    $row['Akseptor KB Pria'] = $item->Kb_p ?? 0;
+                    $row['Akseptor KB Wanita'] = $item->Kb_w ?? 0;
+                    $row['KK Tabungan'] = $item->Kk_tbg ?? 0;
+                } elseif ($bidang == 'kader') {
+                    $row['Kader Posyandu'] = $item->posyandu ?? 0;
+                    $row['Kader Gizi'] = $item->gizi ?? 0;
+                    $row['Kader Kesling'] = $item->kesling ?? 0;
+                    $row['Kader Penyuluhan Narkoba'] = $item->penyuluhan_narkoba ?? 0;
+                    $row['Kader PHBS'] = $item->PHBS ?? 0;
+                    $row['Kader KB'] = $item->KB ?? 0;
+                } elseif ($bidang == 'inovasi_prioritas' || $bidang == 'inovasi_unggulan') {
+                    $row['Kategori'] = !empty($item->kategori) ? ucfirst($item->kategori) : '-';
+                    if ($subBidang == 'rekap_bulanan') {
+                        $row['RW'] = $item->rw ?? 0;
+                        $row['RT'] = $item->rt ?? 0;
+                        $row['Dasa Wisma'] = $item->dasa_wisma ?? 0;
+                        $row['Hamil'] = $item->hamil ?? 0;
+                        $row['Melahirkan'] = $item->melahirkan ?? 0;
+                        $row['Nifas'] = $item->nifas ?? 0;
+                        $row['Ibu Meninggal'] = $item->meninggal ?? 0;
+                        $row['Bayi Lahir L'] = $item->bayi_lahir_l ?? 0;
+                        $row['Bayi Lahir P'] = $item->bayi_lahir_p ?? 0;
+                        $row['Akte Kelahiran Ada'] = $item->akte_kelahiran_ada ?? 0;
+                        $row['Akte Kelahiran Tidak Ada'] = $item->akte_kelahiran_tidak ?? 0;
+                        $row['Bayi Meninggal L'] = $item->bayi_meninggal_l ?? 0;
+                        $row['Bayi Meninggal P'] = $item->bayi_meninggal_p ?? 0;
+                        $row['Balita Meninggal L'] = $item->balita_meninggal_l ?? 0;
+                        $row['Balita Meninggal P'] = $item->balita_meninggal_p ?? 0;
+                    } elseif ($subBidang == 'rekap_tahunan') {
+                        $row['Kader Kesehatan'] = $item->kader_kesehatan ?? 0;
+                        $row['Gizi'] = $item->gizi ?? 0;
+                        $row['Kesling'] = $item->kesling ?? 0;
+                        $row['PHBS'] = $item->phbs ?? 0;
+                        $row['KB'] = $item->kb ?? 0;
+                        $row['Posyandu'] = $item->posyandu ?? 0;
+                        $row['Imunisasi Bayi Balita'] = $item->imunisasi_vaksinasi_bayi_balita ?? 0;
+                        $row['PKG'] = $item->pkg ?? 0;
+                        $row['TBC'] = $item->tbc ?? 0;
+                        $row['Jamban WC'] = $item->jamban_wc ?? 0;
+                        $row['SPAL'] = $item->spal ?? 0;
+                        $row['TPS'] = $item->tps ?? 0;
+                        $row['Jumlah MCK'] = $item->jumlah_mck ?? 0;
+                        $row['PDAM'] = $item->pdam ?? 0;
+                        $row['Sumur'] = $item->sumur ?? 0;
+                        $row['Lain-lain'] = $item->lain_lain ?? 0;
+                        $row['Jml PUS'] = $item->jml_pus ?? 0;
+                        $row['Jml WUS'] = $item->jml_wus ?? 0;
+                        $row['Akseptor KB L'] = $item->akseptor_kb_l ?? 0;
+                        $row['Akseptor KB P'] = $item->akseptor_kb_p ?? 0;
+                        $row['KK Memiliki Tabungan'] = $item->jml_kk_tabungan ?? 0;
+                        $row['KK Memiliki Asuransi'] = $item->jml_kk_asuransi ?? 0;
+                        $row['Kesehatan Program'] = $item->kesehatan_program ?? 0;
+                        $row['Kelestarian Lingkungan Hidup'] = $item->kelestarian_lingkungan_hidup ?? 0;
+                        $row['Perencanaan Sehat Program'] = $item->perencanaan_sehat_program ?? 0;
+                    } elseif ($subBidang == 'posyandu') {
+                        $row['Bulan'] = $item->bulan ?? '-';
+                        $row['Jml Ibu Hamil'] = $item->jml_ibu_hamil ?? 0;
+                        $row['Diperiksa'] = $item->diperiksa ?? 0;
+                        $row['Fe Tablet Darah'] = $item->fe_tablet_darah ?? 0;
+                        $row['Jml Ibu Menyusui'] = $item->jml_ibu_menyusui ?? 0;
+                        $row['KB Kondom'] = $item->kondom ?? 0;
+                        $row['KB Pil'] = $item->pil ?? 0;
+                        $row['KB Implant'] = $item->implant ?? 0;
+                        $row['KB MOP'] = $item->mop ?? 0;
+                        $row['KB MOW'] = $item->mow ?? 0;
+                        $row['KB IUD'] = $item->iud ?? 0;
+                        $row['KB Suntikan'] = $item->suntikan ?? 0;
+                        $row['KB Lain-lain'] = $item->lain_lain_kb ?? 0;
+                        $row['Jml Balita L'] = $item->jml_balita_l ?? 0;
+                        $row['Jml Balita P'] = $item->jml_balita_p ?? 0;
+                        $row['Buku KIA L'] = $item->buku_kia_l ?? 0;
+                        $row['Buku KIA P'] = $item->buku_kia_p ?? 0;
+                        $row['Datang L'] = $item->datang_l ?? 0;
+                        $row['Datang P'] = $item->datang_p ?? 0;
+                        $row['Naik L'] = $item->naik_l ?? 0;
+                        $row['Naik P'] = $item->naik_p ?? 0;
+                        $row['Vit A L'] = $item->vit_a_l ?? 0;
+                        $row['Vit A P'] = $item->vit_a_p ?? 0;
+                        $row['PMT L'] = $item->pmt_l ?? 0;
+                        $row['PMT P'] = $item->pmt_p ?? 0;
+                        $row['Imunisasi TT 1'] = $item->imunisasi_tt_1 ?? 0;
+                        $row['Imunisasi TT 2'] = $item->imunisasi_tt_2 ?? 0;
+                    } elseif ($subBidang == 'kegiatan_pokja4') {
+                        $row['Kader Kesehatan'] = $item->kader_kesehatan ?? 0;
+                        $row['Gizi'] = $item->gizi ?? 0;
+                        $row['Kesling'] = $item->kesling ?? 0;
+                        $row['PHBS'] = $item->phbs ?? 0;
+                        $row['KB'] = $item->kb ?? 0;
+                        $row['Posyandu'] = $item->posyandu ?? 0;
+                        $row['Imunisasi Bayi Balita'] = $item->imunisasi_vaksinasi_bayi_balita ?? 0;
+                        $row['PKG'] = $item->pkg ?? 0;
+                        $row['TBC'] = $item->tbc ?? 0;
+                        $row['Jamban WC'] = $item->jamban_wc ?? 0;
+                        $row['SPAL'] = $item->spal ?? 0;
+                        $row['TPS'] = $item->tps ?? 0;
+                        $row['Jumlah MCK'] = $item->jumlah_mck ?? 0;
+                        $row['PDAM'] = $item->pdam ?? 0;
+                        $row['Sumur'] = $item->sumur ?? 0;
+                        $row['Lain-lain'] = $item->lain_lain ?? 0;
+                        $row['Jml PUS'] = $item->jml_pus ?? 0;
+                        $row['Jml WUS'] = $item->jml_wus ?? 0;
+                        $row['Akseptor KB L'] = $item->akseptor_kb_l ?? 0;
+                        $row['Akseptor KB P'] = $item->akseptor_kb_p ?? 0;
+                        $row['KK Memiliki Tabungan'] = $item->kk_memiliki_tabungan ?? 0;
+                        $row['KK Memiliki Asuransi'] = $item->kk_memiliki_asuransi ?? 0;
+                        $row['Kesehatan'] = $item->kesehatan ?? 0;
+                        $row['Kelestarian Lingkungan'] = $item->kelestarian_lingkungan_hidup ?? 0;
+                        $row['Perencanaan Sehat'] = $item->perencanaan_sehat ?? 0;
+                    }
+                }
+
+                $row['Catatan'] = $item->catatan ?? '-';
+                $row['Status'] = !empty($item->status) ? ucfirst(strtolower($item->status)) : '-';
+
+                return $row;
+            });
+
+            return response()->json([
+                'status' => 'success',
+                'bidang' => strtoupper($bidang),
+                'data' => $data
+            ]);
+            // ==========================================
         } catch (\Throwable $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }

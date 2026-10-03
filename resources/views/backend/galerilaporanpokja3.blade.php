@@ -124,8 +124,7 @@
 
     <section class="section">
 
-        <h1 class="page-heading">
-            Galeri Laporan Kader Pokja 3
+        <h1 class="page-heading">Kegiatan Laporan Kader Pokja 3
         </h1>
 
         @if ($message = Session::get('success'))
@@ -179,6 +178,9 @@
                         <th>
                             Deskripsi
                         </th>
+                        <th>
+                            Nama Peserta
+                        </th>
 
                         <th>
                             Lokasi Kegiatan
@@ -227,6 +229,21 @@
 
                             {{ $tampil->deskripsi }}
 
+                        </td>
+
+                        <td>
+                            @php
+                                $peserta = json_decode($tampil->nama_peserta, true);
+                            @endphp
+                            @if(!empty($peserta) && is_array($peserta))
+                                <ol class="mb-0 ps-3" style="font-size: 13px;">
+                                    @foreach($peserta as $p)
+                                        <li>{{ $p }}</li>
+                                    @endforeach
+                                </ol>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
                         </td>
 
                         <td class="table-lokasi">

@@ -151,10 +151,70 @@ class Pokja2Controller extends Controller
                 return response()->json(['status' => 'empty', 'message' => 'Tidak ada data laporan yang valid pada periode tersebut.']);
             }
 
+            // [PERUBAHAN 03-10-2026] Merapikan pemetaan kolom ekspor Pokja 2; kode lama di bawah dinonaktifkan
+            /*
             return response()->json([
                 'status' => 'success',
                 'bidang' => strtoupper($bidang),
                 'data' => $data
+            ]);
+            */
+            $no = 1;
+            $cleanData = $data->map(function ($item) use (&$no, $bidang) {
+                $row = [
+                    'No' => $no++,
+                    'Tanggal Laporan' => !empty($item->created_at) ? date('d-m-Y', strtotime($item->created_at)) : '-',
+                    'Kecamatan' => !empty($item->nama_kecamatan) ? ucwords(strtolower($item->nama_kecamatan)) : '-',
+                    'Desa / Kelurahan' => !empty($item->nama_desa) ? ucwords(strtolower($item->nama_desa)) : '-',
+                ];
+
+                if ($bidang == 'pendidikan') {
+                    $row['Warga Buta'] = $item->warga_buta ?? 0;
+                    $row['Kel Belajar Paket A'] = $item->kel_belajarA ?? 0;
+                    $row['Warga Belajar Paket A'] = $item->warga_belajarA ?? 0;
+                    $row['Kel Belajar Paket B'] = $item->kel_belajarB ?? 0;
+                    $row['Warga Belajar Paket B'] = $item->warga_belajarB ?? 0;
+                    $row['Kel Belajar Paket C'] = $item->kel_belajarC ?? 0;
+                    $row['Warga Belajar Paket C'] = $item->warga_belajarC ?? 0;
+                    $row['Kel Belajar KF'] = $item->kel_belajarKF ?? 0;
+                    $row['Warga Belajar KF'] = $item->warga_belajarKF ?? 0;
+                    $row['PAUD/Sejenis'] = $item->paud ?? 0;
+                    $row['Taman Bacaan'] = $item->taman_bacaan ?? 0;
+                    $row['Jumlah Kelompok BKB'] = $item->jumlah_klp ?? 0;
+                    $row['Jumlah Ibu Peserta BKB'] = $item->jumlah_ibu_peserta ?? 0;
+                    $row['Jumlah APE'] = $item->jumlah_ape ?? 0;
+                    $row['Jumlah Kelompok Simulasi'] = $item->jumlah_kel_simulasi ?? 0;
+                    $row['Tutor KF'] = $item->KF ?? 0;
+                    $row['Tutor PAUD'] = $item->paud_tutor ?? 0;
+                    $row['Kader BKB'] = $item->BKB ?? 0;
+                    $row['Kader Koperasi'] = $item->koperasi ?? 0;
+                    $row['Kader Keterampilan'] = $item->ketrampilan ?? 0;
+                    $row['Kader LP3PKK'] = $item->LP3PKK ?? 0;
+                    $row['Kader TP3PKK'] = $item->TP3PKK ?? 0;
+                    $row['Damas PKK'] = $item->damas_pkk ?? 0;
+                } elseif ($bidang == 'pengembangan') {
+                    $row['Kelompok UP2K Pemula'] = $item->jumlah_kelompok_pemula ?? 0;
+                    $row['Peserta UP2K Pemula'] = $item->jumlah_peserta_pemula ?? 0;
+                    $row['Kelompok UP2K Madya'] = $item->jumlah_kelompok_madya ?? 0;
+                    $row['Peserta UP2K Madya'] = $item->jumlah_peserta_madya ?? 0;
+                    $row['Kelompok UP2K Utama'] = $item->jumlah_kelompok_utama ?? 0;
+                    $row['Peserta UP2K Utama'] = $item->jumlah_peserta_utama ?? 0;
+                    $row['Kelompok UP2K Mandiri'] = $item->jumlah_kelompok_mandiri ?? 0;
+                    $row['Peserta UP2K Mandiri'] = $item->jumlah_peserta_mandiri ?? 0;
+                    $row['Kelompok Berbadan Hukum'] = $item->jumlah_kelompok_hukum ?? 0;
+                    $row['Peserta Berbadan Hukum'] = $item->jumlah_peserta_hukum ?? 0;
+                }
+
+                $row['Catatan'] = $item->catatan ?? '-';
+                $row['Status'] = !empty($item->status) ? ucfirst(strtolower($item->status)) : '-';
+
+                return $row;
+            });
+
+            return response()->json([
+                'status' => 'success',
+                'bidang' => strtoupper($bidang),
+                'data' => $cleanData
             ]);
         } catch (\Throwable $e) {
             return response()->json([

@@ -53,7 +53,7 @@
     @if ($isAdmin || $isPengguna)
     <li class="nav-item">
       <a class="nav-link collapsed" data-bs-target="#galeri_nav" data-bs-toggle="collapse" href="#">
-      <i class="fa-solid fa-image"></i><span>Galeri</span><i class="bi bi-chevron-down ms-auto"></i>
+      <i class="fa-solid fa-image"></i><span>Kegiatan</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="galeri_nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
       <li><a href="{{ route('galeribidangumum.index') }}"><i class="bi bi-circle"></i><span>Bidang Umum</span></a>

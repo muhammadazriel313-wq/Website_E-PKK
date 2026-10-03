@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Cetak Galeri Tahunan Pokja I</title>
+    <title>Cetak Kegiatan Tahunan Pokja I</title>
 
     <style>
         body {
@@ -347,6 +347,21 @@
 
                         {{ $item->deskripsi }}
 
+                    </td>
+
+                    <td>
+                        @php
+                            $peserta = json_decode($item->nama_peserta, true);
+                        @endphp
+                        @if(!empty($peserta) && is_array($peserta))
+                            <ol style="margin: 0; padding-left: 15px;">
+                                @foreach($peserta as $p)
+                                    <li>{{ $p }}</li>
+                                @endforeach
+                            </ol>
+                        @else
+                            -
+                        @endif
                     </td>
 
                 </tr>

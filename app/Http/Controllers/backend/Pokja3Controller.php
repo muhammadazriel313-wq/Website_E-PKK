@@ -176,11 +176,59 @@ class Pokja3Controller extends Controller
                 return response()->json(['status' => 'empty', 'message' => 'Tidak ada data laporan yang valid pada periode tersebut.']);
             }
 
+            // ==========================================
+            // 🧹 [PERUBAHAN 03-10-2026] Merapikan pemetaan kolom ekspor Pokja 3; kode lama di bawah dinonaktifkan
+            /*
             return response()->json([
                 'status' => 'success',
                 'bidang' => strtoupper($bidang),
                 'data' => $data
             ]);
+            */
+            $no = 1;
+            $data = $data->map(function ($item) use (&$no, $bidang) {
+                $row = [
+                    'No' => $no++,
+                    'Tanggal Laporan' => !empty($item->created_at) ? date('d-m-Y', strtotime($item->created_at)) : '-',
+                    'Kecamatan' => !empty($item->nama_kecamatan) ? ucwords(strtolower($item->nama_kecamatan)) : '-',
+                    'Desa / Kelurahan' => !empty($item->nama_desa) ? ucwords(strtolower($item->nama_desa)) : '-',
+                ];
+
+                if ($bidang == 'pangan') {
+                    $row['Beras'] = $item->beras ?? 0;
+                    $row['Non Beras'] = $item->non_beras ?? 0;
+                    $row['Peternakan'] = $item->peternakan ?? 0;
+                    $row['Perikanan'] = $item->perikanan ?? 0;
+                    $row['Warung Hidup'] = $item->warung_hidup ?? 0;
+                    $row['Lumbung Hidup'] = $item->lumbung_hidup ?? 0;
+                    $row['Toga'] = $item->toga ?? 0;
+                    $row['Tanaman Keras'] = $item->tanaman_keras ?? 0;
+                    $row['Tanaman Lainnya'] = $item->tanaman_lainnya ?? 0;
+                } elseif ($bidang == 'sandang') {
+                    $row['Pangan'] = $item->pangan ?? 0;
+                    $row['Sandang'] = $item->sandang ?? 0;
+                    $row['Jasa'] = $item->jasa ?? 0;
+                } elseif ($bidang == 'perumahan') {
+                    $row['Layak Huni'] = $item->layak_huni ?? 0;
+                    $row['Tidak Layak Huni'] = $item->tidak_layak ?? 0;
+                } elseif ($bidang == 'kader') {
+                    $row['Kader Pangan'] = $item->pangan ?? 0;
+                    $row['Kader Sandang'] = $item->sandang ?? 0;
+                    $row['Kader Tata Laksana Rumah Tangga'] = $item->tata_laksana_rumah ?? 0;
+                }
+
+                $row['Catatan'] = $item->catatan ?? '-';
+                $row['Status'] = !empty($item->status) ? ucfirst(strtolower($item->status)) : '-';
+
+                return $row;
+            });
+
+            return response()->json([
+                'status' => 'success',
+                'bidang' => strtoupper($bidang),
+                'data' => $data
+            ]);
+            // ==========================================
         } catch (\Throwable $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }

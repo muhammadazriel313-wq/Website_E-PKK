@@ -76,6 +76,16 @@ class GaleriBidangUmumController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'tanggal'   => $request->tanggal,
                 'lokasi'    => $request->tempat_kegiatan,
+                'nama_peserta' => $request->has('nama_peserta') ? (function() use ($request, $data) {
+                    $val = $request->nama_peserta;
+                    if (is_array($val)) return json_encode(array_values(array_filter(array_map('trim', $val))));
+                    if (is_string($val) && trim($val) !== '') {
+                        $dec = json_decode($val, true);
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($dec)) return json_encode(array_values(array_filter(array_map('trim', $dec))));
+                        return json_encode(array_values(array_filter(array_map('trim', explode("\n", str_replace("\r", "", $val))))));
+                    }
+                    return null;
+                })() : $data->nama_peserta,
                 'status'    => 'upload1',
             ]);
 
@@ -87,6 +97,16 @@ class GaleriBidangUmumController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'tanggal'   => $request->tanggal,
                 'lokasi'    => $request->tempat_kegiatan,
+                'nama_peserta' => $request->has('nama_peserta') ? (function() use ($request, $data) {
+                    $val = $request->nama_peserta;
+                    if (is_array($val)) return json_encode(array_values(array_filter(array_map('trim', $val))));
+                    if (is_string($val) && trim($val) !== '') {
+                        $dec = json_decode($val, true);
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($dec)) return json_encode(array_values(array_filter(array_map('trim', $dec))));
+                        return json_encode(array_values(array_filter(array_map('trim', explode("\n", str_replace("\r", "", $val))))));
+                    }
+                    return null;
+                })() : $data->nama_peserta,
                 'status'    => 'upload2',
             ]);
 

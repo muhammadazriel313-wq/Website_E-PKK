@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Cetak Galeri Tahunan Pokja II</title>
+    <title>Cetak Kegiatan Tahunan Pokja II</title>
 
     <style>
         body {

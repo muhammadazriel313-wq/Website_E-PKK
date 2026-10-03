@@ -22,7 +22,7 @@
 
 <main id="main" class="main">
     <section class="section">
-        <h1 class="page-heading">Galeri Kelompok Kerja 1</h1>
+        <h1 class="page-heading">Kegiatan Kelompok Kerja 1</h1>
 
         @if ($message = Session::get('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

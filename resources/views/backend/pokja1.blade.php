@@ -125,7 +125,9 @@
           <div class="alert alert-primary mt-3" id="infoLinkSheet" style="display:none; border-left:4px solid #0d6efd; background-color: #f0f7ff;">
             <h6 class="alert-heading fw-bold mb-1" style="font-size:13px;"><i class="bi bi-link-45deg"></i> Link Spreadsheet Tujuan</h6>
             <p class="mb-2" style="font-size:12px; color:#475569;">Data akan diekspor ke dalam tab di Google Sheets berikut:</p>
-            <a href="https://docs.google.com/spreadsheets/d/1sW8NzwzGyx9iBfTyjX7gZ17rFpg8PWgAU7OM4QMVUjo/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
+            {{-- [PERUBAHAN 03-10-2026] Mengarahkan link spreadsheet Pokja 1 ke sheet target baru; kode lama di bawah dinonaktifkan --}}
+            {{-- <a href="https://docs.google.com/spreadsheets/d/1sW8NzwzGyx9iBfTyjX7gZ17rFpg8PWgAU7OM4QMVUjo/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;"> --}}
+            <a href="https://docs.google.com/spreadsheets/d/15eG1L1kuDMbnSsbm3T-Z_e5A4FKINH0ExettHIuZBys/edit" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
               <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet Pokja 1
             </a>
           </div>
@@ -143,8 +145,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   // URL DEPLOY GOOGLE APPS SCRIPT POKJA 1
-  const APPS_SCRIPT_URL_POKJA1 = "https://script.google.com/macros/s/AKfycbzjXVgFoo8OzY1POERpnrjyi-bX_GiaIxPUv2RkZkb0HoBgxrDIoO-njc67ezlfJvKR/exec";
-  const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1sW8NzwzGyx9iBfTyjX7gZ17rFpg8PWgAU7OM4QMVUjo/edit?usp=sharing";
+  // [PERUBAHAN 03-10-2026] Memperbarui URL Apps Script Pokja 1 hasil deploy baru; kode lama di bawah dinonaktifkan
+  // const APPS_SCRIPT_URL_POKJA1 = "https://script.google.com/macros/s/AKfycbzjXVgFoo8OzY1POERpnrjyi-bX_GiaIxPUv2RkZkb0HoBgxrDIoO-njc67ezlfJvKR/exec";
+  const APPS_SCRIPT_URL_POKJA1 = "https://script.google.com/macros/s/AKfycbwA80bo6vFASUV-u6MFJDM0iAcbQekxvFXgyUhPO_j9-VYPVkOMkDgII6Hs6aA1TjzP/exec";
+  // [PERUBAHAN 03-10-2026] Mengarahkan SHEET_HREF ke Google Spreadsheet target baru; kode lama di bawah dinonaktifkan
+  // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1sW8NzwzGyx9iBfTyjX7gZ17rFpg8PWgAU7OM4QMVUjo/edit?usp=sharing";
+  const SHEET_HREF = "https://docs.google.com/spreadsheets/d/15eG1L1kuDMbnSsbm3T-Z_e5A4FKINH0ExettHIuZBys/edit";
 
   document.getElementById("formatExportPokja1").addEventListener("change", function() {
     document.getElementById("infoLinkSheet").style.display = this.value === "excel" ? "block" : "none";

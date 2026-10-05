@@ -134,23 +134,31 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">No</th>
                 @if (Auth::guard('web')->check())
-                  <th class="text-center align-middle" scope="col">Kecamatan</th>
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th class="text-center align-middle" rowspan="3" scope="col">Kecamatan</th>
+                  <th class="text-center align-middle" rowspan="3" scope="col">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th class="text-center align-middle" rowspan="3" scope="col">Desa</th>
                 @endif
-                <th class="text-center align-middle" scope="col">Jamban</th>
-                <th class="text-center align-middle" scope="col">SPAL</th>
-                <th class="text-center align-middle" scope="col">TPS</th>
-                <th class="text-center align-middle" scope="col">MCK</th>
-                <th class="text-center align-middle" scope="col">PDAM</th>
-                <th class="text-center align-middle" scope="col">Sumur</th>
-                <th class="text-center align-middle" scope="col">DLL</th>
-                <th scope="col" class="text-center align-middle">Status</th>
-                <th scope="col" class="text-center align-middle">Tanggal</th>
-                <th scope="col" class="text-center align-middle">Aksi</th>
+                <th scope="col" colspan="7" class="text-center align-middle">Kelestarian Lingkungan Hidup</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Keterangan</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
+              </tr>
+              <tr>
+                <th scope="col" colspan="3" class="text-center align-middle">Jumlah Rumah yang Memiliki</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Jumlah MCK</th>
+                <th scope="col" colspan="3" class="text-center align-middle">Jumlah KK yang Menggunakan Air</th>
+              </tr>
+              <tr>
+                <th scope="col" class="text-center align-middle">Jamban</th>
+                <th scope="col" class="text-center align-middle">SPAL</th>
+                <th scope="col" class="text-center align-middle">Tempat Pembuangan Sampah</th>
+                <th scope="col" class="text-center align-middle">PDAM</th>
+                <th scope="col" class="text-center align-middle">Sumur</th>
+                <th scope="col" class="text-center align-middle">Lain Lain</th>
               </tr>
             </thead>
             <tbody>
@@ -171,6 +179,7 @@
                 <td class="text-center">{{ $pangan1->pdam ?? '0' }}</td>
                 <td class="text-center">{{ $pangan1->sumur ?? '0' }}</td>
                 <td class="text-center">{{ $pangan1->dll ?? '0' }}</td>
+                <td class="text-center">{{ $pangan1->catatan ?: '-' }}</td>
                 
                 <td class="text-center">
                   @if(in_array(strtolower($pangan1->status), ['proses', 'revisi']))
@@ -195,7 +204,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="13" class="text-center py-5">
+                <td colspan="14" class="text-center py-5">
                   <div class="alert alert-danger mb-0">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan kelestarian lingkungan hidup.
                   </div>

@@ -148,22 +148,26 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">No</th>
                 @if (Auth::guard('web')->check())
-                  <th class="text-center align-middle" scope="col">Kecamatan</th>
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th class="text-center align-middle" rowspan="2" scope="col">Kecamatan</th>
+                  <th class="text-center align-middle" rowspan="2" scope="col">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                  <th class="text-center align-middle" scope="col">Desa</th>
+                  <th class="text-center align-middle" rowspan="2" scope="col">Desa</th>
                 @endif
+                <th scope="col" colspan="6" class="text-center align-middle">Jumlah Kader</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Keterangan</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Aksi</th>
+              </tr>
+              <tr>
                 <th class="text-center align-middle" scope="col">Posyandu</th>
                 <th class="text-center align-middle" scope="col">Gizi</th>
                 <th class="text-center align-middle" scope="col">Kesling</th>
                 <th class="text-center align-middle" scope="col">Penyuluhan Narkoba</th>
                 <th class="text-center align-middle" scope="col">PHBS</th>
                 <th class="text-center align-middle" scope="col">KB</th>
-                <th scope="col" class="text-center align-middle">Status</th>
-                <th scope="col" class="text-center align-middle">Tanggal</th>
-                <th scope="col" class="text-center align-middle">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -183,6 +187,7 @@
                 <td class="text-center">{{ $row->penyuluhan_narkoba ?? '-' }}</td>
                 <td class="text-center">{{ $row->PHBS ?? '-' }}</td>
                 <td class="text-center">{{ $row->KB ?? '-' }}</td>
+                <td class="text-center">{{ $row->catatan ?: '-' }}</td>
                 
                 <td class="text-center">
                   @if(in_array(strtolower($row->status), ['proses', 'revisi']))
@@ -210,7 +215,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="12" class="text-center py-5">
+                <td colspan="13" class="text-center py-5">
                   <div class="alert alert-danger mb-0">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan kader Pokja 4.
                   </div>
@@ -250,4 +255,4 @@
   </script>
 </body>
 </html>
-{{-- @endsection --}}
+{{-- @endsection --}} 

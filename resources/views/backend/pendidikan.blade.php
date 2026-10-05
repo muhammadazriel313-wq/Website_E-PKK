@@ -41,7 +41,7 @@
     }
 
     .table-responsive table {
-      min-width: 2500px; /* Diperlebar karena kolom sangat banyak */
+      min-width: 2600px; /* Diperlebar karena kolom sangat banyak */
       white-space: nowrap;
       margin-bottom: 0;
     }
@@ -174,24 +174,28 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" rowspan="3" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">No</th>
                 @if (Auth::guard('web')->check())
-                  <th scope="col" rowspan="3" class="text-center align-middle">Kecamatan</th>
-                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
+                  <th scope="col" rowspan="4" class="text-center align-middle">Kecamatan</th>
+                  <th scope="col" rowspan="4" class="text-center align-middle">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
+                  <th scope="col" rowspan="4" class="text-center align-middle">Desa</th>
                 @endif
-                <th scope="col" rowspan="3" class="text-center align-middle">Warga Buta</th>
-                
+                <th scope="col" colspan="23" class="text-center header-group-title">PENDIDIKAN DAN KETERAMPILAN</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Keterangan</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Aksi</th>
+              </tr>
+
+              <tr>
+                <th scope="col" rowspan="3" class="text-center align-middle header-sub-title">Warga Buta</th>
                 <th scope="col" colspan="8" class="text-center header-group-title">JUMLAH KELOMPOK BELAJAR</th>
-                <th scope="col" colspan="2" class="text-center header-group-title">PENDIDIKAN & KETERAMPILAN</th>
+                <th scope="col" rowspan="3" class="text-center align-middle header-sub-title">PAUD<br>Sejenis</th>
+                <th scope="col" rowspan="3" class="text-center align-middle header-sub-title">Taman Bacaan /<br>Perpustakaan</th>
                 <th scope="col" colspan="4" class="text-center header-group-title">BKB</th>
                 <th scope="col" colspan="5" class="text-center header-group-title">KADER KHUSUS</th>
-                <th scope="col" colspan="3" class="text-center header-group-title">KADER YANG DILATIH</th>
-                
-                <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
+                <th scope="col" colspan="3" class="text-center header-group-title">JUMLAH KADER YANG SUDAH DILATIH</th>
               </tr>
 
               <tr>
@@ -199,35 +203,26 @@
                 <th scope="col" colspan="2" class="text-center header-sub-title">Paket B</th>
                 <th scope="col" colspan="2" class="text-center header-sub-title">Paket C</th>
                 <th scope="col" colspan="2" class="text-center header-sub-title">KF</th>
-                
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">PAUD</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Taman<br>Bacaan</th>
-                
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">J. Kelompok</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">J. Ibu Peserta</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">J. APE</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">J. Kel Simulasi</th>
-                
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">KF</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Paud Tutor</th>
+                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Jml Kelompok</th>
+                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Jml Ibu Peserta</th>
+                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Jml APE (Set)</th>
+                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Jml Klp Simulasi</th>
+                <th scope="col" colspan="2" class="text-center header-sub-title">Tutor</th>
                 <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">BKB</th>
                 <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Koperasi</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Ketrampilan</th>
-                
+                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Keterampilan</th>
                 <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">LP3PKK</th>
                 <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">TP3PKK</th>
                 <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Damas PKK</th>
               </tr>
 
               <tr>
-                <th scope="col" class="text-center" style="font-size: 9px;">Klp</th>
-                <th scope="col" class="text-center" style="font-size: 9px;">Warga</th>
-                <th scope="col" class="text-center" style="font-size: 9px;">Klp</th>
-                <th scope="col" class="text-center" style="font-size: 9px;">Warga</th>
-                <th scope="col" class="text-center" style="font-size: 9px;">Klp</th>
-                <th scope="col" class="text-center" style="font-size: 9px;">Warga</th>
-                <th scope="col" class="text-center" style="font-size: 9px;">Klp</th>
-                <th scope="col" class="text-center" style="font-size: 9px;">Warga</th>
+                @for ($i = 0; $i < 4; $i++)
+                  <th scope="col" class="text-center" style="font-size: 9px;">Klp</th>
+                  <th scope="col" class="text-center" style="font-size: 9px;">Warga</th>
+                @endfor
+                <th scope="col" class="text-center" style="font-size: 9px;">KF</th>
+                <th scope="col" class="text-center" style="font-size: 9px;">PAUD<br>Sejenis</th>
               </tr>
             </thead>
             <tbody>
@@ -266,6 +261,7 @@
                   <td class="text-center">{{ $peng1->LP3PKK ?? '0' }}</td>
                   <td class="text-center">{{ $peng1->TP3PKK ?? '0' }}</td>
                   <td class="text-center">{{ $peng1->damas_pkk ?? '0' }}</td>
+                  <td class="text-center">{{ $peng1->catatan ?: '-' }}</td>
 
                   <td class="text-center">
                     @if(in_array(strtolower($peng1->status), ['proses', 'revisi']))
@@ -295,7 +291,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="29" class="text-center py-5">
+                  <td colspan="30" class="text-center py-5">
                     <div class="alert alert-danger mb-0">
                       <i class="bi bi-exclamation-triangle-fill me-2"></i> 
                       Tidak ada data laporan pendidikan dan keterampilan

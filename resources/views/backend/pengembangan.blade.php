@@ -42,7 +42,7 @@
     }
 
     .table-responsive table {
-      min-width: 1500px;
+      min-width: 1700px;
       white-space: nowrap;
       margin-bottom: 0;
       border-collapse: collapse;
@@ -181,41 +181,39 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" rowspan="3" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">No</th>
                 @if (Auth::guard('web')->check())
-                  <th scope="col" rowspan="3" class="text-center align-middle">Kecamatan</th>
-                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
+                  <th scope="col" rowspan="4" class="text-center align-middle">Kecamatan</th>
+                  <th scope="col" rowspan="4" class="text-center align-middle">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
+                  <th scope="col" rowspan="4" class="text-center align-middle">Desa</th>
                 @endif
-                
+                <th scope="col" colspan="10" class="text-center header-group-title">PENGEMBANGAN KEHIDUPAN BERKOPERASI</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Keterangan</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Aksi</th>
+              </tr>
+
+              <tr>
                 <th scope="col" colspan="8" class="text-center header-group-title">PRAKOPERASI / USAHA BERSAMA / UP2K</th>
                 <th scope="col" colspan="2" class="text-center header-group-title">KOPERASI BERBADAN HUKUM</th>
-                
-                <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
               </tr>
 
               <tr>
-                <th scope="col" colspan="2" class="text-center header-sub-title">PEMULA</th>
-                <th scope="col" colspan="2" class="text-center header-sub-title">MADYA</th>
-                <th scope="col" colspan="2" class="text-center header-sub-title">UTAMA</th>
-                <th scope="col" colspan="2" class="text-center header-sub-title">MANDIRI</th>
-                
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Jml Kel</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Peserta</th>
+                <th scope="col" colspan="2" class="text-center header-sub-title">Pemula</th>
+                <th scope="col" colspan="2" class="text-center header-sub-title">Madya</th>
+                <th scope="col" colspan="2" class="text-center header-sub-title">Utama</th>
+                <th scope="col" colspan="2" class="text-center header-sub-title">Mandiri</th>
+                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Jml</th>
+                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title">Anggt</th>
               </tr>
 
               <tr>
-                <th scope="col" class="text-center header-sub-title">Jml Kel</th>
-                <th scope="col" class="text-center header-sub-title">Peserta</th>
-                <th scope="col" class="text-center header-sub-title">Jml Kel</th>
-                <th scope="col" class="text-center header-sub-title">Peserta</th>
-                <th scope="col" class="text-center header-sub-title">Jml Kel</th>
-                <th scope="col" class="text-center header-sub-title">Peserta</th>
-                <th scope="col" class="text-center header-sub-title">Jml Kel</th>
-                <th scope="col" class="text-center header-sub-title">Peserta</th>
+                @for ($i = 0; $i < 4; $i++)
+                  <th scope="col" class="text-center header-sub-title">Jml Kel</th>
+                  <th scope="col" class="text-center header-sub-title">Psrt</th>
+                @endfor
               </tr>
             </thead>
             <tbody>
@@ -241,6 +239,7 @@
                   <td class="text-center">{{ $peng1->jumlah_peserta_mandiri ?? '0' }}</td>
                   <td class="text-center">{{ $peng1->jumlah_kelompok_hukum ?? '0' }}</td>
                   <td class="text-center">{{ $peng1->jumlah_peserta_hukum ?? '0' }}</td>
+                  <td class="text-center">{{ $peng1->catatan ?: '-' }}</td>
 
                   <td class="text-center">
                     @if(in_array(strtolower($peng1->status), ['proses', 'revisi']))
@@ -270,7 +269,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="16" class="text-center py-5">
+                  <td colspan="17" class="text-center py-5">
                     <div class="alert alert-danger mb-0">
                       <i class="bi bi-exclamation-triangle-fill me-2"></i> 
                       Tidak ada data laporan pengembangan kehidupan berkoperasi

@@ -47,6 +47,15 @@ Route::get('/announcement/{id}', [AnnouncementController::class, 'show']);
 // PROFIL
 Route::get('/profile', [ProfileController::class, 'getProfile']);
 Route::post('/profile/update', [ProfileController::class, 'updateProfile']);
+// [PERUBAHAN 08-10-2026] Endpoint unggah foto profil
+Route::post('/profile/photo', [ProfileController::class, 'updatePhoto']);
+// [PERUBAHAN 08-10-2026] Endpoint ambil berkas foto profil dengan header CORS agar tampil di Chrome dan Emulator
+Route::get('/profile/photo/{filename}', [ProfileController::class, 'getPhoto']);
+// [PERUBAHAN 08-10-2026] Endpoint hapus foto profil
+Route::post('/profile/photo/delete', [ProfileController::class, 'deletePhoto']);
+Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto']);
+Route::post('/profile/delete', [ProfileController::class, 'deleteAccount']);
+Route::delete('/profile/delete', [ProfileController::class, 'deleteAccount']);
 
 // RIWAYAT
 Route::get('/riwayat', [RiwayatController::class, 'getRiwayat']);

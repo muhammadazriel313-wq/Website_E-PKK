@@ -8,15 +8,49 @@ use Illuminate\Support\Facades\DB;
 
 class AnnouncementController extends Controller
 {
-    public function index(Request $request)
+        public function index(Request $request)
     {
         try {
-            $limit = $request->limit ?? 5;
-            $page = $request->page ?? 1;
+            $limit = (int)($request->limit ?? 5);
+            $page = (int)($request->page ?? 1);
             $offset = ($page - 1) * $limit;
 
-            //  ambil data
-            $data = DB::table('pengumumen')
+            // [PERUBAHAN 08-10-2026] Parameter opsional filter tanggal dan bulan
+            $dari = $request->input('dari');
+            $sampai = $request->input('sampai');
+            $bulan = $request->input('bulan');
+
+            // Validasi format tanggal opsional jika disertakan
+            if ($dari && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dari)) {
+                return response()->json([
+                    'statusCode' => 400,
+                    'message' => 'Format parameter dari harus YYYY-MM-DD',
+                    'data' => [],
+                    'pagination' => null,
+                    'error' => ['message' => 'Format parameter dari harus YYYY-MM-DD']
+                ], 400);
+            }
+            if ($sampai && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $sampai)) {
+                return response()->json([
+                    'statusCode' => 400,
+                    'message' => 'Format parameter sampai harus YYYY-MM-DD',
+                    'data' => [],
+                    'pagination' => null,
+                    'error' => ['message' => 'Format parameter sampai harus YYYY-MM-DD']
+                ], 400);
+            }
+            if ($bulan && !preg_match('/^\d{4}-\d{2}$/', $bulan)) {
+                return response()->json([
+                    'statusCode' => 400,
+                    'message' => 'Format parameter bulan harus YYYY-MM',
+                    'data' => [],
+                    'pagination' => null,
+                    'error' => ['message' => 'Format parameter bulan harus YYYY-MM']
+                ], 400);
+            }
+
+            // Query dasar
+            $query = DB::table('pengumumen')
                 ->select(
                     'id',
                     'judulPengumuman as judul_pengumuman',
@@ -25,16 +59,60 @@ class AnnouncementController extends Controller
                     'tanggalPengumuman as tanggal_pengumuman',
                     'updated_at',
                     'created_at'
-                )
-                ->orderBy('tanggalPengumuman', 'desc')
+                );
+
+            // [PERUBAHAN 08-10-2026] Opsi C: rentang tanggalPengumuman ATAU created_at dalam rentang (dikonversi ke WIB dari UTC)
+            if ($dari && $sampai) {
+                $query->where(function ($q) use ($dari, $sampai) {
+                    $q->whereBetween('tanggalPengumuman', [$dari, $sampai])
+                      ->orWhereRaw("DATE(DATE_ADD(created_at, INTERVAL 7 HOUR)) BETWEEN ? AND ?", [$dari, $sampai]);
+                });
+            } elseif ($dari) {
+                $query->where(function ($q) use ($dari) {
+                    $q->where('tanggalPengumuman', '>=', $dari)
+                      ->orWhereRaw("DATE(DATE_ADD(created_at, INTERVAL 7 HOUR)) >= ?", [$dari]);
+                });
+            } elseif ($sampai) {
+                $query->where(function ($q) use ($sampai) {
+                    $q->where('tanggalPengumuman', '<=', $sampai)
+                      ->orWhereRaw("DATE(DATE_ADD(created_at, INTERVAL 7 HOUR)) <= ?", [$sampai]);
+                });
+            }
+
+            // [PERUBAHAN 08-10-2026] Filter bulan khusus kalender riwayat (hanya memakai tanggalPengumuman)
+            if ($bulan) {
+                $query->whereRaw("DATE_FORMAT(tanggalPengumuman, '%Y-%m') = ?", [$bulan]);
+            }
+
+            // Hitung total data
+            $totalData = $query->count();
+
+            // Ambil data
+            $data = $query->orderBy('tanggalPengumuman', 'desc')
                 ->limit($limit)
                 ->offset($offset)
                 ->get();
 
-            //  total data
-            $totalData = DB::table('pengumumen')->count();
+            $isFiltered = ($dari || $sampai || $bulan);
 
             if ($data->isEmpty()) {
+                // Untuk pemanggilan berfilter yang kosong, kembalikan 200 dengan data kosong
+                if ($isFiltered) {
+                    return response()->json([
+                        'statusCode' => 200,
+                        'message' => 'Data pengumuman tidak ditemukan',
+                        'data' => [],
+                        'pagination' => [
+                            'total_data' => 0,
+                            'total_halaman' => 0,
+                            'halaman_sekarang' => (int)$page,
+                            'data_per_halaman' => (int)$limit
+                        ],
+                        'error' => null
+                    ], 200);
+                }
+
+                // Perilaku lama tanpa parameter: tetap kembalikan 404 saat kosong
                 return response()->json([
                     'statusCode' => 404,
                     'message' => 'Data pengumuman tidak ditemukan',
@@ -50,7 +128,7 @@ class AnnouncementController extends Controller
                 'data' => $data,
                 'pagination' => [
                     'total_data' => $totalData,
-                    'total_halaman' => ceil($totalData / $limit),
+                    'total_halaman' => (int)ceil($totalData / $limit),
                     'halaman_sekarang' => (int)$page,
                     'data_per_halaman' => (int)$limit
                 ],

@@ -201,6 +201,149 @@ class DashboardController extends Controller
             $laporan44 +
             $laporan4 ;
 
+        $totalSemuaLaporan = $bidangumum + $totalbidang1 + $totalbidang2 + $totalbidang3 + $totalbidang4;
+
+        $detailProgramKerja = [
+            [
+                'kategori' => 'Bidang Umum',
+                'program' => 'Laporan Umum',
+                'jumlah' => $bidangumum,
+                'warna' => '#ca8a04'
+            ],
+            [
+                'kategori' => 'Pokja 1',
+                'program' => 'Gotong Royong',
+                'jumlah' => $bidang11,
+                'warna' => '#16a34a'
+            ],
+            [
+                'kategori' => 'Pokja 1',
+                'program' => 'Penghayatan Pancasila',
+                'jumlah' => $bidang12,
+                'warna' => '#16a34a'
+            ],
+            [
+                'kategori' => 'Pokja 1',
+                'program' => 'Rekap Lap. Pokja 1',
+                'jumlah' => $laporan1,
+                'warna' => '#16a34a'
+            ],
+            [
+                'kategori' => 'Pokja 2',
+                'program' => 'Pendidikan & Ketrampilan',
+                'jumlah' => $bidang21,
+                'warna' => '#7c3aed'
+            ],
+            [
+                'kategori' => 'Pokja 2',
+                'program' => 'Pengemb. Berkoperasi',
+                'jumlah' => $bidang22,
+                'warna' => '#7c3aed'
+            ],
+            [
+                'kategori' => 'Pokja 3',
+                'program' => 'Pangan',
+                'jumlah' => $bidang31,
+                'warna' => '#ea580c'
+            ],
+            [
+                'kategori' => 'Pokja 3',
+                'program' => 'Sandang',
+                'jumlah' => $bidang32,
+                'warna' => '#ea580c'
+            ],
+            [
+                'kategori' => 'Pokja 3',
+                'program' => 'Perumahan & Tata Laksana',
+                'jumlah' => $bidang33,
+                'warna' => '#ea580c'
+            ],
+            [
+                'kategori' => 'Pokja 3',
+                'program' => 'Rekap Lap. Pokja 3',
+                'jumlah' => $laporan3,
+                'warna' => '#ea580c'
+            ],
+            [
+                'kategori' => 'Pokja 4',
+                'program' => 'Kesehatan',
+                'jumlah' => $bidang41,
+                'warna' => '#db2777'
+            ],
+            [
+                'kategori' => 'Pokja 4',
+                'program' => 'Kelestarian Lingkungan',
+                'jumlah' => $bidang42,
+                'warna' => '#db2777'
+            ],
+            [
+                'kategori' => 'Pokja 4',
+                'program' => 'Perencanaan Sehat',
+                'jumlah' => $bidang43,
+                'warna' => '#db2777'
+            ],
+            [
+                'kategori' => 'Pokja 4',
+                'program' => 'Rekap Lap. Pokja 4',
+                'jumlah' => $laporan4,
+                'warna' => '#db2777'
+            ],
+            [
+                'kategori' => 'Pokja 4',
+                'program' => 'Inovasi',
+                'jumlah' => $laporan44,
+                'warna' => '#db2777'
+            ],
+        ];
+
+        // =========================================
+        // DATA TREN BULANAN (GRAFIK AREA BIRU)
+        // =========================================
+        $selectedYear = date('Y');
+        $monthlyTotals = array_fill(1, 12, 0);
+        $pokjaMonthly = [
+            'umum' => array_fill(1, 12, 0),
+            'pokja1' => array_fill(1, 12, 0),
+            'pokja2' => array_fill(1, 12, 0),
+            'pokja3' => array_fill(1, 12, 0),
+            'pokja4' => array_fill(1, 12, 0),
+        ];
+
+        $groups = [
+            'umum' => [new BidangUmum()],
+            'pokja1' => [new GotongRoyong(), new Penghayatan(), new LaporanPokja1()],
+            'pokja2' => [new Pendidikan(), new Pengembangan()],
+            'pokja3' => [new Pangan(), new Sandang(), new Perumahan(), new LaporanPokja3()],
+            'pokja4' => [new Kesehatan(), new KelestarianLingkunganHidup(), new PerencanaanSehat(), new LaporanPokja4(), new Inovasi()],
+        ];
+
+        foreach ($groups as $groupKey => $models) {
+            foreach ($models as $m) {
+                $tbl = $m->getTable();
+                $rows = $getFilteredQuery($m)
+                    ->selectRaw("MONTH({$tbl}.created_at) as bln, count(*) as total")
+                    ->whereYear("{$tbl}.created_at", $selectedYear)
+                    ->groupBy('bln')
+                    ->get();
+                foreach ($rows as $r) {
+                    $b = (int)$r->bln;
+                    if ($b >= 1 && $b <= 12) {
+                        $pokjaMonthly[$groupKey][$b] += (int)$r->total;
+                        $monthlyTotals[$b] += (int)$r->total;
+                    }
+                }
+            }
+        }
+
+        $chartMonthlyData = array_values($monthlyTotals);
+        $chartPokjaMonthly = [
+            'umum' => array_values($pokjaMonthly['umum']),
+            'pokja1' => array_values($pokjaMonthly['pokja1']),
+            'pokja2' => array_values($pokjaMonthly['pokja2']),
+            'pokja3' => array_values($pokjaMonthly['pokja3']),
+            'pokja4' => array_values($pokjaMonthly['pokja4']),
+        ];
+
         return view(
             'backend.dashboard',
             compact(
@@ -209,7 +352,26 @@ class DashboardController extends Controller
                 'totalbidang1',
                 'totalbidang2',
                 'totalbidang3',
-                'totalbidang4'
+                'totalbidang4',
+                'totalSemuaLaporan',
+                'detailProgramKerja',
+                'chartMonthlyData',
+                'chartPokjaMonthly',
+                'selectedYear',
+                'bidang11',
+                'bidang12',
+                'laporan1',
+                'bidang21',
+                'bidang22',
+                'bidang31',
+                'bidang32',
+                'bidang33',
+                'laporan3',
+                'bidang41',
+                'bidang42',
+                'bidang43',
+                'laporan4',
+                'laporan44'
             )
         );
     }

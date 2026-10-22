@@ -125,9 +125,11 @@
           <div class="alert alert-primary mt-3" id="infoLinkSheet" style="display:none; border-left:4px solid #0d6efd; background-color: #f0f7ff;">
             <h6 class="alert-heading fw-bold mb-1" style="font-size:13px;"><i class="bi bi-link-45deg"></i> Link Spreadsheet Tujuan</h6>
             <p class="mb-2" style="font-size:12px; color:#475569;">Data akan diekspor ke dalam tab di Google Sheets berikut:</p>
-            {{-- [PERUBAHAN 03-10-2026] Mengarahkan link spreadsheet Pokja 1 ke sheet target baru; kode lama di bawah dinonaktifkan --}}
-            {{-- <a href="https://docs.google.com/spreadsheets/d/1sW8NzwzGyx9iBfTyjX7gZ17rFpg8PWgAU7OM4QMVUjo/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;"> --}}
-            <a href="https://docs.google.com/spreadsheets/d/15eG1L1kuDMbnSsbm3T-Z_e5A4FKINH0ExettHIuZBys/edit" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
+            {{-- [PERUBAHAN 2026-10-09] Mengambil URL Spreadsheet dari config services; URL hardcode dinonaktifkan --}}
+            {{-- <a href="https://docs.google.com/spreadsheets/d/15eG1L1kuDMbnSsbm3T-Z_e5A4FKINH0ExettHIuZBys/edit" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;"> --}}
+            {{-- [PERUBAHAN 20-10-2026] Mengarahkan tombol ke Link Google Spreadsheet Pokja 1 milik pengguna; kode lama dinonaktifkan --}}
+            {{-- <a id="linkSheetPokja1" href="{{ config('services.sheets.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;"> --}}
+            <a id="linkSheetPokja1" href="https://docs.google.com/spreadsheets/d/1CkFNHbHcDFAKXQmopHw8dss6m-WE8x2YgzoePDvjlmg/edit?gid=0#gid=0" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
               <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet Pokja 1
             </a>
           </div>
@@ -145,16 +147,33 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   // URL DEPLOY GOOGLE APPS SCRIPT POKJA 1
-  // [PERUBAHAN 03-10-2026] Memperbarui URL Apps Script Pokja 1 hasil deploy baru; kode lama di bawah dinonaktifkan
-  // const APPS_SCRIPT_URL_POKJA1 = "https://script.google.com/macros/s/AKfycbzjXVgFoo8OzY1POERpnrjyi-bX_GiaIxPUv2RkZkb0HoBgxrDIoO-njc67ezlfJvKR/exec";
-  const APPS_SCRIPT_URL_POKJA1 = "https://script.google.com/macros/s/AKfycbwA80bo6vFASUV-u6MFJDM0iAcbQekxvFXgyUhPO_j9-VYPVkOMkDgII6Hs6aA1TjzP/exec";
-  // [PERUBAHAN 03-10-2026] Mengarahkan SHEET_HREF ke Google Spreadsheet target baru; kode lama di bawah dinonaktifkan
-  // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1sW8NzwzGyx9iBfTyjX7gZ17rFpg8PWgAU7OM4QMVUjo/edit?usp=sharing";
-  const SHEET_HREF = "https://docs.google.com/spreadsheets/d/15eG1L1kuDMbnSsbm3T-Z_e5A4FKINH0ExettHIuZBys/edit";
+  // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dan Spreadsheet dari config services; URL hardcode dinonaktifkan
+  // const APPS_SCRIPT_URL_POKJA1 = "https://script.google.com/macros/s/AKfycbwA80bo6vFASUV-u6MFJDM0iAcbQekxvFXgyUhPO_j9-VYPVkOMkDgII6Hs6aA1TjzP/exec";
+  // [PERUBAHAN 20-10-2026] Mengarahkan ke Web App Google Apps Script Pokja 1 milik pengguna; kode lama dinonaktifkan
+  // const APPS_SCRIPT_URL_POKJA1 = "{{ config('services.sheets.script_url') }}";
+  const APPS_SCRIPT_URL_POKJA1 = "https://script.google.com/macros/s/AKfycbxKAztjj0x7b-PWWZLT5Qc_tkDCIYNh-uE00TOEuUvsU2w-rtfPkiPVuo2Imh8PcyrX/exec";
+  // [PERUBAHAN 2026-10-09] Mengarahkan SHEET_HREF ke config services; URL hardcode dinonaktifkan
+  // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/15eG1L1kuDMbnSsbm3T-Z_e5A4FKINH0ExettHIuZBys/edit";
+  // [PERUBAHAN 20-10-2026] Mengarahkan SHEET_HREF ke Link Google Spreadsheet Pokja 1 milik pengguna; kode lama dinonaktifkan
+  // const SHEET_HREF = "{{ config('services.sheets.spreadsheet_url') }}";
+  const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1CkFNHbHcDFAKXQmopHw8dss6m-WE8x2YgzoePDvjlmg/edit?gid=0#gid=0";
+
+  // [PERUBAHAN 2026-10-09] Fungsi navigasi langsung ke tab Google Sheets tanpa perlu geser tab
+  function updateLinkPokja1() {
+    const b = document.querySelector("#formExportPokja1 select[name='bidang']")?.value || '';
+    const saved = localStorage.getItem('sheet_tab_pokja1_' + b) || localStorage.getItem('sheet_tab_pokja1') || SHEET_HREF;
+    const el = document.getElementById("linkSheetPokja1");
+    if (el && saved) el.href = saved;
+  }
 
   document.getElementById("formatExportPokja1").addEventListener("change", function() {
-    document.getElementById("infoLinkSheet").style.display = this.value === "excel" ? "block" : "none";
+    const isExcel = this.value === "excel";
+    document.getElementById("infoLinkSheet").style.display = isExcel ? "block" : "none";
+    if (isExcel) updateLinkPokja1();
   });
+
+  document.querySelector("#formExportPokja1 select[name='bidang']")?.addEventListener("change", updateLinkPokja1);
+  updateLinkPokja1();
 
   document.getElementById("formExportPokja1").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -196,6 +215,16 @@
     // LOGIKA EXPORT EXCEL (GOOGLE SHEETS)
     // ==========================================
     else if (format === "excel") {
+      // [PERUBAHAN 2026-10-09] Validasi URL Apps Script dari .env
+      if (!APPS_SCRIPT_URL_POKJA1 || APPS_SCRIPT_URL_POKJA1.trim() === '') {
+        Swal.fire({
+          icon: 'warning',
+          title: 'URL Belum Diatur!',
+          text: 'URL Google Sheets belum diatur di .env'
+        });
+        return;
+      }
+
       // (Biar gak eror milih 'semua' pas ekspor ke Google Sheets)
       if (bidang === 'semua') {
          Swal.fire('Perhatian!', 'Untuk export ke Google Sheets, silakan pilih bidang spesifik satu per satu.', 'warning');
@@ -242,6 +271,13 @@
           btn.disabled = false; btnText.textContent = 'Export'; return;
         }
 
+        // [PERUBAHAN 2026-10-09] Lengkapi metadata identitas pokja dan periode
+        dbResult.pokja = 'POKJA 1';
+        dbResult.bulan = bulan;
+        dbResult.tahun = tahun;
+        // [PERUBAHAN 20-10-2026] Sertakan kunci rahasia pengaman untuk verifikasi Apps Script
+        dbResult.secret_key = 'PKK-NGANJUK-2026';
+
         Swal.update({ text: `Ditemukan ${dbResult.data.length} baris data. Mengirim ke Google Sheets...` });
 
         const googleResponse = await fetch(APPS_SCRIPT_URL_POKJA1, {
@@ -255,8 +291,25 @@
         try {
             const result = JSON.parse(textResult);
             if (result.status === "success") {
-              Swal.fire({ icon: 'success', title: 'Berhasil!', html: `✅ ${result.message}<br><br><a href="${SHEET_HREF}" target="_blank" class="btn btn-sm btn-outline-primary">Buka Laporan Pokja 1</a>`, confirmButtonText: 'Tutup' })
-                .then(() => { form.reset(); document.getElementById("infoLinkSheet").style.display = "none"; bootstrap.Modal.getInstance(document.getElementById('modalLaporanPokja1'))?.hide(); });
+              const directTabUrl = result.tab_url || SHEET_HREF;
+              if (result.tab_url) {
+                try {
+                  localStorage.setItem('sheet_tab_pokja1_' + bidang, result.tab_url);
+                  localStorage.setItem('sheet_tab_pokja1', result.tab_url);
+                  const el = document.getElementById("linkSheetPokja1");
+                  if (el) el.href = result.tab_url;
+                } catch(e) {}
+              }
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                html: `✅ ${result.message}<br><br><a href="${directTabUrl}" target="_blank" class="btn btn-sm btn-primary text-white" style="font-weight:600;"><i class="bi bi-box-arrow-up-right"></i> Buka Langsung Tab Laporan</a>`,
+                confirmButtonText: 'Tutup'
+              }).then(() => {
+                form.reset();
+                document.getElementById("infoLinkSheet").style.display = "none";
+                bootstrap.Modal.getInstance(document.getElementById('modalLaporanPokja1'))?.hide();
+              });
             } else { throw new Error(result.message); }
         } catch(e) {
             let debugHTML = textResult.substring(0, 150).replace(/</g, "&lt;").replace(/>/g, "&gt;");

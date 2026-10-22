@@ -196,8 +196,9 @@
             </select>
           </div>
           <div class="alert alert-primary mt-3" id="infoLinkSheet" style="display:none; border-left:4px solid #0d6efd; background-color: #f0f7ff;">
-            <p class="mb-2" style="font-size:12px; color:#475569;">Data akan diekspor ke Google Sheets:</p>
-            <a href="https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
+            {{-- [PERUBAHAN 2026-10-09] Mengambil URL Spreadsheet dari config services; URL hardcode dinonaktifkan --}}
+            {{-- <a href="https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;"> --}}
+            <a id="linkSheetPokja4" href="{{ config('services.sheets.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
               <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet
             </a>
           </div>
@@ -213,8 +214,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzZHCfXfsAKfF9rdeLGNRnEGmWe8u7Wxzfw4tePj-aXmjypjntzlRkp8-n4LgThYc/exec";
-  const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing";
+  // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dan Spreadsheet dari config services; URL hardcode dinonaktifkan
+  // const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzZHCfXfsAKfF9rdeLGNRnEGmWe8u7Wxzfw4tePj-aXmjypjntzlRkp8-n4LgThYc/exec";
+  const APPS_SCRIPT_URL = "{{ config('services.sheets.script_url') }}";
+  // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing";
+  const SHEET_HREF = "{{ config('services.sheets.spreadsheet_url') }}";
+
+  // [PERUBAHAN 2026-10-09] Fungsi navigasi langsung ke tab Google Sheets Pokja 4
+  function updateLinkPokja4() {
+    const b = document.getElementById("bidangSelect")?.value || '';
+    const sub = document.getElementById("subBidangSelect")?.value || '';
+    const subKey = sub && sub !== 'semua' ? '_' + sub : '';
+    const saved = localStorage.getItem('sheet_tab_pokja4_' + b + subKey) || localStorage.getItem('sheet_tab_pokja4_' + b) || localStorage.getItem('sheet_tab_pokja4') || SHEET_HREF;
+    const el = document.getElementById("linkSheetPokja4");
+    if (el && saved) el.href = saved;
+  }
 
   // Saklar memunculkan Sub Bidang Inovasi
   document.getElementById("bidangSelect").addEventListener("change", function() {
@@ -225,11 +239,17 @@
         wrapSub.style.display = "none";
         document.getElementById("subBidangSelect").value = "semua";
     }
+    updateLinkPokja4();
   });
 
+  document.getElementById("subBidangSelect")?.addEventListener("change", updateLinkPokja4);
+
   document.getElementById("formatExport").addEventListener("change", function() {
-    document.getElementById("infoLinkSheet").style.display = this.value === "excel" ? "block" : "none";
+    const isExcel = this.value === "excel";
+    document.getElementById("infoLinkSheet").style.display = isExcel ? "block" : "none";
+    if (isExcel) updateLinkPokja4();
   });
+  updateLinkPokja4();
 
   document.getElementById("formExport").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -267,6 +287,16 @@
     
     // EXPORT GOOGLE SHEETS
     if (format === "excel") {
+      // [PERUBAHAN 2026-10-09] Validasi URL Apps Script dari .env
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.trim() === '') {
+        Swal.fire({
+          icon: 'warning',
+          title: 'URL Belum Diatur!',
+          text: 'URL Google Sheets belum diatur di .env'
+        });
+        return;
+      }
+
       if (bidang === 'semua') {
          Swal.fire('Perhatian!', 'Untuk export Excel, pilih bidang spesifik.', 'warning'); return;
       }
@@ -275,7 +305,7 @@
       }
 
       const confirmExport = await Swal.fire({
-        title: 'Mulai Ekspor?', html: `Data akan dikirim ke <b>Google Sheets</b>.`,
+        title: 'Mulai Ekspor?', html: `Data akan dikirim ke <b>Google Sheets</b>.<br><br><a href="${SHEET_HREF}" target="_blank" style="text-decoration:none; color:#0d6efd; font-weight:600;">Pratinjau Spreadsheet</a>`,
         icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Ekspor!', reverseButtons: true
       });
       if (!confirmExport.isConfirmed) return;
@@ -294,6 +324,12 @@
           btn.disabled = false; btnText.textContent = 'Export'; return;
         }
 
+        // [PERUBAHAN 2026-10-09] Lengkapi metadata identitas pokja dan periode
+        dbResult.pokja = 'POKJA 4';
+        dbResult.bulan = bulan;
+        dbResult.tahun = tahun;
+        dbResult.sub_bidang = sub_bidang;
+
         Swal.update({ text: `Mengirim ${dbResult.data.length} data ke Google Sheets...` });
         const googleResponse = await fetch(APPS_SCRIPT_URL, {
           method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -301,19 +337,43 @@
         });
         
         const textResult = await googleResponse.text();
-        const result = JSON.parse(textResult);
-        if (result.status === "success") {
-            Swal.fire('Berhasil!', result.message, 'success').then(() => { form.reset(); bootstrap.Modal.getInstance(document.getElementById('modalLaporan'))?.hide(); });
-        } else { throw new Error(result.message); }
+        try {
+          const result = JSON.parse(textResult);
+          if (result.status === "success") {
+            const directTabUrl = result.tab_url || SHEET_HREF;
+            if (result.tab_url) {
+              try {
+                const subKey = sub_bidang && sub_bidang !== 'semua' ? '_' + sub_bidang : '';
+                localStorage.setItem('sheet_tab_pokja4_' + bidang + subKey, result.tab_url);
+                localStorage.setItem('sheet_tab_pokja4_' + bidang, result.tab_url);
+                localStorage.setItem('sheet_tab_pokja4', result.tab_url);
+                const el = document.getElementById("linkSheetPokja4");
+                if (el) el.href = result.tab_url;
+              } catch(e) {}
+            }
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil!',
+              html: `✅ ${result.message}<br><br><a href="${directTabUrl}" target="_blank" class="btn btn-sm btn-primary text-white" style="font-weight:600;"><i class="bi bi-box-arrow-up-right"></i> Buka Langsung Tab Laporan</a>`,
+              confirmButtonText: 'Tutup'
+            }).then(() => {
+              form.reset();
+              document.getElementById("infoLinkSheet").style.display = "none";
+              bootstrap.Modal.getInstance(document.getElementById('modalLaporan'))?.hide();
+            });
+          } else { throw new Error(result.message); }
+        } catch(e) {
+          let debugHTML = textResult.substring(0, 150).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          throw new Error(`Google Apps Script Error. Pastikan Deploy as Web App di-set ke 'Anyone'.<br><br><small style="color:red;">${debugHTML}...</small>`);
+        }
 
       } catch (error) {
-        Swal.fire('Gagal Mengirim!', error.message, 'error');
+        Swal.fire({ icon: 'error', title: 'Gagal Mengirim!', html: `<div style="text-align:left;">Terjadi kesalahan:<br><br><code style="color:#d63384;">${error.message}</code></div>` });
       } finally {
         btn.disabled = false; btnText.textContent = 'Export';
       }
     }
   });
-</script>
 </script>
 
 @endsection

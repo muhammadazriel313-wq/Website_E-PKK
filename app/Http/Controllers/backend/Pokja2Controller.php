@@ -246,6 +246,7 @@ class Pokja2Controller extends Controller
         // QUERY PENDIDIKAN & KETERAMPILAN
         // =====================================================
 
+        // [PERUBAHAN 2026-10-09] Ditambahkan leftJoin village dan select village.name as nama_desa
         $queryPendidikan = DB::table('laporan_pendidikan_n_keterampilan')
             ->leftJoin(
                 'users_mobile',
@@ -259,15 +260,23 @@ class Pokja2Controller extends Controller
                 '=',
                 'subdistrict.id'
             )
+            ->leftJoin(
+                'village',
+                'users_mobile.id_village',
+                '=',
+                'village.id'
+            )
             ->select(
                 'laporan_pendidikan_n_keterampilan.*',
-                'subdistrict.name as nama_kec'
+                'subdistrict.name as nama_kec',
+                'village.name as nama_desa'
             );
 
         // =====================================================
         // QUERY PENGEMBANGAN KEHIDUPAN BERKOPERASI
         // =====================================================
 
+        // [PERUBAHAN 2026-10-09] Ditambahkan leftJoin village dan select village.name as nama_desa
         $queryPengembangan = DB::table('laporan_pengembangan_kehidupan')
             ->leftJoin(
                 'users_mobile',
@@ -281,9 +290,16 @@ class Pokja2Controller extends Controller
                 '=',
                 'subdistrict.id'
             )
+            ->leftJoin(
+                'village',
+                'users_mobile.id_village',
+                '=',
+                'village.id'
+            )
             ->select(
                 'laporan_pengembangan_kehidupan.*',
-                'subdistrict.name as nama_kec'
+                'subdistrict.name as nama_kec',
+                'village.name as nama_desa'
             );
 
         // =====================================================

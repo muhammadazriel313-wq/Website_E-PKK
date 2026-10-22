@@ -104,6 +104,7 @@
         </div>
 
         <table align="center">
+            {{-- [PERUBAHAN 2026-10-09] Header lama dinonaktifkan:
             <thead>
                 <tr style="background: #e0f2fe;">
                     <th align="center"><b>NO</b></th>
@@ -127,11 +128,56 @@
                     <th align="center"><b>Bantuan Perempuan</b></th>
                 </tr>
             </thead>
+            --}}
+            <thead>
+                {{-- [PERUBAHAN 2026-10-09] Header diselaraskan persis dengan decbidangumum (hierarki merge 3 baris) --}}
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">NO</th>
+                    @if (Auth::guard('web')->check())
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Kecamatan</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Desa</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Desa</th>
+                    @endif
+                    <th scope="col" colspan="4" align="center">JUMLAH KELOMPOK</th>
+                    <th scope="col" colspan="2" align="center">JUMLAH</th>
+                    <th scope="col" colspan="2" align="center">JUMLAH JIWA</th>
+                    <th scope="col" colspan="6" align="center">JUMLAH KADER</th>
+                    <th scope="col" colspan="4" align="center">JUMLAH TENAGA SEKRETARIAT</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Dusun/<br>Lingkungan</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">PKK/<br>RW</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">PKK/<br>RT</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Desa/<br>Wisma</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">KRT</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">KK</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Laki-laki</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Perempuan</th>
+                    <th scope="col" colspan="2" align="center">ANGGOTA TP PKK</th>
+                    <th scope="col" colspan="2" align="center">UMUM</th>
+                    <th scope="col" colspan="2" align="center">KHUSUS</th>
+                    <th scope="col" colspan="2" align="center">HONORER</th>
+                    <th scope="col" colspan="2" align="center">BANTUAN</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" align="center">L</th>
+                    <th scope="col" align="center">P</th>
+                    <th scope="col" align="center">L</th>
+                    <th scope="col" align="center">P</th>
+                    <th scope="col" align="center">L</th>
+                    <th scope="col" align="center">P</th>
+                    <th scope="col" align="center">L</th>
+                    <th scope="col" align="center">P</th>
+                    <th scope="col" align="center">L</th>
+                    <th scope="col" align="center">P</th>
+                </tr>
+            </thead>
 
             <tbody>
                 @php
                 $no = 1;
-                $t_pkk_rw = 0; $t_desa_wisma = 0; $t_krt = 0; $t_kk = 0;
+                $t_dusun = 0; $t_pkk_rw = 0; $t_pkk_rt = 0; $t_desa_wisma = 0; $t_krt = 0; $t_kk = 0;
                 $t_jiwa_l = 0; $t_jiwa_p = 0; $t_anggota_l = 0; $t_anggota_p = 0;
                 $t_umum_l = 0; $t_umum_p = 0; $t_khusus_l = 0; $t_khusus_p = 0;
                 $t_honorer_l = 0; $t_honorer_p = 0; $t_bantuan_l = 0; $t_bantuan_p = 0;
@@ -139,7 +185,9 @@
 
                 @forelse($bidangumum as $item)
                 @php
+                $t_dusun += $item->dusun_lingkungan ?? 0;
                 $t_pkk_rw += $item->PKK_RW ?? 0;
+                $t_pkk_rt += $item->PKK_RT ?? 0;
                 $t_desa_wisma += $item->desa_wisma ?? 0;
                 $t_krt += $item->KRT ?? 0;
                 $t_kk += $item->KK ?? 0;
@@ -158,36 +206,44 @@
                 @endphp
                 <tr>
                     <td align="center">{{ $no++ }}</td>
-                    <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->dusun_lingkungan }}</td>
-                    <td align="center">{{ $item->PKK_RW }}</td>
-                    <td align="center">{{ $item->desa_wisma }}</td>
-                    <td align="center">{{ $item->KRT }}</td>
-                    <td align="center">{{ $item->KK }}</td>
-                    <td align="center">{{ $item->jiwa_laki }}</td>
-                    <td align="center">{{ $item->jiwa_perempuan }}</td>
-                    <td align="center">{{ $item->anggota_laki }}</td>
-                    <td align="center">{{ $item->anggota_perempuan }}</td>
-                    <td align="center">{{ $item->umum_laki }}</td>
-                    <td align="center">{{ $item->umum_perempuan }}</td>
-                    <td align="center">{{ $item->khusus_laki }}</td>
-                    <td align="center">{{ $item->khusus_perempuan }}</td>
-                    <td align="center">{{ $item->honorer_laki }}</td>
-                    <td align="center">{{ $item->honorer_perempuan }}</td>
-                    <td align="center">{{ $item->bantuan_laki }}</td>
-                    <td align="center">{{ $item->bantuan_perempuan }}</td>
+                    @if (Auth::guard('web')->check())
+                    <td align="center">{{ $item->nama_kec ?? '-' }}</td>
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @endif
+                    <td align="center">{{ $item->dusun_lingkungan ?? '-' }}</td>
+                    <td align="center">{{ $item->PKK_RW ?? '-' }}</td>
+                    <td align="center">{{ $item->PKK_RT ?? '-' }}</td>
+                    <td align="center">{{ $item->desa_wisma ?? '-' }}</td>
+                    <td align="center">{{ $item->KRT ?? '-' }}</td>
+                    <td align="center">{{ $item->KK ?? '-' }}</td>
+                    <td align="center">{{ $item->jiwa_laki ?? '0' }}</td>
+                    <td align="center">{{ $item->jiwa_perempuan ?? '0' }}</td>
+                    <td align="center">{{ $item->anggota_laki ?? '0' }}</td>
+                    <td align="center">{{ $item->anggota_perempuan ?? '0' }}</td>
+                    <td align="center">{{ $item->umum_laki ?? '0' }}</td>
+                    <td align="center">{{ $item->umum_perempuan ?? '0' }}</td>
+                    <td align="center">{{ $item->khusus_laki ?? '0' }}</td>
+                    <td align="center">{{ $item->khusus_perempuan ?? '0' }}</td>
+                    <td align="center">{{ $item->honorer_laki ?? '0' }}</td>
+                    <td align="center">{{ $item->honorer_perempuan ?? '0' }}</td>
+                    <td align="center">{{ $item->bantuan_laki ?? '0' }}</td>
+                    <td align="center">{{ $item->bantuan_perempuan ?? '0' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="19" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 21 : 20 }}" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
 
             <tfoot>
                 <tr style="background-color: #f2f2f2;">
-                    <td colspan="3" align="center"><b>TOTAL KESELURUHAN</b></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}" align="center"><b>TOTAL KESELURUHAN</b></td>
+                    <td align="center"><b>{{ $t_dusun }}</b></td>
                     <td align="center"><b>{{ $t_pkk_rw }}</b></td>
+                    <td align="center"><b>{{ $t_pkk_rt }}</b></td>
                     <td align="center"><b>{{ $t_desa_wisma }}</b></td>
                     <td align="center"><b>{{ $t_krt }}</b></td>
                     <td align="center"><b>{{ $t_kk }}</b></td>

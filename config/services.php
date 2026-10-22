@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // [PERUBAHAN 2026-10-09] Konfigurasi integrasi Google Sheets & Google Apps Script
+    'sheets' => [
+        'script_url' => env('SHEETS_APPS_SCRIPT_URL'),
+        'spreadsheet_url' => env('SHEETS_SPREADSHEET_URL'),
+    ],
+
 ];

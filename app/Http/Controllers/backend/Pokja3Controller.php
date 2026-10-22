@@ -266,6 +266,7 @@ class Pokja3Controller extends Controller
         // QUERY PANGAN
         // =====================================================
 
+        // [PERUBAHAN 2026-10-09] Ditambahkan leftJoin village dan select village.name as nama_desa
         $queryPangan = DB::table($tabelPangan)
             ->leftJoin(
                 'users_mobile',
@@ -279,15 +280,23 @@ class Pokja3Controller extends Controller
                 '=',
                 'subdistrict.id'
             )
+            ->leftJoin(
+                'village',
+                'users_mobile.id_village',
+                '=',
+                'village.id'
+            )
             ->select(
                 $tabelPangan . '.*',
-                'subdistrict.name as nama_kec'
+                'subdistrict.name as nama_kec',
+                'village.name as nama_desa'
             );
 
         // =====================================================
         // QUERY SANDANG
         // =====================================================
 
+        // [PERUBAHAN 2026-10-09] Ditambahkan leftJoin village dan select village.name as nama_desa
         $querySandang = DB::table($tabelSandang)
             ->leftJoin(
                 'users_mobile',
@@ -301,15 +310,23 @@ class Pokja3Controller extends Controller
                 '=',
                 'subdistrict.id'
             )
+            ->leftJoin(
+                'village',
+                'users_mobile.id_village',
+                '=',
+                'village.id'
+            )
             ->select(
                 $tabelSandang . '.*',
-                'subdistrict.name as nama_kec'
+                'subdistrict.name as nama_kec',
+                'village.name as nama_desa'
             );
 
         // =====================================================
         // QUERY PERUMAHAN
         // =====================================================
 
+        // [PERUBAHAN 2026-10-09] Ditambahkan leftJoin village dan select village.name as nama_desa
         $queryPerumahan = DB::table($tabelPerumahan)
             ->leftJoin(
                 'users_mobile',
@@ -323,15 +340,23 @@ class Pokja3Controller extends Controller
                 '=',
                 'subdistrict.id'
             )
+            ->leftJoin(
+                'village',
+                'users_mobile.id_village',
+                '=',
+                'village.id'
+            )
             ->select(
                 $tabelPerumahan . '.*',
-                'subdistrict.name as nama_kec'
+                'subdistrict.name as nama_kec',
+                'village.name as nama_desa'
             );
 
         // =====================================================
         // QUERY KADER POKJA 3
         // =====================================================
 
+        // [PERUBAHAN 2026-10-09] Ditambahkan leftJoin village dan select village.name as nama_desa
         $queryKader = DB::table($tabelKader)
             ->leftJoin(
                 'users_mobile',
@@ -345,9 +370,16 @@ class Pokja3Controller extends Controller
                 '=',
                 'subdistrict.id'
             )
+            ->leftJoin(
+                'village',
+                'users_mobile.id_village',
+                '=',
+                'village.id'
+            )
             ->select(
                 $tabelKader . '.*',
-                'subdistrict.name as nama_kec'
+                'subdistrict.name as nama_kec',
+                'village.name as nama_desa'
             );
 
         // =====================================================

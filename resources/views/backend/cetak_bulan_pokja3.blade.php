@@ -117,6 +117,7 @@
         $laporanpokja3 = $laporanpokja3 ?? [];
         @endphp
 
+        {{-- [PERUBAHAN 2026-10-09] Kode lama dinonaktifkan:
         @if($bidang == 'semua' || $bidang == 'pangan')
         <h3>Laporan Program Pangan</h3>
         <table align="center">
@@ -124,15 +125,47 @@
                 <tr style="background: #e0f2fe;">
                     <th align="center"><b>NO</b></th>
                     <th align="center"><b>Kecamatan</b></th>
-                    <th align="center"><b>Beras</b></th>
-                    <th align="center"><b>Non Beras</b></th>
-                    <th align="center"><b>Peternakan</b></th>
-                    <th align="center"><b>Perikanan</b></th>
-                    <th align="center"><b>Warung Hidup</b></th>
-                    <th align="center"><b>Lumbung Hidup</b></th>
-                    <th align="center"><b>Toga</b></th>
-                    <th align="center"><b>Tanaman Keras</b></th>
-                    <th align="center"><b>Tanaman Lainnya</b></th>
+                    ...
+                </tr>
+            </thead>
+            ...
+        </table>
+        @endif
+        ... (sandang, perumahan, kader)
+        --}}
+
+        {{-- ========================================================= --}}
+        {{-- 1. TABEL PANGAN                                            --}}
+        {{-- ========================================================= --}}
+        @if($bidang == 'semua' || $bidang == 'pangan')
+        <h3>Laporan Program Pangan</h3>
+        <table align="center" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+            <thead>
+                {{-- [PERUBAHAN 2026-10-09] Header diselaraskan dengan decpangan (3 baris hierarki) --}}
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">No</th>
+                    @if (Auth::guard('web')->check())
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Kecamatan</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Desa</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Desa</th>
+                    @endif
+                    <th scope="col" colspan="9" align="center">PANGAN</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" colspan="2" align="center">MAKANAN POKOK</th>
+                    <th scope="col" colspan="6" align="center">PEMANFAATAN PEKARANGAN / HATINYA PKK</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">TANAMAN LAINNYA</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" align="center">Beras</th>
+                    <th scope="col" align="center">Non Beras</th>
+                    <th scope="col" align="center">Peternakan</th>
+                    <th scope="col" align="center">Perikanan</th>
+                    <th scope="col" align="center">Warung Hidup</th>
+                    <th scope="col" align="center">Lumbung Hidup</th>
+                    <th scope="col" align="center">Toga</th>
+                    <th scope="col" align="center">Tan. Keras</th>
                 </tr>
             </thead>
             <tbody>
@@ -151,7 +184,12 @@
                 @endphp
                 <tr>
                     <td align="center">{{ $no_png++ }}</td>
-                    <td align="center">{{ $item->nama_kec }}</td>
+                    @if (Auth::guard('web')->check())
+                    <td align="center">{{ $item->nama_kec ?? '-' }}</td>
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @endif
                     <td align="center">{{ $item->beras ?? 0 }}</td>
                     <td align="center">{{ $item->non_beras ?? 0 }}</td>
                     <td align="center">{{ $item->peternakan ?? 0 }}</td>
@@ -164,37 +202,49 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="11" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 12 : 11 }}" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
             <tfoot>
-                <tr style="background-color: #f2f2f2;">
-                    <td colspan="2" align="center"><b>TOTAL</b></td>
-                    <td align="center"><b>{{ $t_beras }}</b></td>
-                    <td align="center"><b>{{ $t_nberas }}</b></td>
-                    <td align="center"><b>{{ $t_ternak }}</b></td>
-                    <td align="center"><b>{{ $t_ikan }}</b></td>
-                    <td align="center"><b>{{ $t_warung }}</b></td>
-                    <td align="center"><b>{{ $t_lumbung }}</b></td>
-                    <td align="center"><b>{{ $t_toga }}</b></td>
-                    <td align="center"><b>{{ $t_keras }}</b></td>
-                    <td align="center"><b>{{ $t_lainnya }}</b></td>
+                <tr style="background-color: #f2f2f2; font-weight: bold;">
+                    <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}" align="center">TOTAL</td>
+                    <td align="center">{{ $t_beras }}</td>
+                    <td align="center">{{ $t_nberas }}</td>
+                    <td align="center">{{ $t_ternak }}</td>
+                    <td align="center">{{ $t_ikan }}</td>
+                    <td align="center">{{ $t_warung }}</td>
+                    <td align="center">{{ $t_lumbung }}</td>
+                    <td align="center">{{ $t_toga }}</td>
+                    <td align="center">{{ $t_keras }}</td>
+                    <td align="center">{{ $t_lainnya }}</td>
                 </tr>
             </tfoot>
         </table>
         @endif
 
+        {{-- ========================================================= --}}
+        {{-- 2. TABEL SANDANG (INDUSTRI RUMAH TANGGA)                  --}}
+        {{-- ========================================================= --}}
         @if($bidang == 'semua' || $bidang == 'sandang')
         <h3>Laporan Industri Rumah Tangga</h3>
-        <table align="center">
+        <table align="center" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom: 25px;">
             <thead>
+                {{-- [PERUBAHAN 2026-10-09] Header diselaraskan dengan decsandang (2 baris hierarki) --}}
                 <tr style="background: #e0f2fe;">
-                    <th align="center"><b>NO</b></th>
-                    <th align="center"><b>Kecamatan</b></th>
-                    <th align="center"><b>Pangan</b></th>
-                    <th align="center"><b>Sandang</b></th>
-                    <th align="center"><b>Jasa</b></th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">No</th>
+                    @if (Auth::guard('web')->check())
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Kecamatan</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Desa</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Desa</th>
+                    @endif
+                    <th scope="col" colspan="3" align="center">JUMLAH INDUSTRI RUMAH TANGGA</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" align="center">Pangan</th>
+                    <th scope="col" align="center">Sandang</th>
+                    <th scope="col" align="center">Jasa</th>
                 </tr>
             </thead>
             <tbody>
@@ -208,37 +258,54 @@
                 @endphp
                 <tr>
                     <td align="center">{{ $no_sdg++ }}</td>
-                    <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->pangan }}</td>
-                    <td align="center">{{ $item->sandang }}</td>
-                    <td align="center">{{ $item->jasa }}</td>
+                    @if (Auth::guard('web')->check())
+                    <td align="center">{{ $item->nama_kec ?? '-' }}</td>
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @endif
+                    <td align="center">{{ $item->pangan ?? 0 }}</td>
+                    <td align="center">{{ $item->sandang ?? 0 }}</td>
+                    <td align="center">{{ $item->jasa ?? 0 }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 6 : 5 }}" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
             <tfoot>
-                <tr style="background-color: #f2f2f2;">
-                    <td colspan="2" align="center"><b>TOTAL</b></td>
-                    <td align="center"><b>{{ $t_pang }}</b></td>
-                    <td align="center"><b>{{ $t_sand }}</b></td>
-                    <td align="center"><b>{{ $t_jasa }}</b></td>
+                <tr style="background-color: #f2f2f2; font-weight: bold;">
+                    <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}" align="center">TOTAL</td>
+                    <td align="center">{{ $t_pang }}</td>
+                    <td align="center">{{ $t_sand }}</td>
+                    <td align="center">{{ $t_jasa }}</td>
                 </tr>
             </tfoot>
         </table>
         @endif
 
+        {{-- ========================================================= --}}
+        {{-- 3. TABEL PERUMAHAN DAN TATA LAKSANA RUMAH TANGGA          --}}
+        {{-- ========================================================= --}}
         @if($bidang == 'semua' || $bidang == 'perumahan')
         <h3>Laporan Program Perumahan Dan Tata Laksana Rumah Tangga</h3>
-        <table align="center">
+        <table align="center" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom: 25px;">
             <thead>
+                {{-- [PERUBAHAN 2026-10-09] Header diselaraskan dengan decperumahan (2 baris hierarki) --}}
                 <tr style="background: #e0f2fe;">
-                    <th align="center"><b>NO</b></th>
-                    <th align="center"><b>Kecamatan</b></th>
-                    <th align="center"><b>Layak Huni</b></th>
-                    <th align="center"><b>Tidak Layak</b></th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">NO</th>
+                    @if (Auth::guard('web')->check())
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">KECAMATAN</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">DESA</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">DESA</th>
+                    @endif
+                    <th scope="col" colspan="2" align="center">JUMLAH RUMAH</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" align="center">SEHAT & LAYAK HUNI</th>
+                    <th scope="col" align="center">TIDAK SEHAT & TIDAK LAYAK HUNI</th>
                 </tr>
             </thead>
             <tbody>
@@ -252,36 +319,53 @@
                 @endphp
                 <tr>
                     <td align="center">{{ $no_rmh++ }}</td>
-                    <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->layak_huni }}</td>
-                    <td align="center">{{ $item->tidak_layak }}</td>
+                    @if (Auth::guard('web')->check())
+                    <td align="center">{{ $item->nama_kec ?? '-' }}</td>
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @endif
+                    <td align="center">{{ $item->layak_huni ?? 0 }}</td>
+                    <td align="center">{{ $item->tidak_layak ?? 0 }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 5 : 4 }}" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
             <tfoot>
-                <tr style="background-color: #f2f2f2;">
-                    <td colspan="2" align="center"><b>TOTAL</b></td>
-                    <td align="center"><b>{{ $t_layak }}</b></td>
-                    <td align="center"><b>{{ $t_tidak }}</b></td>
+                <tr style="background-color: #f2f2f2; font-weight: bold;">
+                    <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}" align="center">TOTAL</td>
+                    <td align="center">{{ $t_layak }}</td>
+                    <td align="center">{{ $t_tidak }}</td>
                 </tr>
             </tfoot>
         </table>
         @endif
 
+        {{-- ========================================================= --}}
+        {{-- 4. TABEL KADER POKJA 3                                     --}}
+        {{-- ========================================================= --}}
         @if($bidang == 'semua' || $bidang == 'kader')
         <h3>Laporan Kader Pokja 3</h3>
-        <table align="center">
+        <table align="center" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom: 25px;">
             <thead>
+                {{-- [PERUBAHAN 2026-10-09] Header diselaraskan dengan declaporanpokja3 (2 baris hierarki; label web 'Jasa' untuk tata_laksana_rumah) --}}
                 <tr style="background: #e0f2fe;">
-                    <th align="center"><b>NO</b></th>
-                    <th align="center"><b>Kecamatan</b></th>
-                    <th align="center"><b>Pangan</b></th>
-                    <th align="center"><b>Sandang</b></th>
-                    <th align="center"><b>Tata Laksana Rumah</b></th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">No</th>
+                    @if (Auth::guard('web')->check())
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Kecamatan</th>
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Desa</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <th scope="col" rowspan="2" align="center" style="vertical-align: middle;">Desa</th>
+                    @endif
+                    <th scope="col" colspan="3" align="center">JUMLAH KADER</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" align="center">Pangan</th>
+                    <th scope="col" align="center">Sandang</th>
+                    <th scope="col" align="center">Jasa</th>
                 </tr>
             </thead>
             <tbody>
@@ -295,23 +379,28 @@
                 @endphp
                 <tr>
                     <td align="center">{{ $no_kdr++ }}</td>
-                    <td align="center">{{ $item->nama_kec }}</td>
-                    <td align="center">{{ $item->pangan }}</td>
-                    <td align="center">{{ $item->sandang }}</td>
-                    <td align="center">{{ $item->tata_laksana_rumah }}</td>
+                    @if (Auth::guard('web')->check())
+                    <td align="center">{{ $item->nama_kec ?? '-' }}</td>
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @elseif (Auth::guard('pengguna')->check())
+                    <td align="center">{{ $item->nama_desa ?? '-' }}</td>
+                    @endif
+                    <td align="center">{{ $item->pangan ?? 0 }}</td>
+                    <td align="center">{{ $item->sandang ?? 0 }}</td>
+                    <td align="center">{{ $item->tata_laksana_rumah ?? 0 }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 6 : 5 }}" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
             <tfoot>
-                <tr style="background-color: #f2f2f2;">
-                    <td colspan="2" align="center"><b>TOTAL</b></td>
-                    <td align="center"><b>{{ $t_kpang }}</b></td>
-                    <td align="center"><b>{{ $t_ksand }}</b></td>
-                    <td align="center"><b>{{ $t_ktata }}</b></td>
+                <tr style="background-color: #f2f2f2; font-weight: bold;">
+                    <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}" align="center">TOTAL</td>
+                    <td align="center">{{ $t_kpang }}</td>
+                    <td align="center">{{ $t_ksand }}</td>
+                    <td align="center">{{ $t_ktata }}</td>
                 </tr>
             </tfoot>
         </table>

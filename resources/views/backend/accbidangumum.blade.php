@@ -131,7 +131,9 @@
                     <div class="alert alert-primary mt-3" id="infoLinkSheet" style="display: none; border-left: 4px solid #0d6efd; background-color: #f0f7ff;">
                         <h6 class="alert-heading fw-bold mb-1" style="font-size: 13px;"><i class="bi bi-link-45deg"></i> Link Spreadsheet Tujuan</h6>
                         <p class="mb-2" style="font-size: 12px; color: #475569;">Data akan diekspor dan disusun otomatis ke tab di Google Sheets berikut:</p>
-                        <a href="https://docs.google.com/spreadsheets/d/1jQo74NIJiUAcrWdVE8O-Afup-ijjCY733F151trNlp4/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size: 12px; font-weight: 600; border: 1px solid #cce3fd;">
+                        {{-- [PERUBAHAN 2026-10-09] Mengambil URL Spreadsheet dari config services; URL hardcode dinonaktifkan --}}
+                        {{-- <a href="https://docs.google.com/spreadsheets/d/1jQo74NIJiUAcrWdVE8O-Afup-ijjCY733F151trNlp4/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size: 12px; font-weight: 600; border: 1px solid #cce3fd;"> --}}
+                        <a id="linkSheetBidangUmum" href="{{ config('services.sheets.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size: 12px; font-weight: 600; border: 1px solid #cce3fd;">
                             <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet Laporan
                         </a>
                     </div>
@@ -152,12 +154,25 @@
 
 <script>
     // URL GOOGLE APPS SCRIPT BIDANG UMUM
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRFcqpMF2IP81GirLgjnNzaD5_k3DBF5yAwbP5nS82_DiFtKn7nbZCW-z3np4NvuMV/exec";
-    const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1jQo74NIJiUAcrWdVE8O-Afup-ijjCY733F151trNlp4/edit?usp=sharing";
+    // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dan Spreadsheet dari config services; URL hardcode dinonaktifkan
+    // const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRFcqpMF2IP81GirLgjnNzaD5_k3DBF5yAwbP5nS82_DiFtKn7nbZCW-z3np4NvuMV/exec";
+    const APPS_SCRIPT_URL = "{{ config('services.sheets.script_url') }}";
+    // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1jQo74NIJiUAcrWdVE8O-Afup-ijjCY733F151trNlp4/edit?usp=sharing";
+    const SHEET_HREF = "{{ config('services.sheets.spreadsheet_url') }}";
+
+    // [PERUBAHAN 2026-10-09] Fungsi navigasi langsung ke tab Google Sheets Bidang Umum
+    function updateLinkBidangUmum() {
+        const saved = localStorage.getItem('sheet_tab_bidang_umum') || SHEET_HREF;
+        const el = document.getElementById("linkSheetBidangUmum");
+        if (el && saved) el.href = saved;
+    }
 
     document.getElementById("formatExport").addEventListener("change", function() {
-        document.getElementById("infoLinkSheet").style.display = this.value === "excel" ? "block" : "none";
+        const isExcel = this.value === "excel";
+        document.getElementById("infoLinkSheet").style.display = isExcel ? "block" : "none";
+        if (isExcel) updateLinkBidangUmum();
     });
+    updateLinkBidangUmum();
 
     document.getElementById("formExport").addEventListener("submit", async function(e){
         e.preventDefault();
@@ -190,6 +205,16 @@
         
         // --- EXPORT GOOGLE SHEETS ---
         if(format === "excel"){
+            // [PERUBAHAN 2026-10-09] Validasi URL Apps Script dari .env
+            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.trim() === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'URL Belum Diatur!',
+                    text: 'URL Google Sheets belum diatur di .env'
+                });
+                return;
+            }
+
             const confirmExport = await Swal.fire({
               title: 'Mulai Ekspor?',
               html: `Data akan ditimpa/diperbarui ke dalam <b>Google Sheets Bidang Umum</b>.<br><br>
@@ -222,6 +247,11 @@
                     btn.disabled = false; btnText.textContent = 'Export'; return;
                 }
 
+                // [PERUBAHAN 2026-10-09] Lengkapi metadata identitas pokja dan periode
+                dbResult.pokja = 'BIDANG UMUM';
+                dbResult.bulan = bulan;
+                dbResult.tahun = tahun;
+
                 Swal.update({ text: `Ditemukan ${dbResult.data.length} baris. Mengirim ke Google Sheets...` });
 
                 // 2. Tembak ke Apps Script
@@ -236,9 +266,17 @@
                 try {
                     const result = JSON.parse(textResult);
                     if(result.status === "success") {
+                        const directTabUrl = result.tab_url || SHEET_HREF;
+                        if (result.tab_url) {
+                            try {
+                                localStorage.setItem('sheet_tab_bidang_umum', result.tab_url);
+                                const el = document.getElementById("linkSheetBidangUmum");
+                                if (el) el.href = result.tab_url;
+                            } catch(e) {}
+                        }
                         Swal.fire({
                             icon: 'success', title: 'Berhasil!',
-                            html: `✅ ${result.message}<br><br><a href="${SHEET_HREF}" target="_blank" class="btn btn-sm btn-outline-primary">Buka Laporan Bidang Umum</a>`,
+                            html: `✅ ${result.message}<br><br><a href="${directTabUrl}" target="_blank" class="btn btn-sm btn-primary text-white" style="font-weight:600;"><i class="bi bi-box-arrow-up-right"></i> Buka Langsung Tab Laporan</a>`,
                             confirmButtonText: 'Tutup',
                         }).then(() => {
                             form.reset(); document.getElementById("infoLinkSheet").style.display = "none";

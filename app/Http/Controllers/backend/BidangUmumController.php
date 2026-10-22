@@ -119,10 +119,19 @@ class BidangUmumController extends Controller
     {
         $statusTarget = Auth::guard('web')->check() ? 'Disetujui2' : 'Disetujui1';
 
+        // [PERUBAHAN 2026-10-09] Tambahkan leftJoin village untuk menyertakan nama_desa sesuai tampilan web
+        /*
         $query = DB::table('laporan_umum')
             ->join('users_mobile', 'laporan_umum.id_user', '=', 'users_mobile.id')
             ->join('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
             ->select('laporan_umum.*', 'subdistrict.name as nama_kec')
+            ->where('laporan_umum.status', $statusTarget);
+        */
+        $query = DB::table('laporan_umum')
+            ->leftJoin('users_mobile', 'laporan_umum.id_user', '=', 'users_mobile.id')
+            ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
+            ->leftJoin('village', 'users_mobile.id_village', '=', 'village.id')
+            ->select('laporan_umum.*', 'subdistrict.name as nama_kec', 'village.name as nama_desa')
             ->where('laporan_umum.status', $statusTarget);
 
         if (Auth::guard('pengguna')->check()) {
@@ -138,11 +147,22 @@ class BidangUmumController extends Controller
         $totals = [];
         for($i=1; $i<=17; $i++) { /* logic sum total di sini jika diperlukan di view */ }
 
+        $tanggal = null;
+        if ($request->has('search') && !empty($request->search)) {
+            try {
+                $tanggal = Carbon::parse($request->search)->isoFormat('MMMM Y');
+            } catch (\Exception $e) {
+                $tanggal = $request->search;
+            }
+        } elseif ($request->has('search2') && !empty($request->search2)) {
+            $tanggal = $request->search2;
+        }
+
         $formattedDate = Carbon::now()->isoFormat('dddd, D MMMM YYYY');
         $ketua = Ttd::where('jabatan', 'Sekretaris')->where('pokja', 'Bidang Umum')->get();
         $viewName = $request->has('search2') ? 'backend.cetak_tahun_bidangumum' : 'backend.cetak_bulan_bidangumum';
 
-        return view($viewName, compact('bidangumum', 'formattedDate', 'ketua'));
+        return view($viewName, compact('bidangumum', 'formattedDate', 'ketua', 'tanggal'));
     }
 
     public function destroy($id)

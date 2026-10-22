@@ -12,8 +12,16 @@ class Pokja1ExportController extends Controller
     public function exportToSheet(Request $request)
     {
         try {
-            // URL Apps Script kamu
-            $url = "https://script.google.com/macros/s/AKfycbzTkeEtrbv6b2_vdoetwHKMzY3CxBseQ47fVHAwlOpTyrRVBevwCpKIm7_B6hVOhmCf/exec";
+            // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dari config services; URL hardcode dinonaktifkan
+            // $url = "https://script.google.com/macros/s/AKfycbzTkeEtrbv6b2_vdoetwHKMzY3CxBseQ47fVHAwlOpTyrRVBevwCpKIm7_B6hVOhmCf/exec";
+            $url = config('services.sheets.script_url');
+
+            if (empty($url)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'URL Google Sheets belum diatur di .env'
+                ], 500);
+            }
 
             // Data dari form
             $data = [

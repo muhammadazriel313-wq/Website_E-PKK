@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\Api\Pokja1ExportApiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
@@ -71,6 +72,7 @@ Route::post('/report/galeri', [ReportController::class, 'insertGaleri']);
 Route::post('/report/laporan-umum', [ReportController::class, 'storeLaporanUmum']);
 
 // POKJA 1
+Route::get('/export/pokja1', [Pokja1ExportApiController::class, 'index']);
 Route::post('/report/kader-pokja1', [ReportController::class, 'insertKaderPokja1']);
 Route::post('/report/gotong-royong', [ReportController::class, 'insertGotongRoyong']);
 Route::post('/report/penghayatan', [ReportController::class, 'insertPenghayatan']);

@@ -1,6 +1,7 @@
 {{-- @extends('backend/layouts.template')
 
 @section('content1') --}}
+@inject('pokja1Deletion', 'App\\Services\\Pokja1ReportDeletion')
 
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +42,7 @@
     }
 
     .table-responsive table {
-      min-width: 1000px;
+      min-width: 1400px;
       white-space: nowrap;
       margin-bottom: 0;
     }
@@ -52,9 +53,9 @@
       background: #f8fafc;
       color: #334155;
       z-index: 2;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      padding: 15px 10px;
+      padding: 12px 8px;
       vertical-align: middle;
       border: 1px solid #e2e8f0;
       text-transform: uppercase;
@@ -62,8 +63,8 @@
     }
 
     .table-responsive tbody td {
-      font-size: 13px;
-      padding: 12px 10px;
+      font-size: 12px;
+      padding: 10px 8px;
       vertical-align: middle;
       background-color: white;
       color: #475569;
@@ -96,128 +97,35 @@
       background: #94a3b8;
     }
 
-    /* ===== SIDEBAR & NAVBAR FIX ===== */
-    body {
-      background: #f6f9ff !important;
-    }
-
-    .header {
-      background: #fff !important;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
-      height: 70px !important;
-      padding: 0 20px !important;
-      z-index: 998 !important;
-    }
-
-    .header .logo {
-      min-width: auto;
-      padding: 0;
-      margin-left: 15px;
-    }
-
-    .header .logo img {
-      max-height: 50px;
-      width: 50px;
-      border-radius: 50%;
-      margin-right: 15px;
-      flex-shrink: 0;
-    }
-
-    .header .logo span {
-      font-size: 15px;
+    .header-group-title {
+      font-size: 12px;
       font-weight: 700;
-      line-height: 1.3;
-      color: #1a1a1a;
-      white-space: nowrap;
-      display: inline-block;
-    }
-
-    .toggle-sidebar-btn {
-      color: #1a1a1a !important;
-      font-size: 24px !important;
-      cursor: pointer !important;
-      padding: 10px 15px !important;
-    }
-
-    .sidebar {
-      width: 300px !important;
-      top: 70px !important;
-      background: #fff !important;
-      border-right: 1px solid #e5e7eb !important;
-      z-index: 997 !important;
-    }
-
-    .toggle-sidebar .sidebar {
-      width: 80px !important;
-    }
-
-    .toggle-sidebar .sidebar .nav-link span {
-      display: none !important;
-    }
-
-    .toggle-sidebar .sidebar .nav-link {
-      justify-content: center !important;
-      padding: 12px 0 !important;
-    }
-
-    #main {
-      margin-left: 300px !important;
-      margin-top: 70px !important;
-      padding: 25px 35px !important;
-      background: #f6f9ff !important;
-      min-height: calc(100vh - 70px) !important;
-    }
-
-    .toggle-sidebar #main {
-      margin-left: 80px !important;
-    }
-
-    .sidebar-nav .nav-link:not(.collapsed) {
-      background: #e8ecff;
-      color: #4154f1;
-      border-radius: 6px;
-    }
-
-    .sidebar-nav .nav-link:not(.collapsed) i {
-      color: #4154f1;
-    }
-
-    .sidebar-nav .nav-item {
-      margin-bottom: 4px;
-    }
-
-    .sidebar-nav .nav-link {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      font-size: 15px;
-      font-weight: 400;
-      font-family: "Poppins", sans-serif !important;
-      color: #4b5563;
-      transition: all 0.3s;
-    }
-
-    .sidebar-nav .nav-link i {
-      font-size: 18px;
-      margin-right: 12px;
-      color: #6b7280;
-    }
-
-    .sidebar-nav .nav-link:hover {
-      background: #f3f4f6;
-      color: #4154f1;
-    }
-
-    i,
-    .bi,
-    [class^="bi-"],
-    [class*=" bi-"],
-    [class^="fa"],
-    [class*=" fa-"] {
-      font-family: unset !important;
+      color: #1e293b;
     }
   </style>
 
+  <style>
+    * { font-family: "Poppins", sans-serif !important; }
+    body { background: #f6f9ff !important; }
+    .header { background: #fff !important; box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important; height: 70px !important; padding: 0 20px !important; z-index: 998 !important; }
+    .header .logo { min-width: auto; padding: 0; margin-left: 15px; }
+    .header .logo img { max-height: 50px; width: 50px; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
+    .header .logo span { font-size: 15px; font-weight: 700; font-family: "Poppins", sans-serif !important; line-height: 1.3; color: #1a1a1a; white-space: nowrap; display: inline-block; }
+    .toggle-sidebar-btn { color: #1a1a1a !important; font-size: 24px !important; cursor: pointer !important; padding: 10px 15px !important; }
+    .sidebar { width: 300px !important; top: 70px !important; background: #fff !important; border-right: 1px solid #e5e7eb !important; z-index: 997 !important; }
+    .toggle-sidebar .sidebar { width: 80px !important; }
+    .toggle-sidebar .sidebar .nav-link span { display: none !important; }
+    .toggle-sidebar .sidebar .nav-link { justify-content: center !important; padding: 12px 0 !important; }
+    #main { margin-left: 300px !important; margin-top: 70px !important; padding: 25px 35px !important; background: #f6f9ff !important; min-height: calc(100vh - 70px) !important; }
+    .toggle-sidebar #main { margin-left: 80px !important; }
+    .sidebar-nav .nav-link:not(.collapsed) { background: #e8ecff; color: #4154f1; border-radius: 6px; }
+    .sidebar-nav .nav-link:not(.collapsed) i { color: #4154f1; }
+    .sidebar-nav .nav-item { margin-bottom: 4px; }
+    .sidebar-nav .nav-link { display: flex; align-items: center; padding: 12px 20px; font-size: 15px; font-weight: 400; font-family: "Poppins", sans-serif !important; color: #4b5563; transition: all 0.3s; }
+    .sidebar-nav .nav-link i { font-size: 18px; margin-right: 12px; color: #6b7280; }
+    .sidebar-nav .nav-link:hover { background: #f3f4f6; color: #4154f1; }
+    i, .bi, [class^="bi-"], [class*=" bi-"], [class^="fa"], [class*=" fa-"] { font-family: unset !important; }
+  </style>
 </head>
 
 <body>
@@ -236,12 +144,12 @@
   </header>
 
   @include('backend.includes.sidebar')
-
-
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>Daftar Laporan Gotong Royong (Riwayat)</h1>
-    </div>@if ($message = Session::get('success'))
+      <h1>Riwayat Laporan Gotong Royong</h1>
+    </div>
+
+    @if ($message = Session::get('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
       <i class="bi bi-check-circle me-1"></i>
       {{ $message }}
@@ -252,79 +160,121 @@
     <div class="card mt-2">
       <div class="card-body">
 
+        <div class="alert alert-info d-flex align-items-center mt-3" role="alert">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          <div>Geser ke samping untuk melihat semua kolom data.</div>
+        </div>
+
         <div class="table-responsive mt-3">
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <th scope="col" class="text-center align-middle">No</th>
-
+                <th scope="col" rowspan="3" class="text-center align-middle">No</th>
                 @if (Auth::guard('web')->check())
-                <th class="text-center align-middle" scope="col">Kecamatan</th>
-                <th class="text-center align-middle" scope="col">Desa</th>
+                  <th scope="col" rowspan="3" class="text-center align-middle">Kecamatan</th>
+                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
                 @elseif (Auth::guard('pengguna')->check())
-                <th class="text-center align-middle" scope="col">Desa</th>
+                  <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
                 @endif
+                <th scope="col" colspan="12" class="text-center header-group-title">GOTONG ROYONG</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Sumber Dana</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Hasil Kegiatan</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
+              </tr>
+              <tr>
+                <th scope="col" colspan="4" class="text-center">KERJA BAKTI</th>
+                <th scope="col" colspan="4" class="text-center">BANTUAN ANAK YATIM</th>
+                <th scope="col" colspan="4" class="text-center">KEGIATAN SOSIAL</th>
+              </tr>
+              <tr>
+                {{-- KERJA BAKTI --}}
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
 
-                <th class="text-center align-middle" scope="col">Kerja Bakti</th>
-                <th class="text-center align-middle" scope="col">Rukun Kematian</th>
-                <th class="text-center align-middle" scope="col">Keagamaan</th>
-                <th class="text-center align-middle" scope="col">Jimpitan</th>
-                <th class="text-center align-middle" scope="col">Arisan</th>
-                <th class="text-center align-middle" scope="col">Status</th>
-                <th class="text-center align-middle" scope="col">Tanggal</th>
-                <th class="text-center align-middle" scope="col">Aksi</th>
+                {{-- BANTUAN ANAK YATIM --}}
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
+
+                {{-- KEGIATAN SOSIAL --}}
+                <th scope="col" class="text-center">Kegiatan</th>
+                <th scope="col" class="text-center">Vol. Keg</th>
+                <th scope="col" class="text-center">Metode</th>
+                <th scope="col" class="text-center">Jml Sasaran</th>
               </tr>
             </thead>
             <tbody>
               @php $no = 1; @endphp
               @forelse ($data2 as $got1)
-              <tr>
-                <th scope="row" class="text-center">{{ $no++ }}</th>
-
-                @if (Auth::guard('web')->check())
-                <td class="text-center">{{ $got1->nama_kec }}</td>
-                <td class="text-center">{{ $got1->nama_desa }}</td>
-                @elseif (Auth::guard('pengguna')->check())
-                <td class="text-center">{{ $got1->nama_desa }}</td>
-                @endif
-
-                <td class="text-center">{{ $got1->kerja_bakti ?? '0' }}</td>
-                <td class="text-center">{{ $got1->rukun_kematian ?? '0' }}</td>
-                <td class="text-center">{{ $got1->keagamaan ?? '0' }}</td>
-                <td class="text-center">{{ $got1->jimpitan ?? '0' }}</td>
-                <td class="text-center">{{ $got1->arisan ?? '0' }}</td>
-
-                <td class="text-center">
-                  @if(in_array(strtolower($got1->status), ['proses', 'revisi']))
-                  <span class="badge bg-warning text-dark">{{ $got1->status }}</span>
-                  @elseif(in_array(strtolower($got1->status), ['disetujui1', 'disetujui2']))
-                  <span class="badge bg-success">{{ $got1->status }}</span>
-                  @else
-                  <span class="badge bg-secondary">{{ $got1->status }}</span>
+                <tr>
+                  <th scope="row" class="text-center">{{ $no++ }}</th>
+                  @if (Auth::guard('web')->check())
+                    <td class="text-center">{{ $got1->nama_kec ?? '-' }}</td>
+                    <td class="text-center">{{ $got1->nama_desa ?? '-' }}</td>
+                  @elseif (Auth::guard('pengguna')->check())
+                    <td class="text-center">{{ $got1->nama_desa ?? '-' }}</td>
                   @endif
-                </td>
 
-                <td class="text-center">{{ \Carbon\Carbon::parse($got1->created_at)->format('d/m/Y') }}</td>
+                  {{-- KERJA BAKTI --}}
+                  <td class="text-center">{{ $got1->kerja_bakti_kegiatan ?? ($got1->jenis_kegiatan == 'Kerja Bakti' ? 'Kerja Bakti' : '-') }}</td>
+                  <td class="text-center">{{ $got1->kerja_bakti_vol ?? ($got1->kerja_bakti > 0 ? $got1->kerja_bakti : '-') }}</td>
+                  <td class="text-center">{{ $got1->kerja_bakti_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $got1->kerja_bakti_sasaran ?? '-' }}</td>
 
-                <td class="text-center">
-                  <form action="{{ route('decgotongroyong.destroy', $got1->id_pokja1_bidang2)}}" method="POST" class="d-inline delete-form">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </form>
-                </td>
-              </tr>
+                  {{-- BANTUAN ANAK YATIM --}}
+                  <td class="text-center">{{ $got1->bantuan_yatim_kegiatan ?? ($got1->jenis_kegiatan == 'Bantuan Anak Yatim' ? 'Santunan Yatim' : '-') }}</td>
+                  <td class="text-center">{{ $got1->bantuan_yatim_vol ?? ($got1->rukun_kematian > 0 ? $got1->rukun_kematian : '-') }}</td>
+                  <td class="text-center">{{ $got1->bantuan_yatim_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $got1->bantuan_yatim_sasaran ?? '-' }}</td>
+
+                  {{-- KEGIATAN SOSIAL --}}
+                  <td class="text-center">{{ $got1->kegiatan_sosial_kegiatan ?? ($got1->jenis_kegiatan == 'Kegiatan Sosial' ? 'Kegiatan Sosial' : '-') }}</td>
+                  <td class="text-center">{{ $got1->kegiatan_sosial_vol ?? (($got1->keagamaan ?? 0) > 0 ? $got1->keagamaan : (($got1->jimpitan ?? 0) > 0 ? $got1->jimpitan : (($got1->arisan ?? 0) > 0 ? $got1->arisan : '-'))) }}</td>
+                  <td class="text-center">{{ $got1->kegiatan_sosial_metode ?? '-' }}</td>
+                  <td class="text-center">{{ $got1->kegiatan_sosial_sasaran ?? '-' }}</td>
+
+                  {{-- KOLOM AKHIR --}}
+                  <td class="text-center">{{ $got1->sumber_dana ?? '-' }}</td>
+                  <td class="text-center" style="max-width: 250px; white-space: normal;">{{ $got1->hasil_kegiatan ?? '-' }}</td>
+
+                  <td class="text-center">
+                    @if(in_array(strtolower($got1->status), ['proses', 'revisi']))
+                      <span class="badge bg-warning text-dark">{{ $got1->status }}</span>
+                    @elseif(in_array(strtolower($got1->status), ['disetujui1', 'disetujui2']))
+                      <span class="badge bg-success">{{ $got1->status }}</span>
+                    @else
+                      <span class="badge bg-secondary">{{ $got1->status }}</span>
+                    @endif
+                  </td>
+
+                  <td class="text-center">{{ \Carbon\Carbon::parse($got1->created_at)->format('d/m/Y H:i') }}</td>
+
+                  <td class="text-center">
+                    @if ($pokja1Deletion->canDelete('gotong_royong', $got1))
+                      <form action="{{ route('decgotongroyong.destroy', $got1->id_pokja1_bidang2)}}" method="POST" class="d-inline delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger" onclick='confirmDelete(this, @json($got1->status))' data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    @endif
+                  </td>
+                </tr>
               @empty
-              <tr>
-                <td colspan="10" class="text-center py-5">
-                  <div class="alert alert-danger mb-0">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    Tidak ada data laporan gotong royong
-                  </div>
-                </td>
-              </tr>
+                <tr>
+                  <td colspan="19" class="text-center py-5">
+                    <div class="alert alert-danger mb-0">
+                      <i class="bi bi-exclamation-triangle-fill me-2"></i> 
+                      Tidak ada data riwayat laporan gotong royong
+                    </div>
+                  </td>
+                </tr>
               @endforelse
             </tbody>
           </table>
@@ -332,7 +282,9 @@
 
       </div>
     </div>
-  </main><a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  </main>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <script src="{{ asset('backend/assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
   <script src="{{ asset('backend/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -349,19 +301,25 @@
   <script>
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 
-    function confirmDelete(button) {
+    function confirmDelete(button, status) {
+      const normalizedStatus = String(status || '').toLowerCase();
+      const message = normalizedStatus === 'disetujui2'
+        ? 'Laporan ini sudah disetujui final. Penghapusan bersifat permanen dan tidak bisa dibatalkan.'
+        : (normalizedStatus === 'disetujui1'
+          ? 'Laporan ini sudah disetujui kecamatan. Penghapusan bersifat permanen.'
+          : 'Hapus laporan ini? Penghapusan bersifat permanen.');
       Swal.fire({
-        title: 'Yakin hapus data?',
-        text: "Data yang dihapus tidak bisa dikembalikan.",
+        title: 'Konfirmasi penghapusan',
+        text: message,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Ya, Hapus!',
+        confirmButtonText: 'Ya, Hapus Permanen',
         cancelButtonText: 'Batal'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -372,6 +330,4 @@
   </script>
 
 </body>
-
 </html>
-{{-- @endsection --}}

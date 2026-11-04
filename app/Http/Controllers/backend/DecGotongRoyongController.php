@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Models\GotongRoyong;
+use App\Services\Pokja1ReportDeletion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -47,20 +48,16 @@ class DecGotongRoyongController extends Controller
         return view('backend.decgotongroyong', compact('data2'));
     }
 
-    public function destroy(string $id_pokja1_bidang2)
+    public function destroy(string $id_pokja1_bidang2, Pokja1ReportDeletion $deletion)
     {
-        $data2 = GotongRoyong::find($id_pokja1_bidang2);
-
-        if ($data2) {
-            // Hanya Admin web yang bisa menghapus
-            if (Auth::guard('web')->check()) {
-                $data2->delete();
-                return redirect()->route('decgotongroyong.index')->with(['success' => 'Berhasil Menghapus Laporan']);
-            } elseif (Auth::guard('pengguna')->check()) {
-                abort(403, 'Unauthorized action.');
-            }
+        try {
+            $deletion->delete('gotong_royong', $id_pokja1_bidang2);
+        } catch (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $exception) {
+            abort(403, 'Anda tidak berhak menghapus laporan ini.');
+        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+            return redirect()->route('decgotongroyong.index')->with('error', 'Laporan tidak ditemukan.');
         }
 
-        return redirect()->route('decgotongroyong.index')->with(['error' => 'Data tidak ditemukan']);
+        return redirect()->route('decgotongroyong.index')->with('success', 'Laporan berhasil dihapus permanen.');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use Carbon\Carbon;
 use App\Models\Ttd;
 use App\Models\GotongRoyong;
+use App\Services\Pokja1ReportDeletion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -98,22 +99,29 @@ class GotongRoyongController extends Controller
     public function update(Request $request, string $id_pokja1_bidang2)
     {
         $data = GotongRoyong::find($id_pokja1_bidang2);
-        $status = $request->status;
 
-        if (strtolower($status) == 'disetujui') {
+        if (!$data) {
+            abort(404);
+        }
+
+        $status = $request->status;
+        if (strtolower((string) $status) == 'disetujui') {
             $status = Auth::guard('pengguna')->check() ? 'Disetujui1' : 'Disetujui2';
         }
 
-        $data->update([
-            'kerja_bakti' => $request->kerja_bakti,
-            'rukun_kematian' => $request->rukun_kematian,
-            'keagamaan' => $request->keagamaan,
-            'jimpitan' => $request->jimpitan,
-            'arisan' => $request->arisan,
+        $updates = [
             'status' => $status,
-            'catatan' => $request->catatan,
+            'catatan' => $request->catatan === 'null' ? null : $request->catatan,
             'updated_at' => now(),
-        ]);
+        ];
+
+        foreach (['kerja_bakti', 'rukun_kematian', 'keagamaan', 'jimpitan', 'arisan'] as $field) {
+            if ($request->exists($field) && $request->input($field) !== null) {
+                $updates[$field] = $request->input($field);
+            }
+        }
+
+        $data->update($updates);
 
         return redirect()->route('gotongroyong.index')->with(['success' => 'Berhasil Mengubah Status']);
     }
@@ -234,13 +242,16 @@ class GotongRoyongController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(string $id_pokja1_bidang2)
+    public function destroy(string $id_pokja1_bidang2, Pokja1ReportDeletion $deletion)
     {
-        $data = GotongRoyong::find($id_pokja1_bidang2);
-        if ($data) {
-            $data->delete();
-            return redirect()->route('gotongroyong.index')->with(['success' => 'Berhasil Menghapus Laporan']);
+        try {
+            $deletion->delete('gotong_royong', $id_pokja1_bidang2);
+        } catch (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $exception) {
+            abort(403, 'Anda tidak berhak menghapus laporan ini.');
+        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+            return redirect()->route('gotongroyong.index')->with('error', 'Laporan tidak ditemukan.');
         }
-        return redirect()->route('gotongroyong.index')->with(['error' => 'Data tidak ditemukan']);
+
+        return redirect()->route('gotongroyong.index')->with('success', 'Laporan berhasil dihapus permanen.');
     }
 }

@@ -491,6 +491,12 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     | EXPORT EXCEL & JSON LAINNYA
     |--------------------------------------------------------------------------
     */
+    Route::post('/export-pokja1/sheets', [App\Http\Controllers\backend\Pokja1SpreadsheetController::class, 'export'])
+        ->middleware(['auth:web', 'throttle:6,1'])
+        ->name('pokja1.sheets.export');
+    Route::post('/export-pokja1/sheets/kecamatan', [App\Http\Controllers\backend\Pokja1DistrictSpreadsheetController::class, 'export'])
+        ->middleware(['throttle:6,1'])
+        ->name('pokja1.sheets.district.export');
     Route::post('/export-pokja1', [Pokja1ExportController::class, 'exportToSheet'])->name('export.pokja1');
     Route::get('/pokja1/filter', [App\Http\Controllers\backend\Pokja1Controller::class, 'filter'])->name('pokja1.filter');
     Route::get('/api-export/pokja1', [App\Http\Controllers\backend\Pokja1Controller::class, 'getExportData'])->name('pokja1.exportJson');

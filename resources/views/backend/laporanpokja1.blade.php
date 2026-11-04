@@ -1,6 +1,7 @@
 @extends('backend.layouts.template')
 
 @section('content1')
+@inject('pokja1Deletion', 'App\\Services\\Pokja1ReportDeletion')
 
 <style>
   * { font-family: 'Poppins', sans-serif !important; }
@@ -185,13 +186,15 @@
                     <a href="{{ route('laporanpokja1.edit', $got1->id_kader_pokja1) }}" class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Review Data">
                       <i class="bi bi-pencil-square"></i>
                     </a>
-                    <form action="{{ route('laporanpokja1.destroy', $got1->id_kader_pokja1) }}" method="POST" class="d-inline delete-form" style="margin:0;">
-                      @csrf
-                      @method('DELETE')
-                      <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </form>
+                    @if ($pokja1Deletion->canDelete('kader', $got1))
+                      <form action="{{ route('laporanpokja1.destroy', $got1->id_kader_pokja1) }}" method="POST" class="d-inline delete-form" style="margin:0;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger" onclick='confirmDelete(this, @json($got1->status))' data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    @endif
                   </div>
                 </td>
               </tr>
@@ -275,15 +278,21 @@
     document.getElementById('tahun').value = '';
   }
 
-  function confirmDelete(button) {
+  function confirmDelete(button, status) {
+    const normalizedStatus = String(status || '').toLowerCase();
+    const message = normalizedStatus === 'disetujui2'
+      ? 'Laporan ini sudah disetujui final. Penghapusan bersifat permanen dan tidak bisa dibatalkan.'
+      : (normalizedStatus === 'disetujui1'
+        ? 'Laporan ini sudah disetujui kecamatan. Penghapusan bersifat permanen.'
+        : 'Hapus laporan ini? Penghapusan bersifat permanen.');
     Swal.fire({
-      title: 'Yakin hapus data?',
-      text: "Data yang dihapus tidak bisa dikembalikan.",
+      title: 'Konfirmasi penghapusan',
+      text: message,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Ya, Hapus!',
+      confirmButtonText: 'Ya, Hapus Permanen',
       cancelButtonText: 'Batal',
       customClass: { popup: 'swal-popup', title: 'swal-title', confirmButton: 'swal-confirm-btn', cancelButton: 'swal-cancel-btn' },
       buttonsStyling: false,

@@ -334,9 +334,8 @@ class ReportController extends Controller
         try {
             //  validasi
             $request->validate([
-                'PKBN' => 'required',
-                'PKDRT' => 'required',
-                'pola_asuh' => 'required',
+                'kader_umum' => 'required|integer|min:0',
+                'kader_khusus' => 'required|integer|min:0',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
@@ -349,9 +348,8 @@ class ReportController extends Controller
             DB::table('laporan_kader_pokja1')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'PKBN' => $request->PKBN,
-                'PKDRT' => $request->PKDRT,
-                'pola_asuh' => $request->pola_asuh,
+                'kader_umum' => $request->kader_umum,
+                'kader_khusus' => $request->kader_khusus,
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -382,9 +380,8 @@ class ReportController extends Controller
                     "id_kader_pokja1" => $data->id_kader_pokja1,
                     "uuid" => $data->uuid,
                     "id_user" => $data->id_user,
-                    "PKBN" => $data->PKBN,
-                    "PKDRT" => $data->PKDRT,
-                    "pola_asuh" => $data->pola_asuh,
+                    "kader_umum" => $data->kader_umum,
+                    "kader_khusus" => $data->kader_khusus,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
@@ -418,11 +415,6 @@ class ReportController extends Controller
         try {
             //  validasi
             $request->validate([
-                'kerja_bakti' => 'required',
-                'rukun_kematian' => 'required',
-                'keagamaan' => 'required',
-                'jimpitan' => 'required',
-                'arisan' => 'required',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
@@ -431,15 +423,45 @@ class ReportController extends Controller
             //  UUID custom (sama seperti kode lama)
             $uuid = 'KP1B2-' . strtoupper(\Illuminate\Support\Str::random(6));
 
+            $jenis_kegiatan = $request->jenis_kegiatan ?? 'Kerja Bakti';
+            $kerja_bakti = $request->kerja_bakti ?? ($jenis_kegiatan == 'Kerja Bakti' ? '1' : '0');
+            $rukun_kematian = $request->rukun_kematian ?? ($jenis_kegiatan == 'Bantuan Anak Yatim' ? '1' : '0');
+            $keagamaan = $request->keagamaan ?? ($jenis_kegiatan == 'Kegiatan Sosial' ? '1' : '0');
+            $jimpitan = $request->jimpitan ?? '0';
+            $arisan = $request->arisan ?? '0';
+
             //  insert data
             DB::table('laporan_gotong_royong')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kerja_bakti' => $request->kerja_bakti,
-                'rukun_kematian' => $request->rukun_kematian,
-                'keagamaan' => $request->keagamaan,
-                'jimpitan' => $request->jimpitan,
-                'arisan' => $request->arisan,
+
+                // Sub-kolom KERJA BAKTI
+                'kerja_bakti_kegiatan' => $request->kerja_bakti_kegiatan,
+                'kerja_bakti_vol' => $request->kerja_bakti_vol,
+                'kerja_bakti_metode' => $request->kerja_bakti_metode,
+                'kerja_bakti_sasaran' => $request->kerja_bakti_sasaran,
+
+                // Sub-kolom BANTUAN ANAK YATIM
+                'bantuan_yatim_kegiatan' => $request->bantuan_yatim_kegiatan,
+                'bantuan_yatim_vol' => $request->bantuan_yatim_vol,
+                'bantuan_yatim_metode' => $request->bantuan_yatim_metode,
+                'bantuan_yatim_sasaran' => $request->bantuan_yatim_sasaran,
+
+                // Sub-kolom KEGIATAN SOSIAL
+                'kegiatan_sosial_kegiatan' => $request->kegiatan_sosial_kegiatan,
+                'kegiatan_sosial_vol' => $request->kegiatan_sosial_vol,
+                'kegiatan_sosial_metode' => $request->kegiatan_sosial_metode,
+                'kegiatan_sosial_sasaran' => $request->kegiatan_sosial_sasaran,
+
+                'jenis_kegiatan' => $jenis_kegiatan,
+                'kerja_bakti' => $kerja_bakti,
+                'rukun_kematian' => $rukun_kematian,
+                'keagamaan' => $keagamaan,
+                'jimpitan' => $jimpitan,
+                'arisan' => $arisan,
+                'sumber_dana' => $request->sumber_dana,
+                'hasil_kegiatan' => $request->hasil_kegiatan,
+                'catatan' => $request->catatan,
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -470,11 +492,26 @@ class ReportController extends Controller
                     "id_pokja1_bidang2" => $data->id_pokja1_bidang2,
                     "uuid" => $data->uuid,
                     "id_user" => $data->id_user,
+                    "kerja_bakti_kegiatan" => $data->kerja_bakti_kegiatan,
+                    "kerja_bakti_vol" => $data->kerja_bakti_vol,
+                    "kerja_bakti_metode" => $data->kerja_bakti_metode,
+                    "kerja_bakti_sasaran" => $data->kerja_bakti_sasaran,
+                    "bantuan_yatim_kegiatan" => $data->bantuan_yatim_kegiatan,
+                    "bantuan_yatim_vol" => $data->bantuan_yatim_vol,
+                    "bantuan_yatim_metode" => $data->bantuan_yatim_metode,
+                    "bantuan_yatim_sasaran" => $data->bantuan_yatim_sasaran,
+                    "kegiatan_sosial_kegiatan" => $data->kegiatan_sosial_kegiatan,
+                    "kegiatan_sosial_vol" => $data->kegiatan_sosial_vol,
+                    "kegiatan_sosial_metode" => $data->kegiatan_sosial_metode,
+                    "kegiatan_sosial_sasaran" => $data->kegiatan_sosial_sasaran,
+                    "jenis_kegiatan" => $data->jenis_kegiatan,
                     "kerja_bakti" => $data->kerja_bakti,
                     "rukun_kematian" => $data->rukun_kematian,
                     "keagamaan" => $data->keagamaan,
                     "jimpitan" => $data->jimpitan,
                     "arisan" => $data->arisan,
+                    "sumber_dana" => $data->sumber_dana,
+                    "hasil_kegiatan" => $data->hasil_kegiatan,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
@@ -540,6 +577,9 @@ class ReportController extends Controller
                 'pkbn_kegiatan' => $request->pkbn_kegiatan,
                 'pkbn_vol' => $request->pkbn_vol,
                 'pkbn_metode' => $request->pkbn_metode,
+                'pkbn_sasaran' => $request->pkbn_sasaran,
+                'sumber_dana' => $request->sumber_dana,
+                'hasil_kegiatan' => $request->hasil_kegiatan,
                 // [PERUBAHAN 03-10-2026] disamakan dengan endpoint lain ('Proses'); kode lama di bawah dinonaktifkan
                 // 'status' => 'Menunggu',
                 'status' => 'Proses',
@@ -596,6 +636,8 @@ class ReportController extends Controller
                     "pkbn_vol" => $data->pkbn_vol,
                     "pkbn_metode" => $data->pkbn_metode,
                     "pkbn_sasaran" => $data->pkbn_sasaran,
+                    "sumber_dana" => $data->sumber_dana,
+                    "hasil_kegiatan" => $data->hasil_kegiatan,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,

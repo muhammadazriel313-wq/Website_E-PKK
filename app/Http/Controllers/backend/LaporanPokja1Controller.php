@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\LaporanPokja1;
+use App\Services\Pokja1ReportDeletion;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -108,14 +109,17 @@ class LaporanPokja1Controller extends Controller
     }
 
     // --- 4. MENGHAPUS DATA (DESTROY) ---
-    public function destroy(string $id_kader_pokja1)
+    public function destroy(string $id_kader_pokja1, Pokja1ReportDeletion $deletion)
     {
-        $data = LaporanPokja1::find($id_kader_pokja1);
-        if ($data) {
-            $data->delete();
-            return redirect()->route('laporanpokja1.index')->with(['success' => 'Berhasil Menghapus Laporan']);
+        try {
+            $deletion->delete('kader', $id_kader_pokja1);
+        } catch (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $exception) {
+            abort(403, 'Anda tidak berhak menghapus laporan ini.');
+        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+            return redirect()->route('laporanpokja1.index')->with('error', 'Laporan tidak ditemukan.');
         }
-        return redirect()->route('laporanpokja1.index')->with(['error' => 'Data tidak ditemukan']);
+
+        return redirect()->route('laporanpokja1.index')->with('success', 'Laporan berhasil dihapus permanen.');
     }
 
     // --- 5. FILTER / CETAK PDF ---

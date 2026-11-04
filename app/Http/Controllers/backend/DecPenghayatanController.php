@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Models\Penghayatan;
+use App\Services\Pokja1ReportDeletion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -54,10 +55,16 @@ class DecPenghayatanController extends Controller
         return view('backend.decpenghayatan', compact('data2'));
     }
 
-    public function destroy(string $id_pokja1_bidang1)
+    public function destroy(string $id_pokja1_bidang1, Pokja1ReportDeletion $deletion)
     {
-        $data2 = Penghayatan::find($id_pokja1_bidang1);
-        $data2->delete();
-        return redirect()->route('decpenghayatan.index')->with(['success' => 'Berhasil Menghapus Laporan']);
+        try {
+            $deletion->delete('penghayatan', $id_pokja1_bidang1);
+        } catch (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $exception) {
+            abort(403, 'Anda tidak berhak menghapus laporan ini.');
+        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+            return redirect()->route('decpenghayatan.index')->with('error', 'Laporan tidak ditemukan.');
+        }
+
+        return redirect()->route('decpenghayatan.index')->with('success', 'Laporan berhasil dihapus permanen.');
     }
 }

@@ -3,13 +3,13 @@
 {{-- @section('content1') --}}
 
 <!DOCTYPE html>
-,<html lang="en">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Laporan</title>
+  <title>Laporan Gotong Royong</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -38,7 +38,6 @@
   {{-- fontawesome --}}
   <link rel="stylesheet" type="text/css" href="{{ asset('fontawesome/css/all.min.css') }}">
 
-
   <style>
     * { font-family: "Poppins", sans-serif !important; }
     body { background: #f6f9ff !important; }
@@ -66,7 +65,7 @@
 <body>
 
   <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
+  <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center w-100">
       <i class="bi bi-list toggle-sidebar-btn"></i>
       <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center" style="text-decoration:none;">
@@ -98,59 +97,89 @@
 
                 @csrf
                 @method('PUT')
+
                 <div class="form-outline mb-4">
 
                   <div class="form-outline mb-4 mt-3">
                     <label for="id_pokja1_bidang2" class="form-label">ID Laporan Gotong Royong</label>
                     <input type="text" name="id_pokja1_bidang2" id="id_pokja1_bidang2" class="form-control" required
-                      readonly oninvalid="this.setCustomValidity('Harap lengkapi id laporan')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->id_pokja1_bidang2 }}" />
+                      readonly value="{{ $data->id_pokja1_bidang2 }}" />
                   </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="kerja_bakti" class="form-label">Kerja Bakti</label>
-                    <input type="text" name="kerja_bakti" id="kerja_bakti" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi kategori laporan')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->kerja_bakti }}" />
-                  </div>
+                  <div class="row">
+                    {{-- 1. KERJA BAKTI --}}
+                    <div class="col-12 mt-3 mb-2"><h5>KERJA BAKTI</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->kerja_bakti_kegiatan ?? ($data->jenis_kegiatan == 'Kerja Bakti' ? 'Kerja Bakti' : '-') }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->kerja_bakti_vol ?? ($data->kerja_bakti > 0 ? $data->kerja_bakti : '-') }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->kerja_bakti_metode ?? '-' }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->kerja_bakti_sasaran ?? '-' }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="rukun_kematian" class="form-label">Rukun Kematian</label>
-                    <input type="text" name="rukun_kematian" id="rukun_kematian" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah posyandu')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->rukun_kematian }}" />
-                  </div>
+                    {{-- 2. BANTUAN ANAK YATIM --}}
+                    <div class="col-12 mt-3 mb-2"><h5>BANTUAN ANAK YATIM</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->bantuan_yatim_kegiatan ?? ($data->jenis_kegiatan == 'Bantuan Anak Yatim' ? 'Santunan Yatim' : '-') }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->bantuan_yatim_vol ?? ($data->rukun_kematian > 0 ? $data->rukun_kematian : '-') }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->bantuan_yatim_metode ?? '-' }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->bantuan_yatim_sasaran ?? '-' }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="keagamaan" class="form-label">Keagamaan</label>
-                    <input type="text" name="keagamaan" id="keagamaan" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah posyandu terintegrasi')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul"
-                      value="{{ $data->keagamaan }}" />
-                  </div>
+                    {{-- 3. KEGIATAN SOSIAL --}}
+                    <div class="col-12 mt-3 mb-2"><h5>KEGIATAN SOSIAL</h5><hr></div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Kegiatan</label>
+                      <input type="text" class="form-control" value="{{ $data->kegiatan_sosial_kegiatan ?? ($data->jenis_kegiatan == 'Kegiatan Sosial' ? 'Kegiatan Sosial' : '-') }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Vol. Keg</label>
+                      <input type="text" class="form-control" value="{{ $data->kegiatan_sosial_vol ?? (($data->keagamaan ?? 0) > 0 ? $data->keagamaan : (($data->jimpitan ?? 0) > 0 ? $data->jimpitan : (($data->arisan ?? 0) > 0 ? $data->arisan : '-'))) }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Metode</label>
+                      <input type="text" class="form-control" value="{{ $data->kegiatan_sosial_metode ?? '-' }}" readonly />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="form-label">Jml Sasaran</label>
+                      <input type="text" class="form-control" value="{{ $data->kegiatan_sosial_sasaran ?? '-' }}" readonly />
+                    </div>
 
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="jimpitan" class="form-label">Jimpitan</label>
-                    <input type="text" name="jimpitan" id="jimpitan" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah klp')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->jimpitan }}" />
-                  </div>
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="arisan" class="form-label">Arisan</label>
-                    <input type="text" name="arisan" id="arisan" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi jumlah anggota')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->arisan }}" />
+                    {{-- INFORMASI TAMBAHAN --}}
+                    <div class="col-12 mt-3 mb-2"><h5>Informasi Tambahan</h5><hr></div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Sumber Dana</label>
+                      <input type="text" class="form-control" value="{{ $data->sumber_dana ?? '-' }}" readonly />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Hasil Kegiatan</label>
+                      <textarea class="form-control" rows="3" readonly>{{ $data->hasil_kegiatan ?? '-' }}</textarea>
+                    </div>
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
                     <label for="id_user" class="form-label">Id Pengguna</label>
                     <input type="text" name="id_user" id="id_user" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi id pengguna')"
-                      oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->id_user }}" />
+                      value="{{ $data->id_user }}" />
                   </div>
 
                   <div id="statusAlert" class="alert alert-danger d-none" role="alert">
@@ -182,8 +211,7 @@
                   <div class="form-outline mb-4 mt-3">
                     <label for="tanggal" class="form-label">Tanggal</label>
                     <input type="text" name="tanggal" id="tanggal" class="form-control" required readonly
-                      oninvalid="this.setCustomValidity('Harap lengkapi judul')" oninput="this.setCustomValidity('')"
-                      placeholder="Masukkan Judul" value="{{ $data->created_at }}" />
+                      value="{{ $data->created_at }}" />
                   </div>
 
                   <div class="text-end pt-1 pb-1 mt-4">
@@ -191,6 +219,7 @@
                       type="submit">Upload</button>
                   </div>
 
+                </div>
               </form>
 
             </div>
@@ -225,43 +254,41 @@
       alertBox.classList.add('d-none');
 
       if (status === "Revisi") {
-        // Konfirmasi untuk Revisi
         return Swal.fire({
           title: 'Konfirmasi Revisi',
           text: 'Apakah Anda yakin ingin mengubah status menjadi Revisi? Catatan perlu diisi.',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Ya, Ubah',
-          cancelButtonText: 'Batal',
+          confirmButtonColor: '#f0ad4e',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya, Revisi',
+          cancelButtonText: 'Batal'
         }).then((result) => {
-          return result.isConfirmed;
+          if (result.isConfirmed) {
+            e.target.submit();
+          }
         });
       } else if (status === "Disetujui1" || status === "Disetujui2") {
-        // Konfirmasi untuk Disetujui
         return Swal.fire({
           title: 'Konfirmasi Persetujuan',
           text: 'Apakah Anda yakin ingin menyetujui laporan ini?',
           icon: 'question',
           showCancelButton: true,
+          confirmButtonColor: '#5cb85c',
+          cancelButtonColor: '#d33',
           confirmButtonText: 'Ya, Setujui',
-          cancelButtonText: 'Batal',
+          cancelButtonText: 'Batal'
         }).then((result) => {
           if (result.isConfirmed) {
-            document.querySelector('form').submit(); // Kirim form jika disetujui
+            e.target.submit();
           }
-          return false; // Hindari submit default
         });
       } else {
         alertBox.classList.remove('d-none');
-        alertBox.innerText = 'Harap pilih status laporan.';
-        return false;
       }
     }
   </script>
 
 </body>
 
-{{--
-
-</html> --}}
-{{-- @endsection --}}
+</html>

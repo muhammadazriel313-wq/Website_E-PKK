@@ -1,6 +1,7 @@
 {{-- @extends('backend/layouts.template')
 
 @section('content') --}}
+@inject('pokja1Deletion', 'App\\Services\\Pokja1ReportDeletion')
 
 <!DOCTYPE html>
 <html lang="en">
@@ -174,8 +175,10 @@
                   <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
                 @endif
                 
-                <th scope="col" colspan="24" class="text-center header-group-title">PENGHAYATAN DAN PENGAMALAN PANCASILA - GOTONG ROYONG</th>
+                <th scope="col" colspan="24" class="text-center header-group-title">PENGHAYATAN DAN PENGAMALAN PANCASILA</th>
                 
+                <th scope="col" rowspan="3" class="text-center align-middle">Sumber Dana</th>
+                <th scope="col" rowspan="3" class="text-center align-middle">Hasil Kegiatan</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
@@ -258,6 +261,9 @@
                   <td class="text-center">{{ $peng1->pkbn_metode ?? '-' }}</td>
                   <td class="text-center">{{ $peng1->pkbn_sasaran ?? '-' }}</td>
 
+                  <td class="text-center">{{ $peng1->sumber_dana ?? '-' }}</td>
+                  <td class="text-center" style="max-width: 250px; white-space: normal;">{{ $peng1->hasil_kegiatan ?? '-' }}</td>
+
                   <td class="text-center">
                     @if(in_array(strtolower($peng1->status), ['proses', 'revisi']))
                       <span class="badge bg-warning text-dark">{{ $peng1->status }}</span>
@@ -271,13 +277,15 @@
                   <td class="text-center">{{ \Carbon\Carbon::parse($peng1->created_at)->format('d/m/Y H:i') }}</td>
                   
                   <td class="text-center">
-                    <form action="{{ route('decpenghayatan.destroy', $peng1->id_pokja1_bidang1)}}" method="POST" class="d-inline delete-form">
-                      @csrf
-                      @method('DELETE')
-                      <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </form>
+                    @if ($pokja1Deletion->canDelete('penghayatan', $peng1))
+                      <form action="{{ route('decpenghayatan.destroy', $peng1->id_pokja1_bidang1)}}" method="POST" class="d-inline delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger" onclick='confirmDelete(this, @json($peng1->status))' data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    @endif
                   </td>
                 </tr>
               @empty
@@ -317,15 +325,21 @@
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 
-    function confirmDelete(button) {
+    function confirmDelete(button, status) {
+      const normalizedStatus = String(status || '').toLowerCase();
+      const message = normalizedStatus === 'disetujui2'
+        ? 'Laporan ini sudah disetujui final. Penghapusan bersifat permanen dan tidak bisa dibatalkan.'
+        : (normalizedStatus === 'disetujui1'
+          ? 'Laporan ini sudah disetujui kecamatan. Penghapusan bersifat permanen.'
+          : 'Hapus laporan ini? Penghapusan bersifat permanen.');
       Swal.fire({
-        title: 'Yakin hapus data?',
-        text: "Data yang dihapus tidak bisa dikembalikan.",
+        title: 'Konfirmasi penghapusan',
+        text: message,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Ya, Hapus!',
+        confirmButtonText: 'Ya, Hapus Permanen',
         cancelButtonText: 'Batal'
       }).then((result) => {
         if (result.isConfirmed) {

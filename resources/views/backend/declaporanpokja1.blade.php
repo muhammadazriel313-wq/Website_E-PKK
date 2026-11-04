@@ -1,6 +1,7 @@
 {{-- @extends('backend/layouts.template')
 
 @section('content1') --}}
+@inject('pokja1Deletion', 'App\\Services\\Pokja1ReportDeletion')
 
 <!DOCTYPE html>
 <html lang="en">
@@ -203,13 +204,15 @@
                   <td class="text-center">{{ \Carbon\Carbon::parse($got1->created_at)->format('d/m/Y H:i') }}</td>
                   
                   <td class="text-center">
-                    <form action="{{ route('declaporanpokja1.destroy', $got1->id_kader_pokja1)}}" method="POST" class="d-inline delete-form">
-                      @csrf
-                      @method('DELETE')
-                      <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </form>
+                    @if ($pokja1Deletion->canDelete('kader', $got1))
+                      <form action="{{ route('declaporanpokja1.destroy', $got1->id_kader_pokja1)}}" method="POST" class="d-inline delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger" onclick='confirmDelete(this, @json($got1->status))' data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    @endif
                   </td>
                 </tr>
               @empty
@@ -249,15 +252,21 @@
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 
-    function confirmDelete(button) {
+    function confirmDelete(button, status) {
+      const normalizedStatus = String(status || '').toLowerCase();
+      const message = normalizedStatus === 'disetujui2'
+        ? 'Laporan ini sudah disetujui final. Penghapusan bersifat permanen dan tidak bisa dibatalkan.'
+        : (normalizedStatus === 'disetujui1'
+          ? 'Laporan ini sudah disetujui kecamatan. Penghapusan bersifat permanen.'
+          : 'Hapus laporan ini? Penghapusan bersifat permanen.');
       Swal.fire({
-        title: 'Yakin hapus data?',
-        text: "Data yang dihapus tidak bisa dikembalikan.",
+        title: 'Konfirmasi penghapusan',
+        text: message,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Ya, Hapus!',
+        confirmButtonText: 'Ya, Hapus Permanen',
         cancelButtonText: 'Batal'
       }).then((result) => {
         if (result.isConfirmed) {

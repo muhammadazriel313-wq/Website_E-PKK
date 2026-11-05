@@ -23,3 +23,9 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+public/API-REST-E-PKK/.env
+fix_*.php
+add_device_preview.php
+cookies_*.txt
+*.sql
+storage/logs/*.log

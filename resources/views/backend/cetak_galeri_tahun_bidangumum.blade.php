@@ -279,21 +279,19 @@
 
                 <tr>
 
-                    <th width="5%">
-                        No
-                    </th>
+                    <th rowspan="2" width="4%">NO</th>
+                    <th rowspan="2" width="16%">NAMA</th>
+                    <th rowspan="2" width="12%">JABATAN</th>
+                    <th colspan="3">KEGIATAN</th>
+                    <th rowspan="2" width="16%">TANDA TANGAN</th>
 
-                    <th width="20%">
-                        Tanggal
-                    </th>
+                </tr>
 
-                    <th width="30%">
-                        Lokasi Kegiatan
-                    </th>
+                <tr>
 
-                    <th width="45%">
-                        Deskripsi
-                    </th>
+                    <th width="12%">TANGGAL</th>
+                    <th width="16%">TEMPAT</th>
+                    <th width="24%">URAIAN</th>
 
                 </tr>
 
@@ -315,6 +313,21 @@
 
                     </td>
 
+                    <td>
+                        @php
+                            $peserta = json_decode($tampil->nama_peserta, true);
+                        @endphp
+                        @if(!empty($peserta) && is_array($peserta))
+                            @foreach($peserta as $p)
+                                {{ $loop->iteration }}. {{ $p }}<br>
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </td>
+
+                    <td>{{ $tampil->jabatan }}</td>
+
                     <td class="center">
 
                         {{ \Carbon\Carbon::parse($tampil->tanggal)->isoFormat('D MMMM Y') }}
@@ -333,13 +346,15 @@
 
                     </td>
 
+                    <td></td>
+
                 </tr>
 
                 @empty
 
                 <tr>
 
-                    <td colspan="4" class="center">
+                    <td colspan="7" class="center">
 
                         Tidak ada data pada bulan ini.
 

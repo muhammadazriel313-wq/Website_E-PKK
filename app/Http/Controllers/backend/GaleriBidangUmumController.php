@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Models\Ttd;
+use App\Support\JabatanKegiatan;
 use App\Models\Ttds;
 use App\Models\Galeri;
 use Illuminate\Http\Request;
@@ -71,11 +72,25 @@ class GaleriBidangUmumController extends Controller
     {
         $data = Galeri::find($id);
 
+        // Jabatan harus salah satu dari 15 pilihan (nilai lama yang tidak diubah tetap boleh)
+        $jabatanBaru = trim((string) $request->input('jabatan', ''));
+        if (
+            $request->has('jabatan') &&
+            $jabatanBaru !== '' &&
+            !in_array($jabatanBaru, JabatanKegiatan::LIST, true) &&
+            $jabatanBaru !== $data->jabatan
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors(['jabatan' => 'Jabatan harus dipilih dari daftar.']);
+        }
+
         if (Auth::guard('pengguna')->check()) {
             $data->update([
                 'deskripsi' => $request->deskripsi,
                 'tanggal'   => $request->tanggal,
                 'lokasi'    => $request->tempat_kegiatan,
+                'jabatan'   => $request->has('jabatan') ? $request->jabatan : $data->jabatan,
                 'nama_peserta' => $request->has('nama_peserta') ? (function() use ($request, $data) {
                     $val = $request->nama_peserta;
                     if (is_array($val)) return json_encode(array_values(array_filter(array_map('trim', $val))));
@@ -97,6 +112,7 @@ class GaleriBidangUmumController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'tanggal'   => $request->tanggal,
                 'lokasi'    => $request->tempat_kegiatan,
+                'jabatan'   => $request->has('jabatan') ? $request->jabatan : $data->jabatan,
                 'nama_peserta' => $request->has('nama_peserta') ? (function() use ($request, $data) {
                     $val = $request->nama_peserta;
                     if (is_array($val)) return json_encode(array_values(array_filter(array_map('trim', $val))));

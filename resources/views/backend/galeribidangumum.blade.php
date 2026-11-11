@@ -12,6 +12,17 @@
         padding: 18px 14px;
     }
 
+    /* Header bertingkat seperti buku kegiatan:
+       NO | NAMA | JABATAN | KEGIATAN (TANGGAL, TEMPAT, URAIAN) | TANDA TANGAN */
+    .table-ttd thead th {
+        text-align: center !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .table-ttd thead tr:first-child {
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+
     .gallery-image-table {
         width: 110px;
         height: 110px;
@@ -60,7 +71,7 @@
         justify-content: center;
         align-items: center;
         gap: 10px;
-        min-height: 110px;
+        min-height: 0;
     }
 
     .status-upload {
@@ -241,36 +252,19 @@
 
                     <tr>
 
-                        <th style="width: 60px;">
-                            No
-                        </th>
+                        <th rowspan="2" style="width: 60px;">NO</th>
+                        <th rowspan="2">NAMA</th>
+                        <th rowspan="2">JABATAN</th>
+                        <th colspan="3">KEGIATAN</th>
+                        <th rowspan="2" style="width: 200px;">TANDA TANGAN</th>
 
-                        <th style="width: 150px;">
-                            Gambar
-                        </th>
+                    </tr>
 
-                        <th>
-                            Deskripsi
-                        </th>
-                        <th>
-                            Nama Peserta
-                        </th>
+                    <tr>
 
-                        <th>
-                            Lokasi Kegiatan
-                        </th>
-
-                        <th style="width: 180px;">
-                            Tanggal
-                        </th>
-
-                        <th style="width: 120px;">
-                            Status
-                        </th>
-
-                        <th style="width: 180px; text-align:center;">
-                            Aksi
-                        </th>
+                        <th style="width: 180px;">TANGGAL</th>
+                        <th>TEMPAT</th>
+                        <th>URAIAN</th>
 
                     </tr>
 
@@ -291,21 +285,6 @@
                         </td>
 
                         <td>
-
-                            <img
-                                src="{{ asset('storage/gallery/' . $tampil->gambar) }}"
-                                alt="{{ $tampil->deskripsi }}"
-                                class="gallery-image-table">
-
-                        </td>
-
-                        <td class="table-desc">
-
-                            {{ $tampil->deskripsi }}
-
-                        </td>
-
-                        <td>
                             @php
                                 $peserta = json_decode($tampil->nama_peserta, true);
                             @endphp
@@ -320,11 +299,7 @@
                             @endif
                         </td>
 
-                        <td class="table-lokasi">
-
-                            {{ $tampil->lokasi ?? '-' }}
-
-                        </td>
+                        <td>{{ $tampil->jabatan }}</td>
 
                         <td>
 
@@ -332,7 +307,28 @@
 
                         </td>
 
-                        <td class="table-status">
+                        <td class="table-lokasi">
+
+                            {{ $tampil->lokasi ?? '-' }}
+
+                        </td>
+
+                        <td class="table-desc">
+
+                            {{ $tampil->deskripsi }}
+
+                        </td>
+
+                        <td>
+
+                            <img
+                                src="{{ asset('storage/gallery/' . $tampil->gambar) }}"
+                                alt="{{ $tampil->deskripsi }}"
+                                class="gallery-image-table">
+
+                            {{-- Status & Aksi (dipindah dari kolom sendiri) --}}
+
+                            <div class="table-status mt-2">
 
                             @if(strtolower($tampil->status) == 'upload1')
 
@@ -354,9 +350,11 @@
 
                             @endif
 
-                        </td>
+                        
 
-                        <td class="table-aksi">
+                            </div>
+
+                            <div class="table-aksi mt-2">
 
                             <div class="table-aksi-wrapper">
 
@@ -409,6 +407,10 @@
                                     </button>
 
                                 </form>
+
+                            </div>
+
+                        
 
                             </div>
 

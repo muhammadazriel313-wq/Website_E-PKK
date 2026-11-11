@@ -17,19 +17,22 @@ class RiwayatController extends Controller
         1 => [
             'laporan_kader_pokja1',
             'laporan_penghayatan_n_pengamalan',
-            'laporan_gotong_royong'
+            'laporan_gotong_royong',
+            'galerys'
         ],
 
         2 => [
             'laporan_pendidikan_n_keterampilan',
-            'laporan_pengembangan_kehidupan'
+            'laporan_pengembangan_kehidupan',
+            'galerys'
         ],
 
         3 => [
             'laporan_kader_pokja3',
             'laporan_pangan',
             'laporan_sandang',
-            'laporan_perumahan'
+            'laporan_perumahan',
+            'galerys'
         ],
 
         4 => [
@@ -40,11 +43,13 @@ class RiwayatController extends Controller
             'rekap_desa_bulanan',
             'rekap_desa_tahunan',
             'posyandu',
-            'kegiatan_pokja4'
+            'kegiatan_pokja4',
+            'galerys'
         ],
 
         5 => [
-            'laporan_umum'
+            'laporan_umum',
+            'galerys'
         ]
     ];
 
@@ -57,19 +62,22 @@ class RiwayatController extends Controller
         1 => [
             'KP1'   => 'laporan_kader_pokja1',
             'KP1B1' => 'laporan_penghayatan_n_pengamalan',
-            'KP1B2' => 'laporan_gotong_royong'
+            'KP1B2' => 'laporan_gotong_royong',
+            'GAL'   => 'galerys'
         ],
 
         2 => [
             'KP2B1' => 'laporan_pendidikan_n_keterampilan',
-            'KP2B2' => 'laporan_pengembangan_kehidupan'
+            'KP2B2' => 'laporan_pengembangan_kehidupan',
+            'GAL'   => 'galerys'
         ],
 
         3 => [
             'KP3'   => 'laporan_kader_pokja3',
             'KP3B1' => 'laporan_pangan',
             'KP3B2' => 'laporan_sandang',
-            'KP3B3' => 'laporan_perumahan'
+            'KP3B3' => 'laporan_perumahan',
+            'GAL'   => 'galerys'
         ],
 
         4 => [
@@ -78,11 +86,13 @@ class RiwayatController extends Controller
             'KP4B2'     => 'laporan_kelestarian_lingkungan_hidup',
             'KP4B3'     => 'laporan_perencanaan_sehat',
             'PRIORITAS' => ['rekap_desa_bulanan', 'rekap_desa_tahunan','posyandu', 'kegiatan_pokja4'],
-            'UNGGULAN'  => ['rekap_desa_bulanan', 'rekap_desa_tahunan','posyandu', 'kegiatan_pokja4']
+            'UNGGULAN'  => ['rekap_desa_bulanan', 'rekap_desa_tahunan','posyandu', 'kegiatan_pokja4'],
+            'GAL'       => 'galerys'
         ],
 
         5 => [
-            'PKKUM' => 'laporan_umum'
+            'PKKUM' => 'laporan_umum',
+            'GAL'   => 'galerys'
         ]
     ];
 
@@ -436,6 +446,11 @@ class RiwayatController extends Controller
                 ], 404);
             }
 
+            // Kegiatan (galerys): tampilkan hanya field yang relevan
+            if ($table === 'galerys') {
+                $data = $this->formatGaleriDetail($data);
+            }
+
             return response()->json([
 
                 'statusCode' => 200,
@@ -689,14 +704,83 @@ class RiwayatController extends Controller
 
             /// ================= UPDATE =================
 
-            DB::table($table)
+            if ($table === 'galerys') {
 
-                ->where(
-                    'uuid',
-                    $uuid
-                )
+                // Kegiatan hanya boleh diedit saat masih berstatus Proses
+                if ($existing->status !== 'Proses') {
 
-                ->update($data);
+                    return response()->json([
+
+                        'statusCode' => 400,
+
+                        'message' =>
+                        'Kegiatan yang sudah diproses tidak bisa diedit',
+
+                        'data' => null,
+
+                        'error' => null
+
+                    ], 400);
+                }
+
+                // Hanya field berikut yang boleh diubah dari mobile
+                $payload = [];
+
+                if (!empty(trim((string) ($data['nama_kegiatan'] ?? '')))) {
+                    $payload['deskripsi'] = trim($data['nama_kegiatan']);
+                }
+
+                if (!empty(trim((string) ($data['lokasi'] ?? '')))) {
+                    $payload['lokasi'] = trim($data['lokasi']);
+                }
+
+                if (array_key_exists('nama_peserta', $data)) {
+                    $payload['nama_peserta'] =
+                        $this->normalizeNamaPeserta($data['nama_peserta']);
+                }
+
+                // Jabatan hanya untuk akun Bidang Umum (id_organization 5)
+                // dan harus salah satu dari 15 pilihan.
+                if (
+                    array_key_exists('jabatan', $data) &&
+                    (string) $existing->id_organization === '5'
+                ) {
+                    $jab = trim((string) $data['jabatan']);
+
+                    if (!in_array($jab, \App\Support\JabatanKegiatan::LIST, true)) {
+
+                        return response()->json([
+
+                            'statusCode' => 422,
+
+                            'message' => 'Jabatan harus dipilih dari daftar',
+
+                            'data' => null,
+
+                            'error' => null
+
+                        ], 422);
+                    }
+
+                    $payload['jabatan'] = $jab;
+                }
+
+                $payload['updated_at'] = now();
+
+                DB::table($table)
+                    ->where('uuid', $uuid)
+                    ->update($payload);
+            } else {
+
+                DB::table($table)
+
+                    ->where(
+                        'uuid',
+                        $uuid
+                    )
+
+                    ->update($data);
+            }
 
             return response()->json([
 
@@ -784,6 +868,10 @@ class RiwayatController extends Controller
 
                 foreach ($data as $row) {
 
+                    if ($table === 'galerys') {
+                        $row->status = $this->mapGaleriStatus($row->status);
+                    }
+
                     $results[] = $row;
                 }
             } catch (\Exception $e) {
@@ -793,6 +881,81 @@ class RiwayatController extends Controller
         }
 
         return $results;
+    }
+
+    /// =======================================================
+    /// KEGIATAN (galerys) - HELPER
+    /// =======================================================
+
+    // Status kegiatan di web: Proses -> upload1 (Kecamatan) -> upload2 (Kabupaten).
+    // Disamakan dengan status laporan lain supaya filter Riwayat mobile tetap sama.
+    private function mapGaleriStatus($status)
+    {
+        switch ($status) {
+            case 'upload1':
+                return 'Disetujui1';
+            case 'upload2':
+            case 'Upload':
+                return 'Disetujui2';
+            default:
+                return $status;
+        }
+    }
+
+    private function formatGaleriDetail($row)
+    {
+        $names = json_decode($row->nama_peserta ?? '[]', true);
+
+        return [
+            'uuid'            => $row->uuid,
+            'id_user'         => $row->id_user,
+            'status'          => $this->mapGaleriStatus($row->status),
+            'created_at'      => $row->created_at,
+            'id_role'         => $row->id_role,
+            'id_organization' => $row->id_organization,
+
+            'nama_kegiatan'   => $row->deskripsi,
+            'nama_peserta'    => is_array($names) ? implode("\n", $names) : '',
+            'jabatan'         => $row->jabatan ?? null,
+            'lokasi'          => $row->lokasi,
+            'bidang'          => $row->bidang,
+            'gambar_url'      => url('storage/gallery/' . $row->gambar),
+        ];
+    }
+
+    // Sama dengan ReportController::normalizeNamaPeserta
+    private function normalizeNamaPeserta($value)
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $trim = trim($value);
+            if ($trim === '') {
+                return null;
+            }
+            $decoded = json_decode($trim, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $value = $decoded;
+            } else {
+                $value = explode("\n", str_replace("\r", '', $trim));
+            }
+        }
+
+        if (!is_array($value)) {
+            return null;
+        }
+
+        $names = [];
+        foreach ($value as $name) {
+            $name = trim((string) $name);
+            if ($name !== '' && !in_array(mb_strtolower($name), array_map('mb_strtolower', $names), true)) {
+                $names[] = $name;
+            }
+        }
+
+        return count($names) ? json_encode($names, JSON_UNESCAPED_UNICODE) : null;
     }
 
     /// =======================================================

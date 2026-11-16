@@ -101,6 +101,9 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     // === DASHBOARD ===
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // === PERINGKAT DESA & KECAMATAN ===
+    Route::get('/peringkat', [App\Http\Controllers\backend\PeringkatController::class, 'index'])->name('peringkat');
+
     // === MENU UTAMA & PROFILE ===
     Route::resource('profile', App\Http\Controllers\backend\ProfileController::class);
     Route::resource('change_password', App\Http\Controllers\backend\ChangePasswordController::class);

@@ -10,6 +10,15 @@
             </a>
         </li>
 
+        {{-- Peringkat --}}
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('peringkat') ? '' : 'collapsed' }}"
+                href="{{ route('peringkat') }}">
+                <i class="bi bi-trophy"></i>
+                <span>Peringkat</span>
+            </a>
+        </li>
+
         @auth('web')
         {{-- Tanda Tangan --}}
         <li class="nav-item">

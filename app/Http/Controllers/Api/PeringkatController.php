@@ -163,7 +163,7 @@ class PeringkatController extends Controller
     // kalau belum ada laporan, pakai akun pertama yang punya foto.
     private function ambilFoto(Request $request, int $role, string $kolom, string $mulai, string $akhir): array
     {
-        $host = $request->getSchemeAndHttpHost();
+        $host = $request->getSchemeAndHttpHost() . $request->getBasePath();
         $hasil = [];
 
         $perAkun = DB::query()

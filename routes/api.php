@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\Pokja1ExportApiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PeringkatController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RiwayatController;
@@ -96,3 +97,10 @@ Route::post('/report/rekap-desa-bulanan', [ ReportController::class, 'insertReka
 Route::post('/report/rekap-desa-tahunan', [ ReportController::class, 'insertRekapDesaTahunan']);
 Route::post('/report/posyandu', [ ReportController::class, 'insertPosyandu']);
 Route::post('/report/kegiatan-pokja4', [ ReportController::class, 'insertKegiatanPokja4']);
+
+
+// PERINGKAT (fitur baru)
+// contoh: /api/ranking/desa?periode=bulan_ini&limit=3&id=13
+// periode: bulan_ini | bulan_lalu | tahun_ini | tahun_lalu | custom (+ mulai & akhir, format YYYY-MM-DD)
+Route::get('/ranking/desa', [PeringkatController::class, 'desa']);
+Route::get('/ranking/kecamatan', [PeringkatController::class, 'kecamatan']);

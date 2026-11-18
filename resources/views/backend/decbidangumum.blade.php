@@ -138,6 +138,7 @@
                 <th scope="col" colspan="2" class="text-center header-group-title">JUMLAH JIWA</th>
                 <th scope="col" colspan="6" class="text-center header-group-title">JUMLAH KADER</th>
                 <th scope="col" colspan="4" class="text-center header-group-title">JUMLAH TENAGA SEKRETARIAT</th>
+                <th scope="col" rowspan="3" class="text-center align-middle" style="width: 200px;">Keterangan</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
@@ -207,6 +208,7 @@
                 <td class="text-center">{{ $umum->honorer_perempuan ?? '0' }}</td>
                 <td class="text-center">{{ $umum->bantuan_laki ?? '0' }}</td>
                 <td class="text-center">{{ $umum->bantuan_perempuan ?? '0' }}</td>
+                <td>{{ $umum->keterangan ?? '-' }}</td>
                 <td class="text-center">
                   @if(in_array(strtolower($umum->status), ['proses', 'revisi']))
                   <span class="badge bg-warning text-dark">
@@ -235,7 +237,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="23" class="text-center" style="padding:40px;">
+                <td colspan="24" class="text-center" style="padding:40px;">
                   <i class="bi bi-inbox" style="font-size:48px; display:block; margin-bottom:10px; color:#9ca3af;"></i>
                   <span style="color:#9ca3af; font-size:14px;">Tidak ada data laporan bidang umum</span>
                 </td>

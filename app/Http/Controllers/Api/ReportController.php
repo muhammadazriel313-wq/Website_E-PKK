@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
+use App\Support\JabatanKegiatan;
 
 class ReportController extends Controller
 {
@@ -15,10 +17,14 @@ class ReportController extends Controller
     {
         try {
 
+            // Jabatan: wajib & harus salah satu dari 15 pilihan untuk akun Bidang Umum (id_organization 5)
+            $jabatanRules = ['nullable', 'string', Rule::in(JabatanKegiatan::LIST)];
+            if ((string) $request->id_organization === '5') {
+                $jabatanRules = ['required', 'string', Rule::in(JabatanKegiatan::LIST)];
+            }
+
             // VALIDASI
             $request->validate([
-                // [PERUBAHAN 03-10-2026] Menambahkan format webp pada validasi mimes; kode lama di bawah dinonaktifkan
-                // 'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif',
                 'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif,webp',
                 'id_user' => 'required',
                 'deskripsi' => 'required',
@@ -27,11 +33,16 @@ class ReportController extends Controller
                 'id_role' => 'required',
                 'id_organization' => 'required',
 
-                // TAMBAHAN NAMA PESERTA & LOKASI
-                'nama_peserta' => 'nullable',
+                // TAMBAHAN LOKASI
                 'lokasi' => 'nullable|string',
                 'latitude' => 'nullable',
                 'longitude' => 'nullable',
+
+                // NAMA PESERTA KEGIATAN (array / JSON string / satu nama per baris)
+                'nama_peserta' => 'nullable',
+
+                // JABATAN (kolom JABATAN di Buku Kegiatan)
+                'jabatan' => $jabatanRules,
             ]);
 
             // UUID
@@ -78,20 +89,11 @@ class ReportController extends Controller
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
                 'deskripsi' => $request->deskripsi,
-                // [PERUBAHAN 03-10-2026] Menyimpan nama_peserta (JSON)
-                'nama_peserta' => (function() use ($request) {
-                    $val = $request->nama_peserta;
-                    if (is_array($val)) {
-                        return json_encode(array_values(array_filter(array_map('trim', $val))));
-                    } elseif (is_string($val) && trim($val) !== '') {
-                        $decoded = json_decode($val, true);
-                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                            return json_encode(array_values(array_filter(array_map('trim', $decoded))));
-                        }
-                        return json_encode([trim($val)]);
-                    }
-                    return null;
-                })(),
+                'nama_peserta' => $this->normalizeNamaPeserta($request->nama_peserta),
+                'jabatan' => trim((string) $request->jabatan) !== '' ? trim($request->jabatan) : null,
+
+                // Tanggal kegiatan (kolom TANGGAL di Buku Kegiatan) = tanggal kirim
+                'tanggal' => now(),
                 'gambar' => $fileName,
                 'pokja' => $request->pokja,
                 'bidang' => $request->bidang,
@@ -152,7 +154,8 @@ class ReportController extends Controller
                     'uuid' => $data->uuid,
                     'id_user' => $data->id_user,
                     'deskripsi' => $data->deskripsi,
-                    'nama_peserta' => $data->nama_peserta,
+                    'nama_peserta' => json_decode($data->nama_peserta ?? '[]', true) ?: [],
+                    'jabatan' => $data->jabatan ?? null,
                     'gambar' => $data->gambar,
                     'pokja' => $data->pokja,
                     'bidang' => $data->bidang,
@@ -212,6 +215,45 @@ class ReportController extends Controller
 
 
 
+    /**
+     * Ubah input nama peserta (array, JSON string, atau teks satu nama per baris)
+     * menjadi JSON array string, sama seperti format yang dipakai web.
+     * Mengembalikan null jika tidak ada nama.
+     */
+    private function normalizeNamaPeserta($value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $trim = trim($value);
+            if ($trim === '') {
+                return null;
+            }
+            $decoded = json_decode($trim, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $value = $decoded;
+            } else {
+                $value = explode("\n", str_replace("\r", '', $trim));
+            }
+        }
+
+        if (!is_array($value)) {
+            return null;
+        }
+
+        $names = [];
+        foreach ($value as $name) {
+            $name = trim((string) $name);
+            if ($name !== '' && !in_array(mb_strtolower($name), array_map('mb_strtolower', $names), true)) {
+                $names[] = $name;
+            }
+        }
+
+        return count($names) ? json_encode($names, JSON_UNESCAPED_UNICODE) : null;
+    }
+
     /// BIDANG UMUM 
     public function storeLaporanUmum(Request $request)
     {
@@ -249,6 +291,7 @@ class ReportController extends Controller
                 'bantuan_laki' => $request->bantuan_laki ?? 0,
                 'bantuan_perempuan' => $request->bantuan_perempuan ?? 0,
                 'catatan' => $request->catatan ?? '',
+                'keterangan' => $request->keterangan ?? '',
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -299,6 +342,7 @@ class ReportController extends Controller
                     "bantuan_laki" => $data->bantuan_laki,
                     "bantuan_perempuan" => $data->bantuan_perempuan,
                     "catatan" => $data->catatan,
+                    "keterangan" => $data->keterangan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
                     "updated_at" => $data->updated_at,
@@ -334,8 +378,9 @@ class ReportController extends Controller
         try {
             //  validasi
             $request->validate([
-                'kader_umum' => 'required|integer|min:0',
-                'kader_khusus' => 'required|integer|min:0',
+                'PKBN' => 'required',
+                'PKDRT' => 'required',
+                'pola_asuh' => 'required',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
@@ -348,8 +393,9 @@ class ReportController extends Controller
             DB::table('laporan_kader_pokja1')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kader_umum' => $request->kader_umum,
-                'kader_khusus' => $request->kader_khusus,
+                'PKBN' => $request->PKBN,
+                'PKDRT' => $request->PKDRT,
+                'pola_asuh' => $request->pola_asuh,
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -380,8 +426,9 @@ class ReportController extends Controller
                     "id_kader_pokja1" => $data->id_kader_pokja1,
                     "uuid" => $data->uuid,
                     "id_user" => $data->id_user,
-                    "kader_umum" => $data->kader_umum,
-                    "kader_khusus" => $data->kader_khusus,
+                    "PKBN" => $data->PKBN,
+                    "PKDRT" => $data->PKDRT,
+                    "pola_asuh" => $data->pola_asuh,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
@@ -415,6 +462,11 @@ class ReportController extends Controller
         try {
             //  validasi
             $request->validate([
+                'kerja_bakti' => 'required',
+                'rukun_kematian' => 'required',
+                'keagamaan' => 'required',
+                'jimpitan' => 'required',
+                'arisan' => 'required',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
@@ -423,45 +475,15 @@ class ReportController extends Controller
             //  UUID custom (sama seperti kode lama)
             $uuid = 'KP1B2-' . strtoupper(\Illuminate\Support\Str::random(6));
 
-            $jenis_kegiatan = $request->jenis_kegiatan ?? 'Kerja Bakti';
-            $kerja_bakti = $request->kerja_bakti ?? ($jenis_kegiatan == 'Kerja Bakti' ? '1' : '0');
-            $rukun_kematian = $request->rukun_kematian ?? ($jenis_kegiatan == 'Bantuan Anak Yatim' ? '1' : '0');
-            $keagamaan = $request->keagamaan ?? ($jenis_kegiatan == 'Kegiatan Sosial' ? '1' : '0');
-            $jimpitan = $request->jimpitan ?? '0';
-            $arisan = $request->arisan ?? '0';
-
             //  insert data
             DB::table('laporan_gotong_royong')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-
-                // Sub-kolom KERJA BAKTI
-                'kerja_bakti_kegiatan' => $request->kerja_bakti_kegiatan,
-                'kerja_bakti_vol' => $request->kerja_bakti_vol,
-                'kerja_bakti_metode' => $request->kerja_bakti_metode,
-                'kerja_bakti_sasaran' => $request->kerja_bakti_sasaran,
-
-                // Sub-kolom BANTUAN ANAK YATIM
-                'bantuan_yatim_kegiatan' => $request->bantuan_yatim_kegiatan,
-                'bantuan_yatim_vol' => $request->bantuan_yatim_vol,
-                'bantuan_yatim_metode' => $request->bantuan_yatim_metode,
-                'bantuan_yatim_sasaran' => $request->bantuan_yatim_sasaran,
-
-                // Sub-kolom KEGIATAN SOSIAL
-                'kegiatan_sosial_kegiatan' => $request->kegiatan_sosial_kegiatan,
-                'kegiatan_sosial_vol' => $request->kegiatan_sosial_vol,
-                'kegiatan_sosial_metode' => $request->kegiatan_sosial_metode,
-                'kegiatan_sosial_sasaran' => $request->kegiatan_sosial_sasaran,
-
-                'jenis_kegiatan' => $jenis_kegiatan,
-                'kerja_bakti' => $kerja_bakti,
-                'rukun_kematian' => $rukun_kematian,
-                'keagamaan' => $keagamaan,
-                'jimpitan' => $jimpitan,
-                'arisan' => $arisan,
-                'sumber_dana' => $request->sumber_dana,
-                'hasil_kegiatan' => $request->hasil_kegiatan,
-                'catatan' => $request->catatan,
+                'kerja_bakti' => $request->kerja_bakti,
+                'rukun_kematian' => $request->rukun_kematian,
+                'keagamaan' => $request->keagamaan,
+                'jimpitan' => $request->jimpitan,
+                'arisan' => $request->arisan,
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -492,26 +514,11 @@ class ReportController extends Controller
                     "id_pokja1_bidang2" => $data->id_pokja1_bidang2,
                     "uuid" => $data->uuid,
                     "id_user" => $data->id_user,
-                    "kerja_bakti_kegiatan" => $data->kerja_bakti_kegiatan,
-                    "kerja_bakti_vol" => $data->kerja_bakti_vol,
-                    "kerja_bakti_metode" => $data->kerja_bakti_metode,
-                    "kerja_bakti_sasaran" => $data->kerja_bakti_sasaran,
-                    "bantuan_yatim_kegiatan" => $data->bantuan_yatim_kegiatan,
-                    "bantuan_yatim_vol" => $data->bantuan_yatim_vol,
-                    "bantuan_yatim_metode" => $data->bantuan_yatim_metode,
-                    "bantuan_yatim_sasaran" => $data->bantuan_yatim_sasaran,
-                    "kegiatan_sosial_kegiatan" => $data->kegiatan_sosial_kegiatan,
-                    "kegiatan_sosial_vol" => $data->kegiatan_sosial_vol,
-                    "kegiatan_sosial_metode" => $data->kegiatan_sosial_metode,
-                    "kegiatan_sosial_sasaran" => $data->kegiatan_sosial_sasaran,
-                    "jenis_kegiatan" => $data->jenis_kegiatan,
                     "kerja_bakti" => $data->kerja_bakti,
                     "rukun_kematian" => $data->rukun_kematian,
                     "keagamaan" => $data->keagamaan,
                     "jimpitan" => $data->jimpitan,
                     "arisan" => $data->arisan,
-                    "sumber_dana" => $data->sumber_dana,
-                    "hasil_kegiatan" => $data->hasil_kegiatan,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
@@ -540,62 +547,66 @@ class ReportController extends Controller
     }
 
     // PENGHAYATAN DAN PENGALAMAN PANCASILA
-        public function insertPenghayatan(Request $request)
+    public function insertPenghayatan(Request $request)
     {
         try {
             $request->validate([
+                'jumlah_kel_simulasi1' => 'required',
+                'jumlah_anggota1' => 'required',
+                'jumlah_kel_simulasi2' => 'required',
+                'jumlah_anggota2' => 'required',
+                'jumlah_kel_simulasi3' => 'required',
+                'jumlah_anggota3' => 'required',
+                'jumlah_kel_simulasi4' => 'required',
+                'jumlah_anggota4' => 'required',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
             ]);
 
+            // UUID sama seperti native kamu
             $uuid = 'KP1B1-' . strtoupper(Str::random(6));
 
+            // INSERT
             DB::table('laporan_penghayatan_n_pengamalan')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kisah_kegiatan' => $request->kisah_kegiatan,
-                'kisah_vol' => $request->kisah_vol,
-                'kisah_metode' => $request->kisah_metode,
-                'kisah_sasaran' => $request->kisah_sasaran,
-                'krisan_kegiatan' => $request->krisan_kegiatan,
-                'krisan_vol' => $request->krisan_vol,
-                'krisan_metode' => $request->krisan_metode,
-                'krisan_sasaran' => $request->krisan_sasaran,
-                'kilas_kegiatan' => $request->kilas_kegiatan,
-                'kilas_vol' => $request->kilas_vol,
-                'kilas_metode' => $request->kilas_metode,
-                'kilas_sasaran' => $request->kilas_sasaran,
-                'kiat_kegiatan' => $request->kiat_kegiatan,
-                'kiat_vol' => $request->kiat_vol,
-                'kiat_metode' => $request->kiat_metode,
-                'kiat_sasaran' => $request->kiat_sasaran,
-                'kisak_kegiatan' => $request->kisak_kegiatan,
-                'kisak_vol' => $request->kisak_vol,
-                'kisak_metode' => $request->kisak_metode,
-                'kisak_sasaran' => $request->kisak_sasaran,
-                'pkbn_kegiatan' => $request->pkbn_kegiatan,
-                'pkbn_vol' => $request->pkbn_vol,
-                'pkbn_metode' => $request->pkbn_metode,
-                'pkbn_sasaran' => $request->pkbn_sasaran,
-                'sumber_dana' => $request->sumber_dana,
-                'hasil_kegiatan' => $request->hasil_kegiatan,
-                // [PERUBAHAN 03-10-2026] disamakan dengan endpoint lain ('Proses'); kode lama di bawah dinonaktifkan
-                // 'status' => 'Menunggu',
+                'jumlah_kel_simulasi1' => $request->jumlah_kel_simulasi1,
+                'jumlah_anggota1' => $request->jumlah_anggota1,
+                'jumlah_kel_simulasi2' => $request->jumlah_kel_simulasi2,
+                'jumlah_anggota2' => $request->jumlah_anggota2,
+                'jumlah_kel_simulasi3' => $request->jumlah_kel_simulasi3,
+                'jumlah_anggota3' => $request->jumlah_anggota3,
+                'jumlah_kel_simulasi4' => $request->jumlah_kel_simulasi4,
+                'jumlah_anggota4' => $request->jumlah_anggota4,
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'id_role' => $request->id_role,
-                'id_organization' => $request->id_organization,
-                'catatan' => $request->catatan
+                'id_organization' => $request->id_organization
             ]);
 
+            // SELECT + JOIN (SAMA PERSIS LOGIKA LAMA)
             $data = DB::table('laporan_penghayatan_n_pengamalan')
                 ->leftJoin('role_users_mobile', 'laporan_penghayatan_n_pengamalan.id_role', '=', 'role_users_mobile.id')
                 ->leftJoin('role_organization', 'laporan_penghayatan_n_pengamalan.id_organization', '=', 'role_organization.id')
                 ->where('laporan_penghayatan_n_pengamalan.uuid', $uuid)
                 ->select(
-                    'laporan_penghayatan_n_pengamalan.*',
+                    'laporan_penghayatan_n_pengamalan.id_pokja1_bidang1',
+                    'laporan_penghayatan_n_pengamalan.uuid',
+                    'laporan_penghayatan_n_pengamalan.id_user',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi1',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota1',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi2',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota2',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi3',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota3',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi4',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota4',
+                    'laporan_penghayatan_n_pengamalan.catatan',
+                    'laporan_penghayatan_n_pengamalan.status',
+                    'laporan_penghayatan_n_pengamalan.created_at',
+                    'laporan_penghayatan_n_pengamalan.updated_at',
                     'role_users_mobile.id AS role_id',
                     'role_users_mobile.uuid AS role_uuid',
                     'role_users_mobile.name AS role_name',
@@ -612,59 +623,43 @@ class ReportController extends Controller
                     "id_pokja1_bidang1" => $data->id_pokja1_bidang1,
                     "uuid" => $data->uuid,
                     "id_user" => $data->id_user,
-                    "kisah_kegiatan" => $data->kisah_kegiatan,
-                    "kisah_vol" => $data->kisah_vol,
-                    "kisah_metode" => $data->kisah_metode,
-                    "kisah_sasaran" => $data->kisah_sasaran,
-                    "krisan_kegiatan" => $data->krisan_kegiatan,
-                    "krisan_vol" => $data->krisan_vol,
-                    "krisan_metode" => $data->krisan_metode,
-                    "krisan_sasaran" => $data->krisan_sasaran,
-                    "kilas_kegiatan" => $data->kilas_kegiatan,
-                    "kilas_vol" => $data->kilas_vol,
-                    "kilas_metode" => $data->kilas_metode,
-                    "kilas_sasaran" => $data->kilas_sasaran,
-                    "kiat_kegiatan" => $data->kiat_kegiatan,
-                    "kiat_vol" => $data->kiat_vol,
-                    "kiat_metode" => $data->kiat_metode,
-                    "kiat_sasaran" => $data->kiat_sasaran,
-                    "kisak_kegiatan" => $data->kisak_kegiatan,
-                    "kisak_vol" => $data->kisak_vol,
-                    "kisak_metode" => $data->kisak_metode,
-                    "kisak_sasaran" => $data->kisak_sasaran,
-                    "pkbn_kegiatan" => $data->pkbn_kegiatan,
-                    "pkbn_vol" => $data->pkbn_vol,
-                    "pkbn_metode" => $data->pkbn_metode,
-                    "pkbn_sasaran" => $data->pkbn_sasaran,
-                    "sumber_dana" => $data->sumber_dana,
-                    "hasil_kegiatan" => $data->hasil_kegiatan,
+                    "jumlah_kel_simulasi1" => $data->jumlah_kel_simulasi1,
+                    "jumlah_anggota1" => $data->jumlah_anggota1,
+                    "jumlah_kel_simulasi2" => $data->jumlah_kel_simulasi2,
+                    "jumlah_anggota2" => $data->jumlah_anggota2,
+                    "jumlah_kel_simulasi3" => $data->jumlah_kel_simulasi3,
+                    "jumlah_anggota3" => $data->jumlah_anggota3,
+                    "jumlah_kel_simulasi4" => $data->jumlah_kel_simulasi4,
+                    "jumlah_anggota4" => $data->jumlah_anggota4,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
                     "updated_at" => $data->updated_at,
                     "role" => [
                         "id" => $data->role_id,
-                        "uuid"=> $data->role_uuid,
+                        "uuid" => $data->role_uuid,
                         "name" => $data->role_name
                     ],
                     "organization" => [
                         "id" => $data->organization_id,
                         "uuid" => $data->organization_uuid,
                         "name" => $data->organization_name
-                    ]
+                    ],
                 ],
                 'error' => null
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'statusCode' => 500,
-                'message' => 'Failed to upload report kader pokja 1',
+                'message' => 'Failed to upload report penghayatan',
                 'data' => null,
                 'error' => ['message' => $e->getMessage()]
-            ]);
+            ], 500);
         }
     }
 
+    // POKJA 2 //
+    // PENDIDIKAN DAN KETERAMPILAN (POKJA 2)
     public function insertPendidikanKeterampilan(Request $request)
     {
         try {

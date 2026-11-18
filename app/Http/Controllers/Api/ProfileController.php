@@ -68,7 +68,7 @@ class ProfileController extends Controller
             if ($data && !empty($data->foto)) {
                 // [PERUBAHAN 08-10-2026] Menggunakan endpoint /api/profile/photo agar memiliki header CORS untuk Chrome CanvasKit dan Emulator
                 // $data->foto = $request->getSchemeAndHttpHost() . '/storage/profile/' . $data->foto;
-                $data->foto = $request->getSchemeAndHttpHost() . '/api/profile/photo/' . $data->foto;
+                $data->foto = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/api/profile/photo/' . $data->foto;
             } else if ($data) {
                 $data->foto = null;
             }
@@ -270,7 +270,7 @@ class ProfileController extends Controller
             // Bangun URL foto penuh memakai host request yang sedang aktif
             // [PERUBAHAN 08-10-2026] Menggunakan endpoint /api/profile/photo agar memiliki header CORS untuk Chrome CanvasKit dan Emulator
             // $photoUrl = $request->getSchemeAndHttpHost() . '/storage/profile/' . $fileName;
-            $photoUrl = $request->getSchemeAndHttpHost() . '/api/profile/photo/' . $fileName;
+            $photoUrl = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/api/profile/photo/' . $fileName;
 
             return response()->json([
                 'statusCode' => 200,

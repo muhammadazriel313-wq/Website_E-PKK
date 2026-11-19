@@ -109,38 +109,44 @@
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="J_Psubur" class="form-label">Jumlah Perempuan Subur</label>
+                    <label for="J_Psubur" class="form-label">Jumlah PUS (Pasangan Usia Subur)</label>
                     <input type="text" name="J_Psubur" id="J_Psubur" class="form-control" required readonly
                       oninvalid="this.setCustomValidity('Harap lengkapi jumlah perempuan subur')"
                       oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->J_Psubur }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="J_Wsubur" class="form-label">Jumlah Wanita Subur</label>
+                    <label for="J_Wsubur" class="form-label">Jumlah WUS (Wanita Usia Subur)</label>
                     <input type="text" name="J_Wsubur" id="J_Wsubur" class="form-control" required readonly
                       oninvalid="this.setCustomValidity('Harap lengkapi jumlah wanita subur')"
                       oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->J_Wsubur }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="Kb_p" class="form-label">Kb Perempuan</label>
+                    <label for="Kb_p" class="form-label">Jumlah Akseptor KB Laki-laki (L)</label>
                     <input type="text" name="Kb_p" id="Kb_p" class="form-control" required readonly
                       oninvalid="this.setCustomValidity('Harap lengkapi kb perempuan')"
                       oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->Kb_p }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="Kb_w" class="form-label">Kb Wanita</label>
+                    <label for="Kb_w" class="form-label">Jumlah Akseptor KB Perempuan (P)</label>
                     <input type="text" name="Kb_w" id="Kb_w" class="form-control" required readonly
                       oninvalid="this.setCustomValidity('Harap lengkapi kb wanita')"
                       oninput="this.setCustomValidity('')" placeholder="Masukkan Judul" value="{{ $data->Kb_w }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="Kk_tbg" class="form-label">Kk Tbg</label>
+                    <label for="Kk_tbg" class="form-label">Jumlah KK yang Memiliki Tabungan Keluarga</label>
                     <input type="text" name="Kk_tbg" id="Kk_tbg" class="form-control" required readonly
                       oninvalid="this.setCustomValidity('Harap lengkapi kk tbg')" oninput="this.setCustomValidity('')"
                       placeholder="Masukkan Judul" value="{{ $data->Kk_tbg }}" />
+                  </div>
+
+                  <div class="form-outline mb-4 mt-3">
+                    <label for="Kk_asuransi" class="form-label">Jumlah KK yang Memiliki Asuransi Kesehatan</label>
+                    <input type="text" name="Kk_asuransi" id="Kk_asuransi" class="form-control" readonly
+                      value="{{ $data->Kk_asuransi ?? 0 }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">

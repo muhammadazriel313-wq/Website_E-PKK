@@ -94,6 +94,7 @@
     .sidebar-nav .nav-link:hover { background: #f3f4f6; color: #4154f1; }
     i, .bi, [class^="bi-"], [class*=" bi-"], [class^="fa"], [class*=" fa-"] { font-family: unset !important; }
   </style>
+  @include('backend.includes.kesehatan_table_css')
 </head>
 
 <body>
@@ -132,37 +133,9 @@
           <div>Scroll horizontal untuk melihat semua kolom data.</div>
         </div>
 
-        <div class="table-responsive mt-3">
-          <table class="table table-bordered table-hover">
-            <thead>
-              <tr>
-                <th scope="col" rowspan="3" class="text-center align-middle">No</th>
-                @if (Auth::guard('web')->check())
-                  <th class="text-center align-middle" rowspan="3" scope="col">Kecamatan</th>
-                  <th class="text-center align-middle" rowspan="3" scope="col">Desa</th>
-                @elseif (Auth::guard('pengguna')->check())
-                  <th class="text-center align-middle" rowspan="3" scope="col">Desa</th>
-                @endif
-                <th scope="col" colspan="7" class="text-center align-middle">Kelestarian Lingkungan Hidup</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Keterangan</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
-              </tr>
-              <tr>
-                <th scope="col" colspan="3" class="text-center align-middle">Jumlah Rumah yang Memiliki</th>
-                <th scope="col" rowspan="2" class="text-center align-middle">Jumlah MCK</th>
-                <th scope="col" colspan="3" class="text-center align-middle">Jumlah KK yang Menggunakan Air</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-center align-middle">Jamban</th>
-                <th scope="col" class="text-center align-middle">SPAL</th>
-                <th scope="col" class="text-center align-middle">Tempat Pembuangan Sampah</th>
-                <th scope="col" class="text-center align-middle">PDAM</th>
-                <th scope="col" class="text-center align-middle">Sumur</th>
-                <th scope="col" class="text-center align-middle">Lain Lain</th>
-              </tr>
-            </thead>
+        <div class="tbl-kes-wrap mt-3">
+          <table class="tbl-kes">
+            @include('backend.includes.kelestarian_table_head', ['extra' => ['Catatan','Status','Tanggal','Aksi']])
             <tbody>
               @php $no = 1; @endphp
               @forelse ($data as $pangan)
@@ -174,13 +147,7 @@
                 @elseif (Auth::guard('pengguna')->check())
                   <td class="text-center">{{ $pangan->nama_desa ?? '-' }}</td>
                 @endif
-                <td class="text-center">{{ $pangan->jamban ?? '0' }}</td>
-                <td class="text-center">{{ $pangan->spal ?? '0' }}</td>
-                <td class="text-center">{{ $pangan->tps ?? '0' }}</td>
-                <td class="text-center">{{ $pangan->mck ?? '0' }}</td>
-                <td class="text-center">{{ $pangan->pdam ?? '0' }}</td>
-                <td class="text-center">{{ $pangan->sumur ?? '0' }}</td>
-                <td class="text-center">{{ $pangan->dll ?? '0' }}</td>
+                @include('backend.includes.kelestarian_table_cells', ['item' => $pangan])
                 <td class="text-center">{{ $pangan->catatan ?: '-' }}</td>
                 
                 <td class="text-center">
@@ -210,7 +177,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="14" class="text-center py-5">
+                <td colspan="16" class="text-center py-5">
                   <div class="alert alert-danger mb-0">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan kelestarian lingkungan hidup.
                   </div>

@@ -20,28 +20,102 @@
         <li><a class="nav-link scrollto" href="{{ route('home.index') }}#portfolio">Galeri</a></li>
         <li><a class="nav-link scrollto " href="{{ route('home.index') }}#service">Program Kerja</a></li>
 
-        <li class="dropdown"><a href="#informasi"><span>Informasi</span> <i class="bi bi-chevron-down"></i></a>
-          <ul>
-            <li><a href="{{ route('berita.index') }}">Berita</a></li>
-            {{-- <li><a href="{{ route('showkes.index') }}">Laporan Kesehatan</a>
+        <li><a class="nav-link scrollto" href="{{ route('home.index') }}#berita">Berita</a></li>
+        <li class="dropdown"><a href="#"><span>Profil</span> <i class="bi bi-chevron-down"></i></a>
+          <ul class="dropdown-menu-profile">
+            <li><a href="{{ route('visimisi.index') }}">Visi Misi</a></li>
+            <li><a href="lambangpkk">Arti Lambang PKK</a></li>
+            <li><a href="sejarah">Sejarah</a></li>
+            <li><a href="mars">Mars PKK</a></li>
+            <li class="admin-login-wrapper">
+              <a href="{{ route('login') }}" class="btn-masuk-admin">
+                <i class="bi bi-shield-lock-fill"></i>
+                <span>Masuk Admin</span>
+              </a>
+            </li>
+          </ul>
         </li>
-        <li><a href="{{ route('showling.index') }}">Laporan Kelestarian Lingkungan Hidup</a></li>
-        <li><a href="{{ route('showhat.index') }}">Laporan Perencanaan Sehat</a></li> --}}
-        <li><a href="{{ route('pengumuman.index') }}">Pengumuman</a></li>
-      </ul>
-      </li>
-      <li class="dropdown"><a href="#"><span>Profil</span> <i class="bi bi-chevron-down"></i></a>
-        <ul>
-          <li><a href="{{ route('visimisi.index') }}">Visi Misi</a></li>
-          <li><a href="lambangpkk">Arti Lambang PKK</a></li>
-          <li><a href="sejarah">Sejarah</a></li>
-          <li><a href="mars">Mars PKK</a></li>
-        </ul>
-      </li>
-      <li class="login"><a href="{{ route('login') }}">Masuk</a></li>
       </ul>
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
   </div>
 </header>
 <!-- End Header -->
+
+<style>
+  /* ===== DROPDOWN PROFIL & TOMBOL MASUK ADMIN ===== */
+  .navbar .dropdown ul {
+    border-radius: 14px !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12) !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    padding: 8px 0 8px 0 !important;
+    overflow: hidden;
+  }
+
+  .navbar .dropdown ul li a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+    padding: 10px 22px;
+    transition: all 0.2s ease;
+  }
+
+  .navbar .dropdown ul li a:hover {
+    color: #016AA3;
+    padding-left: 26px;
+    background-color: #f8fafc;
+  }
+
+  /* Kotak Pembatas & Tombol Masuk Admin */
+  .navbar .dropdown ul .admin-login-wrapper {
+    margin-top: 6px;
+    padding: 8px 12px 4px 12px !important;
+    border-top: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+  }
+
+  .navbar .dropdown ul .btn-masuk-admin {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: linear-gradient(135deg, #016AA3 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    padding: 9px 16px !important;
+    border-radius: 8px !important;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(1, 106, 163, 0.25) !important;
+    transition: all 0.25s ease !important;
+  }
+
+  .navbar .dropdown ul .btn-masuk-admin:hover {
+    background: linear-gradient(135deg, #01507d 0%, #016AA3 100%) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(1, 106, 163, 0.35) !important;
+    padding-left: 16px !important;
+  }
+
+  .navbar .dropdown ul .btn-masuk-admin i {
+    font-size: 14px !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+  }
+
+  /* Tampilan Mobile */
+  @media (max-width: 991px) {
+    .navbar-mobile .dropdown ul .admin-login-wrapper {
+      padding: 10px 20px !important;
+      background: transparent;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 8px;
+    }
+
+    .navbar-mobile .dropdown ul .btn-masuk-admin {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Pengguna;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,7 +24,7 @@ class AuthenticatedSessionController extends Controller
     {
         // 1. Validasi input form
         $request->validate([
-            'email' => ['required', 'string'], // Asumsi nama input di HTML komandan tetap 'email'
+            'email' => ['required', 'string'], 
             'password' => ['required', 'string'],
         ]);
 
@@ -36,11 +38,26 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('dashboard');
         }
 
-        // 3. Coba login sebagai Kecamatan/Desa (Guard 'pengguna' -> tabel 'users_mobile')
-        // PERHATIKAN: Sekarang kita menggunakan kolom 'phone_number' sesuai database!
-        if (Auth::guard('pengguna')->attempt(['phone_number' => $loginId, 'password' => $password], $remember)) {
+        // 3. Login Kecamatan (Guard 'pengguna' -> tabel 'users_mobile').
+        //    Tabel users_mobile TIDAK punya kolom 'email', kredensialnya adalah 'phone_number'.
+        //    Nomor HP bisa sama di beberapa akun, jadi cocokkan password ke semua kandidat.
+        $phone = trim($loginId);
+
+        $kandidat = Pengguna::where('phone_number', $phone)->get()
+            ->filter(fn ($u) => Hash::check($password, $u->password));
+
+        $kecamatan = $kandidat->firstWhere('id_role', 2);
+        if ($kecamatan) {
+            // remember = false: users_mobile tidak punya kolom remember_token
+            Auth::guard('pengguna')->login($kecamatan, false);
             $request->session()->regenerate();
             return redirect()->route('dashboard');
+        }
+
+        if ($kandidat->firstWhere('id_role', 1)) {
+            throw ValidationException::withMessages([
+                'email' => 'Akun Desa hanya dapat digunakan di aplikasi mobile.',
+            ]);
         }
 
         // 4. Jika gagal login karena salah password atau akun tidak terdaftar
@@ -51,7 +68,7 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
-        // 1. Pastikan kedua guard benar-benar di-logout (Gembok ditutup!)
+        // 1. Pastikan kedua guard benar-benar di-logout
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
@@ -64,7 +81,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // 3. Lempar ke halaman Home dengan Pop-up SweetAlert
+        // 3. Lempar ke halaman Home
         return redirect('/home')->with('success', 'Sampai jumpa! Anda telah aman keluar dari sistem E-PKK.');
     }
 }

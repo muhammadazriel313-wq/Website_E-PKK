@@ -110,74 +110,109 @@
 
 <main id="main">
 
-  <section class="app-section">
-    <div class="container">
-      <div class="row align-items-center">
+  <!-- ======= About Section (Profil & Visi Misi) ======= -->
+  <section id="about" class="about-modern-section">
+    <!-- Dekorasi Lingkaran Latar Belakang -->
+    <div class="about-bg-shape shape-1"></div>
+    <div class="about-bg-shape shape-2"></div>
 
-        <!-- KIRI (GAMBAR HP) -->
-        <div class="col-lg-6 text-center animate-on-scroll" data-animation="slide-right">
-          <div class="app-img floating-animation">
-            <img src="{{ asset('frontend/assets/img/gadget.png') }}" class="img-fluid" alt="">
-          </div>
-        </div>
+    <div class="container position-relative">
 
-        <!-- KANAN (TEXT) -->
-        <div class="col-lg-6 animate-on-scroll" data-animation="slide-left">
-          <h3 class="app-title gradient-text">E-PKK Kab.Nganjuk App</h3>
-          <p class="fade-in-text">
-            E-PKK Kab. Nganjuk adalah aplikasi digital yang digunakan untuk mendukung pelaksanaan program PKK agar lebih mudah, cepat, dan teratur. Aplikasi ini memudahkan pengguna dalam melakukan pelaporan kegiatan secara langsung melalui perangkat genggam.
-
-            Selain itu, E-PKK juga menyediakan fitur unggah galeri untuk mendokumentasikan kegiatan PKK dalam bentuk foto maupun laporan. Dengan fitur ini, seluruh aktivitas dapat tercatat dengan rapi, mudah diakses, dan terdokumentasi dengan baik dalam satu sistem.
-          </p>
-
-          <a href="#" class="btn-app pulse-animation">Download Sekarang</a>
-        </div>
-
+      <!-- Judul Section -->
+      <div class="section-title text-center animate-on-scroll" data-animation="fade-up">
+        <div class="section-badge">PROFIL & VISI MISI</div>
+        <h3>Kepemimpinan & Arah Kebijakan <span class="gradient-text">TP-PKK Kab. Nganjuk</span></h3>
+        <p>Mewujudkan keluarga yang berdaya, sehat, dan sejahtera melalui 10 Program Pokok PKK</p>
       </div>
-    </div>
-  </section>
 
-  <!-- ======= About Section ======= -->
-  <section id="about" class="about section-bg">
-    <div class="container">
+      <div class="row align-items-center g-4 mt-2">
 
-      <div class="row align-items-center">
-
-        <!-- KIRI -->
+        <!-- KIRI: PROFIL KETUA -->
         <div class="col-lg-4 animate-on-scroll" data-animation="fade-up">
-          <h5>
-            <b>Ketua PPK Kab. Nganjuk</b>
-          </h5>
-          <p>
-            Ketua Tim Penggerak PKK (TP PKK) Kabupaten Nganjuk saat ini adalah
-            Ny. S. Wahyuni Marhaen, S.E. Beliau aktif memimpin program pemberdayaan keluarga,
-            penurunan stunting, dan kesehatan masyarakat, didampingi pengurus TP PKK lainnya di Kabupaten Nganjuk.
-          </p>
-        </div>
+          <div class="about-card profile-card">
+            <div class="card-role-tag">
+              <i class="bi bi-person-badge-fill me-1"></i> KETUA TP-PKK
+            </div>
+            
+            <h4 class="leader-name">Ny. S. Wahyuni Marhaen, S.E.</h4>
+            <span class="leader-subtitle">Ketua Tim Penggerak PKK Kabupaten Nganjuk</span>
 
-        <!-- TENGAH (FOTO) -->
-        <div class="col-lg-4 text-center animate-on-scroll" data-animation="zoom-in">
-          <div class="img-box hover-lift">
-            <img src="{{ asset('frontend/assets/img/ketuapkk.png') }}" class="img-fluid">
+            <div class="leader-divider"></div>
+
+            <p class="leader-description">
+              Aktif memimpin pelaksanaan program pemberdayaan keluarga di seluruh pelosok Kabupaten Nganjuk, dengan fokus utama pada percepatan penurunan stunting, penguatan ketahanan ekonomi keluarga, dan digitalisasi pelaporan PKK hingga tingkat dasawisma.
+            </p>
+
+            <div class="leader-quote">
+              <i class="bi bi-quote quote-icon"></i>
+              <span>"Bergerak bersama, mengabdi dengan hati untuk kesejahteraan keluarga Nganjuk Melesat."</span>
+            </div>
           </div>
         </div>
 
-        <!-- KANAN -->
-        <div class="col-lg-4 animate-on-scroll" data-animation="fade-up" data-delay="200">
-          <h5><b>Visi Utama</b></h5>
-          <p>
-            Mewujudkan keluarga sehat, cerdas, berdaya, beriman, dan bertaqwa menuju Nganjuk Melesat
-            (Maju, Sejahtera, Bermartabat).
-          </p>
-
-          <h5 class="mt-3"><b>Misi Utama</b></h5>
-          <ul class="animated-list">
-            <li>Sinergi Daerah</li>
-            <li>Digitalisasi PKK</li>
-            <li>Pemberdayaan Keluarga</li>
-            <li>Kolaborasi</li>
-          </ul>
+        <!-- TENGAH: FOTO KETUA SHOWCASE -->
+        <div class="col-lg-4 text-center animate-on-scroll" data-animation="zoom-in" data-delay="150">
+          <div class="leader-photo-container">
+            <div class="photo-glow-effect"></div>
+            <div class="photo-card-wrapper hover-lift">
+              <img src="{{ asset('frontend/assets/img/ketuapkk.png') }}" class="img-fluid leader-photo" alt="Foto Ketua TP-PKK Kab. Nganjuk">
+              <div class="photo-info-badge">
+                <img src="{{ asset('frontend/assets/img/favicon.png') }}" class="badge-pkk-logo" alt="Logo PKK">
+                <span>TP-PKK KABUPATEN NGANJUK</span>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- KANAN: VISI & MISI UTAMA -->
+        <div class="col-lg-4 animate-on-scroll" data-animation="fade-up" data-delay="300">
+          <div class="about-card vision-mission-card">
+            
+            <!-- Visi Box -->
+            <div class="visi-card-box">
+              <div class="box-header">
+                <div class="header-icon-circle bg-primary-soft">
+                  <i class="bi bi-compass-fill"></i>
+                </div>
+                <h5 class="box-title">Visi Utama</h5>
+              </div>
+              <p class="visi-card-text">
+                "Mewujudkan keluarga sehat, cerdas, berdaya, beriman, dan bertaqwa menuju <strong>Nganjuk Melesat</strong> (Maju, Sejahtera, Bermartabat)."
+              </p>
+            </div>
+
+            <!-- Misi Box -->
+            <div class="misi-card-box mt-3">
+              <div class="box-header">
+                <div class="header-icon-circle bg-primary-soft">
+                  <i class="bi bi-bullseye"></i>
+                </div>
+                <h5 class="box-title">Misi Utama</h5>
+              </div>
+
+              <div class="misi-items-grid">
+                <div class="misi-item-badge">
+                  <i class="bi bi-diagram-3-fill text-primary"></i>
+                  <span>Sinergi Daerah</span>
+                </div>
+                <div class="misi-item-badge">
+                  <i class="bi bi-phone-fill text-primary"></i>
+                  <span>Digitalisasi PKK</span>
+                </div>
+                <div class="misi-item-badge">
+                  <i class="bi bi-heart-pulse-fill text-primary"></i>
+                  <span>Pemberdayaan Keluarga</span>
+                </div>
+                <div class="misi-item-badge">
+                  <i class="bi bi-people-fill text-primary"></i>
+                  <span>Kolaborasi Lintas Sektor</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -240,8 +275,6 @@
 
   </section>
   <!-- End Portfolio -->
-
-</main> <!-- Tutup Tag Main -->
 
 <!-- Swiper JS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -1248,6 +1281,558 @@
     }
   }
 </style>
+
+<!-- ======= Berita Terbaru Section ======= -->
+<section id="berita" class="berita-home-section">
+  <div class="container">
+    <div class="section-title animate-on-scroll" data-animation="fade-up">
+      <div class="section-badge">BERITA</div>
+      <h3>Berita Terbaru <span class="gradient-text">PKK Kab Nganjuk</span></h3>
+      <p>Informasi dan berita terkini seputar kegiatan PKK Kabupaten Nganjuk</p>
+    </div>
+
+    <div class="row gy-4">
+      @forelse ($beritas as $tampil)
+      <div class="col-lg-4 col-md-6 animate-on-scroll" data-animation="fade-up" data-delay="{{ $loop->index * 100 }}">
+        <div class="berita-card">
+          <div class="berita-card-img">
+            <img src="{{ asset('/storage/berita/'.$tampil->image) }}" alt="{{ $tampil->judul }}">
+            <div class="berita-date-badge">
+              <span class="berita-day">{{ $tampil->created_at->format('d') }}</span>
+              <span class="berita-month">{{ $tampil->created_at->format('M Y') }}</span>
+            </div>
+          </div>
+          <div class="berita-card-body">
+            <h4 class="berita-card-title">{{ $tampil->judul }}</h4>
+            <p class="berita-card-text">{{ Str::limit(strip_tags($tampil->deskripsi ?? $tampil->isi ?? ''), 100) }}</p>
+            <a href="{{ route('frontend.show', $tampil->id) }}" class="berita-read-more">
+              Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      @empty
+      <div class="col-12">
+        <div class="text-center py-5">
+          <i class="bi bi-newspaper" style="font-size: 48px; color: #ccc;"></i>
+          <p style="font-family: 'Poppins', sans-serif; font-size: 16px; color: #999; margin-top: 16px;">Belum ada berita tersedia.</p>
+        </div>
+      </div>
+      @endforelse
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+      <a href="{{ route('berita.index') }}" class="btn btn-primary modern-btn">
+        Lihat Semua Berita
+      </a>
+    </div>
+  </div>
+</section>
+<!-- End Berita -->
+
+<!-- Berita Section Styles -->
+<style>
+  .berita-home-section {
+    padding: 80px 0;
+    background: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .berita-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .berita-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 16px 48px rgba(28, 110, 164, 0.15);
+  }
+
+  .berita-card-img {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .berita-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .berita-card:hover .berita-card-img img {
+    transform: scale(1.08);
+  }
+
+  .berita-date-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(1, 106, 163, 0.9);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+  }
+
+  .berita-day {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .berita-month {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .berita-card-body {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .berita-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .berita-card-text {
+    font-size: 14px;
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .berita-read-more {
+    font-size: 14px;
+    font-weight: 600;
+    color: #016AA3;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .berita-read-more:hover {
+    color: #015a8a;
+    gap: 10px;
+  }
+
+  .berita-read-more i {
+    transition: transform 0.3s ease;
+  }
+
+  .berita-read-more:hover i {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 768px) {
+    .berita-home-section {
+      padding: 60px 0;
+    }
+
+    .berita-card-img {
+      height: 200px;
+    }
+
+    .berita-card-title {
+      font-size: 16px;
+    }
+  }
+
+  /* ========== ABOUT SECTION MODERN STYLING ========== */
+  .about-modern-section {
+    position: relative;
+    padding: 100px 0 90px 0;
+    background: linear-gradient(135deg, #f0f7fc 0%, #e2effa 50%, #f0f7fc 100%);
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .about-bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .shape-1 {
+    width: 380px;
+    height: 380px;
+    background: rgba(1, 106, 163, 0.12);
+    top: -80px;
+    left: -80px;
+  }
+
+  .shape-2 {
+    width: 320px;
+    height: 320px;
+    background: rgba(46, 139, 192, 0.15);
+    bottom: -60px;
+    right: -60px;
+  }
+
+  .about-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px 28px;
+    box-shadow: 0 10px 30px rgba(1, 106, 163, 0.08);
+    border: 1px solid rgba(1, 106, 163, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+  }
+
+  .about-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(1, 106, 163, 0.16);
+    border-color: rgba(1, 106, 163, 0.25);
+  }
+
+  .card-role-tag {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    background: linear-gradient(135deg, #016AA3 0%, #2E8BC0 100%);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    box-shadow: 0 3px 10px rgba(1, 106, 163, 0.25);
+  }
+
+  .leader-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .leader-subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    color: #016AA3;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .leader-divider {
+    width: 48px;
+    height: 3px;
+    background: linear-gradient(90deg, #016AA3, #38bdf8);
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+
+  .leader-description {
+    font-size: 13.5px;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .leader-quote {
+    margin-top: auto;
+    background: #f8fafc;
+    border-left: 3px solid #016AA3;
+    padding: 12px 14px 12px 16px;
+    border-radius: 0 12px 12px 0;
+    font-size: 12.5px;
+    color: #334155;
+    font-style: italic;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .quote-icon {
+    font-size: 18px;
+    color: #016AA3;
+    line-height: 1;
+  }
+
+  /* Tengah: Showcase Foto */
+  .leader-photo-container {
+    position: relative;
+    display: inline-block;
+    z-index: 2;
+  }
+
+  .photo-glow-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    background: radial-gradient(circle, rgba(1, 106, 163, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+    filter: blur(30px);
+    z-index: -1;
+  }
+
+  .photo-card-wrapper {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 28px;
+    box-shadow: 0 16px 48px rgba(1, 106, 163, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  .leader-photo {
+    border-radius: 20px;
+    max-height: 380px;
+    width: auto;
+    display: block;
+  }
+
+  .photo-info-badge {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(7, 48, 74, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 7px 18px;
+    border-radius: 50px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .badge-pkk-logo {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  }
+
+  /* Kanan: Visi & Misi Box */
+  .vision-mission-card {
+    padding: 26px 24px;
+  }
+
+  .visi-card-box {
+    background: linear-gradient(135deg, #f0f7fc 0%, #e2effa 100%);
+    border-radius: 16px;
+    padding: 18px 20px;
+    border-left: 4px solid #016AA3;
+  }
+
+  .box-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .header-icon-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #016AA3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(1, 106, 163, 0.15);
+  }
+
+  .box-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .visi-card-text {
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .misi-card-box {
+    background: #ffffff;
+  }
+
+  .misi-items-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .misi-item-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    transition: all 0.25s ease;
+  }
+
+  .misi-item-badge i {
+    font-size: 16px;
+    width: 24px;
+    text-align: center;
+  }
+
+  .misi-item-badge:hover {
+    background: #f0f7fc;
+    border-color: #016AA3;
+    color: #016AA3;
+    transform: translateX(4px);
+  }
+
+  /* ========== APP DOWNLOAD MODERN STYLING ========== */
+  .app-section {
+    padding: 90px 0;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f7fc 100%);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .app-feature-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .app-feature-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 50px;
+  }
+
+  .btn-download-app {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #016AA3 0%, #0284c7 100%);
+    color: #ffffff !important;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 34px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(1, 106, 163, 0.35);
+    transition: all 0.3s ease;
+  }
+
+  .btn-download-app:hover {
+    background: linear-gradient(135deg, #01507d 0%, #016AA3 100%);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 14px 32px rgba(1, 106, 163, 0.45);
+    color: #ffffff !important;
+  }
+
+  @media (max-width: 991px) {
+    .about-modern-section {
+      padding: 60px 0;
+    }
+    .leader-photo {
+      max-height: 300px;
+    }
+  }
+</style>
+
+<!-- ======= Download App Section (Dipindah ke Bawah) ======= -->
+<section class="app-section">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <!-- KIRI (GAMBAR HP) -->
+      <div class="col-lg-6 text-center animate-on-scroll" data-animation="slide-right">
+        <div class="app-img floating-animation">
+          <img src="{{ asset('frontend/assets/img/gadget.png') }}" class="img-fluid" alt="E-PKK App Mobile">
+        </div>
+      </div>
+
+      <!-- KANAN (TEXT) -->
+      <div class="col-lg-6 animate-on-scroll" data-animation="slide-left">
+        <div class="app-feature-badges">
+          <span class="app-feature-pill"><i class="bi bi-phone-fill"></i> Mobile Apps</span>
+          <span class="app-feature-pill"><i class="bi bi-cloud-check-fill"></i> Pelaporan Realtime</span>
+          <span class="app-feature-pill"><i class="bi bi-shield-check"></i> Terintegrasi</span>
+        </div>
+
+        <h3 class="app-title gradient-text" style="font-size: 32px; font-weight: 700; margin-bottom: 16px;">E-PKK Kab.Nganjuk App</h3>
+        <p class="fade-in-text" style="font-size: 15px; color: #475569; line-height: 1.8; margin-bottom: 24px;">
+          E-PKK Kab. Nganjuk adalah aplikasi digital resmi yang dirancang untuk mendukung pelaksanaan 10 Program Pokok PKK secara cepat, akurat, dan terstruktur. Memudahkan kader dalam pelaporan kegiatan langsung dari perangkat ponsel pintar serta mendokumentasikan arsip kegiatan PKK secara terpusat.
+        </p>
+
+        <a href="#" class="btn-download-app pulse-animation">
+          <i class="bi bi-cloud-arrow-down-fill fs-5"></i>
+          <span>Download Sekarang</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- End Download App Section -->
 
 </main>
 <!-- End Main -->

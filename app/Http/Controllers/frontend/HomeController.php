@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Visitor;
 use App\Models\Galeri;
+use App\Models\Berita;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -43,13 +44,17 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
+        //  BERITA TERBARU
+        $beritas = Berita::latest()->take(3)->get();
+
         return view('home', compact(
             'visitor',
             'totalMinggu',
             'totalBulan',
             'totalTahun',
             'totalVisitors',
-            'galerys'
+            'galerys',
+            'beritas'
         ));
     }
 }

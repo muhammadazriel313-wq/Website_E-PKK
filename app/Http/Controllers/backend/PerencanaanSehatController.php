@@ -91,6 +91,7 @@ class PerencanaanSehatController extends Controller
             'Kb_p' => $request->Kb_p ?? $data->Kb_p,
             'Kb_w' => $request->Kb_w ?? $data->Kb_w,
             'Kk_tbg' => $request->Kk_tbg ?? $data->Kk_tbg,
+            'Kk_asuransi' => $request->Kk_asuransi ?? $data->Kk_asuransi,
             'status' => $status,
             'catatan' => $request->catatan,
         ]);

@@ -94,6 +94,7 @@
     i, .bi, [class^="bi-"], [class*=" bi-"], [class^="fa"], [class*=" fa-"] { font-family: unset !important; }
   </style>
 
+  @include('backend.includes.kesehatan_table_css')
 </head>
 
 <body>
@@ -132,37 +133,9 @@
           <div>Scroll horizontal untuk melihat semua kolom data.</div>
         </div>
 
-        <div class="table-responsive mt-3">
-          <table class="table table-bordered table-hover">
-            <thead>
-              <tr>
-                <th scope="col" rowspan="4" class="text-center align-middle">No</th>
-                @if (Auth::guard('web')->check())
-                  <th class="text-center align-middle" rowspan="4" scope="col">Kecamatan</th>
-                  <th class="text-center align-middle" rowspan="4" scope="col">Desa</th>
-                @elseif (Auth::guard('pengguna')->check())
-                  <th class="text-center align-middle" rowspan="4" scope="col">Desa</th>
-                @endif
-                <th scope="col" colspan="5" class="text-center align-middle">Kesehatan</th>
-                <th scope="col" rowspan="4" class="text-center align-middle">Keterangan</th>
-                <th scope="col" rowspan="4" class="text-center align-middle">Status</th>
-                <th scope="col" rowspan="4" class="text-center align-middle">Tanggal</th>
-                <th scope="col" rowspan="4" class="text-center align-middle">Aksi</th>
-              </tr>
-              <tr>
-                <th scope="col" colspan="5" class="text-center align-middle">Posyandu</th>
-              </tr>
-              <tr>
-                <th scope="col" rowspan="2" class="text-center align-middle">Jumlah</th>
-                <th scope="col" rowspan="2" class="text-center align-middle">Terintegrasi</th>
-                <th scope="col" colspan="3" class="text-center align-middle">Lansia</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-center align-middle">Jml Klp</th>
-                <th scope="col" class="text-center align-middle">Jml Anggota</th>
-                <th scope="col" class="text-center align-middle">Jml yg Memiliki<br>Kartu Berobat Gratis</th>
-              </tr>
-            </thead>
+        <div class="tbl-kes-wrap mt-3">
+          <table class="tbl-kes">
+            @include('backend.includes.kesehatan_table_head', ['extra' => ['Catatan','Status','Tanggal','Aksi']])
             <tbody>
               @php $no = 1; @endphp
               @forelse ($data2 as $sehat1)
@@ -175,11 +148,8 @@
                   <td class="text-center">{{ $sehat1->nama_desa ?? '-' }}</td>
                 @endif
                 
-                <td class="text-center">{{ $sehat1->jumlah_posyandu ?? '0' }}</td>
-                <td class="text-center">{{ $sehat1->jumlah_posyandu_iterasi ?? '0' }}</td>
-                <td class="text-center">{{ $sehat1->jumlah_klp ?? '0' }}</td>
-                <td class="text-center">{{ $sehat1->jumlah_anggota ?? '0' }}</td>
-                <td class="text-center">{{ $sehat1->jumlah_kartu_gratis ?? '0' }}</td>
+                {{-- Data Kolom Kesehatan 3-11 --}}
+                @include('backend.includes.kesehatan_table_cells', ['item' => $sehat1])
                 <td class="text-center">{{ $sehat1->catatan ?: '-' }}</td>
                 
                 <td class="text-center">
@@ -205,7 +175,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="11" class="text-center py-5">
+                <td colspan="16" class="text-center py-5">
                   <div class="alert alert-danger mb-0">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan kesehatan.
                   </div>

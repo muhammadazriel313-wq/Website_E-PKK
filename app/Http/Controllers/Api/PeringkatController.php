@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * [PERUBAHAN] Fitur baru: Peringkat Anggota PKK (desa & kecamatan).
  *
  * Aturan poin:
  * - 1 laporan = 1 poin, hanya laporan berstatus Disetujui2 (ACC akhir admin kabupaten).
- * - Galeri tidak dihitung (hanya Upload Laporan).
+ * - Galeri kegiatan (tabel galerys) ikut dihitung, 1 galeri = 1 poin, hanya yang berstatus upload2.
  * - Peringkat desa  : laporan dari akun mobile id_role = 1, dikelompokkan per desa.
  * - Peringkat kecamatan: laporan dari akun mobile id_role = 2, dikelompokkan per kecamatan.
  *   (poin desa dan kecamatan terpisah, tidak digabung)
@@ -22,7 +23,12 @@ class PeringkatController extends Controller
 {
     private const STATUS_FINAL = 'disetujui2';
 
-    // Semua tabel laporan yang diupload dari mobile (tabel galerys sengaja tidak ada).
+    // Tabel yang status persetujuan akhirnya bukan 'disetujui2'.
+    private const STATUS_KHUSUS = [
+        'galerys' => 'upload2',
+    ];
+
+    // Semua tabel yang jadi sumber poin (laporan mobile + galeri kegiatan).
     private const TABEL_LAPORAN = [
         'laporan_kader_pokja1',
         'laporan_gotong_royong',
@@ -42,6 +48,7 @@ class PeringkatController extends Controller
         'rekap_desa_tahunan',
         'posyandu',
         'kegiatan_pokja4',
+        'galerys',
     ];
 
     // GET /api/ranking/desa?periode=bulan_ini&limit=3&id=<id user mobile>
@@ -145,14 +152,19 @@ class PeringkatController extends Controller
         }
     }
 
-    // Gabungan (UNION ALL) semua laporan yang sudah ACC akhir pada rentang tanggal.
+    // Gabungan (UNION ALL) semua laporan dan galeri yang sudah ACC akhir pada rentang tanggal.
     private function laporanDisetujui(string $mulai, string $akhir)
     {
         $union = null;
         foreach (self::TABEL_LAPORAN as $tabel) {
+            // Lewati tabel yang belum punya kolom yang dibutuhkan
+            if (!Schema::hasColumns($tabel, ['id_user', 'status', 'created_at'])) {
+                continue;
+            }
+            $statusAkhir = self::STATUS_KHUSUS[$tabel] ?? self::STATUS_FINAL;
             $q = DB::table($tabel)
                 ->select('id_user', 'created_at')
-                ->whereRaw('LOWER(status) = ?', [self::STATUS_FINAL])
+                ->whereRaw('LOWER(status) = ?', [$statusAkhir])
                 ->whereBetween('created_at', [$mulai, $akhir]);
             $union = $union ? $union->unionAll($q) : $q;
         }

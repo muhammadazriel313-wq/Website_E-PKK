@@ -91,7 +91,7 @@
 
       <div class="pk-head">
         <h1>Peringkat</h1>
-        <p>Satu laporan yang sudah disetujui akhir oleh admin kabupaten bernilai satu poin. Laporan yang masih diproses dan galeri tidak dihitung.</p>
+        <p>Satu laporan atau galeri kegiatan yang sudah disetujui akhir oleh admin kabupaten bernilai satu poin. Laporan dan galeri yang masih diproses tidak dihitung.</p>
       </div>
 
       <div class="pk-bar">

@@ -175,6 +175,7 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     Route::resource('acclaporanpokja3', App\Http\Controllers\backend\AccLaporanPokja3Controller::class);
     Route::resource('acclaporanpokja4', App\Http\Controllers\backend\AccLaporanPokja4Controller::class);
     Route::resource('accbidangumum', App\Http\Controllers\backend\AccBidangUmumController::class);
+    // [LEGACY] Aman dihapus setelah verifikasi migrasi Pangan & Sandang selesai
     Route::resource('accpangansandang', App\Http\Controllers\backend\AccPanganSandangController::class);
 
     // === RESOURCES LAINNYA ===
@@ -185,6 +186,7 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     Route::resource('pengembangan', App\Http\Controllers\backend\PengembanganController::class);
     Route::resource('sandang', App\Http\Controllers\backend\SandangController::class);
     Route::resource('pangan', App\Http\Controllers\backend\PanganController::class);
+    // [LEGACY] Aman dihapus setelah verifikasi migrasi Pangan & Sandang selesai
     Route::resource('pangansandang', App\Http\Controllers\backend\PanganSandangController::class);
     Route::resource('decpangansandang', App\Http\Controllers\backend\DecPanganSandangController::class);
     Route::resource('perumahan', App\Http\Controllers\backend\PerumahanController::class);
@@ -498,6 +500,7 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
     Route::post('/export-pokja4', [Pokja4ExportController::class, 'exportToSheet'])->name('export.pokja4');
     Route::get('/api-export/pokja2', [App\Http\Controllers\backend\Pokja2Controller::class, 'getExportData'])->name('pokja2.exportJson');
     Route::get('/api-export/pokja3', [App\Http\Controllers\backend\Pokja3Controller::class, 'getExportData'])->name('pokja3.exportJson');
+    Route::get('/export-excel/pokja3', [App\Http\Controllers\backend\Pokja3Controller::class, 'exportExcel'])->name('pokja3.exportExcel');
 
     /*
     |--------------------------------------------------------------------------

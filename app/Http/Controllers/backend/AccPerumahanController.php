@@ -67,14 +67,25 @@ class AccPerumahanController extends Controller
                     ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_perumahan.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_perumahan.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->count();
 
                 $per2 = DB::table('laporan_perumahan')
                     ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_perumahan.status', ['Disetujui1', 'disetujui1', 'DISETUJUI1'])
+                    ->whereIn('laporan_perumahan.status', ['Disetujui1', 'disetujui1', 'DISETUJUI1', 'Disetujui2', 'disetujui2', 'DISETUJUI2'])
+                    ->count();
+            } else {
+                // Desa: Laporan miliknya sendiri
+                $per1 = DB::table('laporan_perumahan')
+                    ->where('id_user', $user->id)
+                    ->whereIn('status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
+                    ->count();
+
+                $per2 = DB::table('laporan_perumahan')
+                    ->where('id_user', $user->id)
+                    ->whereIn('status', ['Disetujui1', 'disetujui1', 'DISETUJUI1', 'Disetujui2', 'disetujui2', 'DISETUJUI2'])
                     ->count();
             }
         }

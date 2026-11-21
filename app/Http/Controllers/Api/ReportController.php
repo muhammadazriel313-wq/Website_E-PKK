@@ -985,10 +985,15 @@ class ReportController extends Controller
             // UUID (SAMA PERSIS)
             $uuid = 'KP3B1-' . strtoupper(Str::random(6));
 
+            $user = DB::table('users_mobile')->where('id', $request->id_user)->first();
+
             // INSERT
             DB::table('laporan_pangan')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
+                'kecamatan_id' => $user->id_subdistrict ?? $request->kecamatan_id ?? $request->id_subdistrict ?? null,
+                'desa_id' => $user->id_village ?? $request->desa_id ?? $request->id_village ?? null,
+                'kader_pangan' => $request->kader_pangan ?? 0,
                 'beras' => $request->beras ?? 0,
                 'non_beras' => $request->non_beras ?? 0,
                 'peternakan' => $request->peternakan ?? 0,
@@ -998,8 +1003,9 @@ class ReportController extends Controller
                 'toga' => $request->toga ?? 0,
                 'tanaman_keras' => $request->tanaman_keras ?? 0,
                 'tanaman_lainnya' => $request->tanaman_lainnya ?? 0,
+                'industri_pangan' => $request->industri_pangan ?? 0,
                 'catatan' => $request->catatan ?? '',
-                'status' => 'Proses',
+                'status' => 'Menunggu',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'id_role' => $request->id_role,
@@ -1012,7 +1018,8 @@ class ReportController extends Controller
                 ->leftJoin('role_organization', 'laporan_pangan.id_organization', '=', 'role_organization.id')
                 ->where('laporan_pangan.uuid', $uuid)
                 ->select(
-                    'laporan_pangan.id_pokja3_bidang1',
+                    'laporan_pangan.id as id_pokja3_bidang1',
+                    'laporan_pangan.id',
                     'laporan_pangan.uuid',
                     'laporan_pangan.id_user',
                     'laporan_pangan.beras',
@@ -1093,12 +1100,17 @@ class ReportController extends Controller
             // UUID (SAMA PERSIS)
             $uuid = 'KP3B2-' . strtoupper(Str::random(6));
 
+            $user = DB::table('users_mobile')->where('id', $request->id_user)->first();
+
             // INSERT
             DB::table('laporan_sandang')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'pangan' => $request->pangan ?? 0,
-                'sandang' => $request->sandang ?? 0,
+                'kecamatan_id' => $user->id_subdistrict ?? null,
+                'desa_id' => $user->id_village ?? null,
+                'kader_sandang' => $request->kader_sandang ?? 0,
+                'industri_pangan' => $request->industri_pangan ?? $request->pangan ?? 0,
+                'industri_sandang' => $request->industri_sandang ?? $request->sandang ?? 0,
                 'jasa' => $request->jasa ?? 0,
                 'catatan' => $request->catatan ?? '',
                 'status' => 'Proses',
@@ -1114,11 +1126,15 @@ class ReportController extends Controller
                 ->leftJoin('role_organization', 'laporan_sandang.id_organization', '=', 'role_organization.id')
                 ->where('laporan_sandang.uuid', $uuid)
                 ->select(
-                    'laporan_sandang.id_pokja3_bidang2',
+                    'laporan_sandang.id as id_pokja3_bidang2',
+                    'laporan_sandang.id',
                     'laporan_sandang.uuid',
                     'laporan_sandang.id_user',
-                    'laporan_sandang.pangan',
-                    'laporan_sandang.sandang',
+                    'laporan_sandang.kader_sandang',
+                    'laporan_sandang.industri_pangan as pangan',
+                    'laporan_sandang.industri_pangan',
+                    'laporan_sandang.industri_sandang as sandang',
+                    'laporan_sandang.industri_sandang',
                     'laporan_sandang.jasa',
                     'laporan_sandang.catatan',
                     'laporan_sandang.status',

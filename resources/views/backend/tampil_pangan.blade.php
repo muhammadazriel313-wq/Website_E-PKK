@@ -228,6 +228,18 @@
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
+                    <label for="kader_pangan" class="form-label fw-semibold">
+                      Jumlah Kader Pangan
+                    </label>
+                    <input type="text"
+                      name="kader_pangan"
+                      id="kader_pangan"
+                      class="form-control"
+                      readonly
+                      value="{{ $data->kader_pangan ?? 0 }}" />
+                  </div>
+
+                  <div class="form-outline mb-4 mt-3">
                     <label for="beras" class="form-label">Beras</label>
 
                     <input type="text"
@@ -340,6 +352,7 @@
                       value="{{ $data->tanaman_lainnya }}" />
                   </div>
 
+
                   <div id="statusAlert"
                     class="alert alert-danger d-none"
                     role="alert">
@@ -359,6 +372,10 @@
 
                       <option value="Revisi">
                         Revisi
+                      </option>
+
+                      <option value="Ditolak">
+                        Ditolak
                       </option>
 
                       @if(Auth::guard('pengguna')->check())
@@ -458,7 +475,7 @@
 
   <script>
     function toggleCatatan(val) {
-      if (val === 'Revisi') {
+      if (val === 'Revisi' || val === 'Ditolak') {
         document.getElementById('catatan').focus();
       }
     }
@@ -491,6 +508,26 @@
           showCancelButton: true,
           confirmButtonText: 'Ya, Ubah',
           cancelButtonText: 'Batal',
+        }).then((result) => {
+
+          if (result.isConfirmed) {
+            e.target.submit();
+          }
+
+        });
+
+        return false;
+
+      } else if (status === "Ditolak") {
+
+        Swal.fire({
+          title: 'Konfirmasi Penolakan',
+          text: 'Apakah Anda yakin ingin menolak laporan ini?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Ya, Tolak',
+          cancelButtonText: 'Batal',
+          confirmButtonColor: '#d33',
         }).then((result) => {
 
           if (result.isConfirmed) {

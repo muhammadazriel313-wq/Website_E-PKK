@@ -10,13 +10,15 @@
           <h1 class="page-heading">Tambahkan Berita Baru</h1>
 
           <div class="form-card">
-            <form action="{{ route('input_berita.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="berita-form" action="{{ route('input_berita.store') }}" method="POST" enctype="multipart/form-data">
               @csrf
 
               <div class="form-group">
                 <label for="image" class="form-label">Gambar :</label>
                 <input type="file" name="image" id="image" class="form-control" required
                   oninvalid="this.setCustomValidity('Harap unggah gambar')" oninput="this.setCustomValidity('')" />
+                <small class="form-text text-muted">Maksimal ukuran gambar yang diunggah adalah 2 MB.</small>
+                <div id="image-size-error" class="text-danger" role="alert" style="display: none;">Ukuran gambar melebihi batas maksimal 2 MB.</div>
               </div>
 
               <div class="form-group">
@@ -116,6 +118,27 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
+    const beritaForm = document.getElementById('berita-form');
+    const beritaImage = document.getElementById('image');
+    const imageSizeError = document.getElementById('image-size-error');
+    const maxImageSize = 2 * 1024 * 1024;
+
+    beritaForm.addEventListener('submit', function (event) {
+      const image = beritaImage.files[0];
+      if (image && image.size > maxImageSize) {
+        event.preventDefault();
+        imageSizeError.style.display = 'block';
+        beritaImage.focus();
+      } else {
+        imageSizeError.style.display = 'none';
+      }
+    });
+
+    beritaImage.addEventListener('change', function () {
+      const image = this.files[0];
+      imageSizeError.style.display = image && image.size > maxImageSize ? 'block' : 'none';
+    });
+
     function confirmDelete(button) {
       Swal.fire({
         title: 'Yakin hapus data?',

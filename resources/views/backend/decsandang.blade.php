@@ -112,7 +112,14 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>Daftar Laporan Program Industri Rumah Tangga (Riwayat)</h1>
+      <h1>Daftar Laporan Program Sandang (Sudah Disetujui)</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ route('pokja3.index') }}">Pokja 3</a></li>
+          <li class="breadcrumb-item"><a href="{{ route('accsandang.index') }}">Program Sandang</a></li>
+          <li class="breadcrumb-item active">Riwayat Disetujui</li>
+        </ol>
+      </nav>
     </div>
 
     @if ($message = Session::get('success'))
@@ -125,16 +132,11 @@
     <div class="card mt-2">
       <div class="card-body">
         
-        <div class="alert alert-info d-flex align-items-center mt-3" role="alert">
-          <i class="bi bi-info-circle-fill me-2"></i>
-          <div>Scroll horizontal untuk melihat semua kolom data.</div>
-        </div>
-
         <div class="table-responsive mt-3">
-          <table class="table table-bordered table-hover">
-            <thead>
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
               <tr>
-                <th scope="col" rowspan="2" class="text-center align-middle">No</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width: 50px;">No</th>
                 @if (Auth::guard('web')->check())
                   <th class="text-center align-middle" rowspan="2" scope="col">Kecamatan</th>
                   <th class="text-center align-middle" rowspan="2" scope="col">Desa</th>
@@ -142,17 +144,18 @@
                   <th class="text-center align-middle" rowspan="2" scope="col">Desa</th>
                 @endif
                 
-                <th scope="col" colspan="3" class="text-center header-group-title" style="background-color: #fcf8e3;">JUMLAH INDUSTRI RUMAH TANGGA</th>
+                <th scope="col" rowspan="2" class="text-center align-middle header-group-title" style="background-color: #fce7f3;">JML KADER SANDANG</th>
+                <th scope="col" colspan="3" class="text-center header-group-title" style="background-color: #f8fafc;">INDUSTRI RUMAH TANGGA</th>
                 
                 <th scope="col" rowspan="2" class="text-center align-middle">Status</th>
                 <th scope="col" rowspan="2" class="text-center align-middle">Tanggal</th>
-                <th scope="col" rowspan="2" class="text-center align-middle">Aksi</th>
+                <th scope="col" rowspan="2" class="text-center align-middle" style="width: 80px;">Aksi</th>
               </tr>
               
               <tr>
-                <th class="text-center header-sub-title" scope="col" style="background-color: #fffaf0;">Pangan</th>
-                <th class="text-center header-sub-title" scope="col" style="background-color: #fffaf0;">Sandang</th>
-                <th class="text-center header-sub-title" scope="col" style="background-color: #fffaf0;">Jasa</th>
+                <th class="text-center header-sub-title" scope="col" style="background-color: #f1f5f9;">Pangan</th>
+                <th class="text-center header-sub-title" scope="col" style="background-color: #f1f5f9;">Sandang</th>
+                <th class="text-center header-sub-title" scope="col" style="background-color: #f1f5f9;">Jasa</th>
               </tr>
             </thead>
             <tbody>
@@ -167,9 +170,10 @@
                   <td class="text-center">{{ $sehat1->nama_desa ?? '-' }}</td>
                 @endif
                 
-                <td class="text-center">{{ $sehat1->pangan ?? '0' }}</td>
-                <td class="text-center">{{ $sehat1->sandang ?? '0' }}</td>
-                <td class="text-center">{{ $sehat1->jasa ?? '0' }}</td>
+                <td class="text-center fw-semibold text-danger">{{ $sehat1->kader_sandang ?? 0 }}</td>
+                <td class="text-center">{{ $sehat1->industri_pangan ?? $sehat1->pangan ?? 0 }}</td>
+                <td class="text-center">{{ $sehat1->industri_sandang ?? $sehat1->sandang ?? 0 }}</td>
+                <td class="text-center">{{ $sehat1->jasa ?? 0 }}</td>
                 
                 <td class="text-center">
                   @if(in_array(strtolower($sehat1->status), ['proses', 'revisi']))
@@ -183,7 +187,7 @@
                 
                 <td class="text-center">{{ \Carbon\Carbon::parse($sehat1->created_at)->format('d/m/Y H:i') }}</td>
                 <td class="text-center" style="white-space: nowrap;">
-                  <form action="{{ route('decsandang.destroy', $sehat1->id_pokja3_bidang2) }}" method="POST" class="d-inline delete-form">
+                  <form action="{{ route('decsandang.destroy', $sehat1->id ?? $sehat1->id_pokja3_bidang2) }}" method="POST" class="d-inline delete-form">
                     @csrf
                     @method('DELETE')
                     <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(this)" data-bs-toggle="tooltip" title="Hapus Data">
@@ -194,9 +198,9 @@
               </tr>
               @empty
               <tr>
-                <td colspan="9" class="text-center py-5">
-                  <div class="alert alert-danger mb-0">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan program Industri Rumah Tangga.
+                <td colspan="10" class="text-center py-5">
+                  <div class="alert alert-secondary mb-0">
+                    <i class="bi bi-info-circle me-2"></i> Belum ada data laporan program Sandang yang disetujui.
                   </div>
                 </td>
               </tr>

@@ -228,21 +228,34 @@
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="pangan" class="form-label">
-                      Pangan
+                    <label for="kader_sandang" class="form-label fw-semibold">
+                      Jumlah Kader Sandang
                     </label>
 
                     <input type="text"
-                      name="pangan"
-                      id="pangan"
+                      name="kader_sandang"
+                      id="kader_sandang"
                       class="form-control"
-                      required readonly
-                      value="{{ $data->pangan }}" />
+                      readonly
+                      value="{{ $data->kader_sandang ?? 0 }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="sandang" class="form-label">
-                      Sandang
+                    <label for="industri_pangan" class="form-label fw-semibold">
+                      Industri Rumah Tangga: Pangan
+                    </label>
+
+                    <input type="text"
+                      name="industri_pangan"
+                      id="industri_pangan"
+                      class="form-control"
+                      required readonly
+                      value="{{ $data->industri_pangan ?? $data->pangan ?? 0 }}" />
+                  </div>
+
+                  <div class="form-outline mb-4 mt-3">
+                    <label for="sandang" class="form-label fw-semibold">
+                      Industri Rumah Tangga: Sandang
                     </label>
 
                     <input type="text"
@@ -250,12 +263,12 @@
                       id="sandang"
                       class="form-control"
                       required readonly
-                      value="{{ $data->sandang }}" />
+                      value="{{ $data->industri_sandang ?? $data->sandang ?? 0 }}" />
                   </div>
 
                   <div class="form-outline mb-4 mt-3">
-                    <label for="jasa" class="form-label">
-                      Jasa
+                    <label for="jasa" class="form-label fw-semibold">
+                      Industri Rumah Tangga: Jasa
                     </label>
 
                     <input type="text"
@@ -263,20 +276,7 @@
                       id="jasa"
                       class="form-control"
                       required readonly
-                      value="{{ $data->jasa }}" />
-                  </div>
-
-                  <div class="form-outline mb-4 mt-3">
-                    <label for="id_user" class="form-label">
-                      ID Pengguna
-                    </label>
-
-                    <input type="text"
-                      name="id_user"
-                      id="id_user"
-                      class="form-control"
-                      required readonly
-                      value="{{ $data->id_user }}" />
+                      value="{{ $data->jasa ?? 0 }}" />
                   </div>
 
                   <div id="statusAlert"
@@ -298,6 +298,10 @@
 
                       <option value="Revisi">
                         Revisi
+                      </option>
+
+                      <option value="Ditolak">
+                        Ditolak
                       </option>
 
                       @if(Auth::guard('pengguna')->check())

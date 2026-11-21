@@ -154,17 +154,47 @@
         @endphp
 
         {{-- [PERUBAHAN 2026-10-09] Header, kolom desa, catatan, dan total diselaraskan persis dengan web acuan (deckesehatan, deckelestarian, decperencanaan, declaporanpokja4) --}}
-        {{-- TABEL KESEHATAN (Buku 4 Pokja IV) --}}
+        {{-- TABEL KESEHATAN --}}
         @if($bidang == 'semua' || $bidang == 'kesehatan')
         @include('backend.includes.kesehatan_table_css')
         <h3>Laporan Kesehatan</h3>
-        @php $dataKes = collect($kesehatan); @endphp
-        <div class="tbl-kes-wrap">
-        <table class="tbl-kes">
-            @include('backend.includes.kesehatan_table_head', ['extra' => ['Keterangan']])
+        <table>
+            <thead>
+                <tr style="background:#e0f2fe;">
+                    <th rowspan="4">No</th>
+                    @if (Auth::guard('web')->check())
+                        <th rowspan="4">Kecamatan</th>
+                        <th rowspan="4">Desa</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                        <th rowspan="4">Desa</th>
+                    @endif
+                    <th colspan="5">Kesehatan</th>
+                    <th rowspan="4">Keterangan</th>
+                </tr>
+                <tr style="background:#e0f2fe;">
+                    <th colspan="5">Posyandu</th>
+                </tr>
+                <tr style="background:#e0f2fe;">
+                    <th rowspan="2">Jumlah</th>
+                    <th rowspan="2">Terintegrasi</th>
+                    <th colspan="3">Lansia</th>
+                </tr>
+                <tr style="background:#e0f2fe;">
+                    <th>Jml Klp</th>
+                    <th>Jml Anggota</th>
+                    <th>Jml yg Memiliki<br>Kartu Berobat Gratis</th>
+                </tr>
+            </thead>
             <tbody>
-                @php $no = 1; @endphp
-                @forelse($dataKes as $item)
+                @php 
+                    $no = 1; 
+                    $t_pos = 0; 
+                    $t_iter = 0; 
+                    $t_klp = 0; 
+                    $t_ang = 0; 
+                    $t_grt = 0; 
+                @endphp
+                @forelse($kesehatan as $item)
                 <tr>
                     <td>{{ $no++ }}</td>
                     @if (Auth::guard('web')->check())
@@ -173,27 +203,34 @@
                     @elseif (Auth::guard('pengguna')->check())
                         <td>{{ $item->nama_desa ?? '-' }}</td>
                     @endif
-                    @include('backend.includes.kesehatan_table_cells', ['item' => $item])
-                    <td class="k-teks">{{ $item->catatan ?: '-' }}</td>
+                    <td>{{ $item->jumlah_posyandu ?? '0' }}</td>
+                    <td>{{ $item->jumlah_posyandu_iterasi ?? '0' }}</td>
+                    <td>{{ $item->jumlah_klp ?? '0' }}</td>
+                    <td>{{ $item->jumlah_anggota ?? '0' }}</td>
+                    <td>{{ $item->jumlah_kartu_gratis ?? '0' }}</td>
+                    <td>{{ $item->catatan ?: '-' }}</td>
                 </tr>
+                @php 
+                    $t_pos += (int)($item->jumlah_posyandu ?? 0); 
+                    $t_iter += (int)($item->jumlah_posyandu_iterasi ?? 0); 
+                    $t_klp += (int)($item->jumlah_klp ?? 0); 
+                    $t_ang += (int)($item->jumlah_anggota ?? 0); 
+                    $t_grt += (int)($item->jumlah_kartu_gratis ?? 0); 
+                @endphp
                 @empty
                 <tr>
-                    <td colspan="{{ Auth::guard('web')->check() ? 13 : 12 }}">Tidak ada data</td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 9 : 8 }}">Tidak ada data</td>
                 </tr>
                 @endforelse
             </tbody>
             <tfoot>
-                <tr>
+                <tr style="background:#f2f2f2; font-weight:bold;">
                     <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}">Total</td>
-                    <td>{{ $dataKes->sum('kader_kesehatan') }}</td>
-                    <td>{{ $dataKes->sum('kader_gizi') }}</td>
-                    <td>{{ $dataKes->sum('kader_kesling') }}</td>
-                    <td>{{ $dataKes->sum('kader_phbs') }}</td>
-                    <td>{{ $dataKes->sum('kader_kb') }}</td>
-                    <td>{{ $dataKes->sum('posyandu') }}</td>
-                    <td>{{ $dataKes->sum('imunisasi_vaksinasi') }}</td>
-                    <td>{{ $dataKes->sum('pkg') }}</td>
-                    <td>{{ $dataKes->sum('tbc') }}</td>
+                    <td>{{ $t_pos }}</td>
+                    <td>{{ $t_iter }}</td>
+                    <td>{{ $t_klp }}</td>
+                    <td>{{ $t_ang }}</td>
+                    <td>{{ $t_grt }}</td>
                     <td>-</td>
                 </tr>
             </tfoot>
@@ -205,13 +242,40 @@
         @if($bidang == 'semua' || $bidang == 'kelestarian')
         @include('backend.includes.kesehatan_table_css')
         <h3>Laporan Kelestarian Lingkungan Hidup</h3>
-        @php $dataLest = collect($kelestarian); @endphp
-        <div class="tbl-kes-wrap">
-        <table class="tbl-kes">
-            @include('backend.includes.kelestarian_table_head', ['extra' => ['Catatan']])
+        <table>
+            <thead>
+                <tr style="background:#e0f2fe;">
+                    <th rowspan="3">No</th>
+                    @if (Auth::guard('web')->check())
+                        <th rowspan="3">Kecamatan</th>
+                        <th rowspan="3">Desa</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                        <th rowspan="3">Desa</th>
+                    @endif
+                    <th colspan="7">Kelestarian Lingkungan Hidup</th>
+                    <th rowspan="3">Keterangan</th>
+                </tr>
+                <tr style="background:#e0f2fe;">
+                    <th colspan="3">Jumlah Rumah yang Memiliki</th>
+                    <th rowspan="2">Jumlah MCK</th>
+                    <th colspan="3">Jumlah KK yang Menggunakan Air</th>
+                </tr>
+                <tr style="background:#e0f2fe;">
+                    <th>Jamban</th>
+                    <th>SPAL</th>
+                    <th>Tempat Pembuangan Sampah</th>
+                    <th>PDAM</th>
+                    <th>Sumur</th>
+                    <th>Lain Lain</th>
+                </tr>
+            </thead>
             <tbody>
-                @php $no = 1; @endphp
-                @forelse($dataLest as $item)
+                @php 
+                    $no = 1; 
+                    $t_jam = 0; $t_spal = 0; $t_tps = 0; $t_mck = 0; 
+                    $t_pdam = 0; $t_sumur = 0; $t_dll = 0; 
+                @endphp
+                @forelse($kelestarian as $item)
                 <tr>
                     <td>{{ $no++ }}</td>
                     @if (Auth::guard('web')->check())
@@ -220,9 +284,24 @@
                     @elseif (Auth::guard('pengguna')->check())
                         <td>{{ $item->nama_desa ?? '-' }}</td>
                     @endif
-                    @include('backend.includes.kelestarian_table_cells', ['item' => $item])
-                    <td class="k-teks">{{ $item->catatan ?: '-' }}</td>
+                    <td>{{ $item->jamban ?? '0' }}</td>
+                    <td>{{ $item->spal ?? '0' }}</td>
+                    <td>{{ $item->tps ?? '0' }}</td>
+                    <td>{{ $item->mck ?? '0' }}</td>
+                    <td>{{ $item->pdam ?? '0' }}</td>
+                    <td>{{ $item->sumur ?? '0' }}</td>
+                    <td>{{ $item->dll ?? '0' }}</td>
+                    <td>{{ $item->catatan ?: '-' }}</td>
                 </tr>
+                @php 
+                    $t_jam += (int)($item->jamban ?? 0); 
+                    $t_spal += (int)($item->spal ?? 0); 
+                    $t_tps += (int)($item->tps ?? 0); 
+                    $t_mck += (int)($item->mck ?? 0); 
+                    $t_pdam += (int)($item->pdam ?? 0); 
+                    $t_sumur += (int)($item->sumur ?? 0); 
+                    $t_dll += (int)($item->dll ?? 0); 
+                @endphp
                 @empty
                 <tr>
                     <td colspan="{{ Auth::guard('web')->check() ? 11 : 10 }}">Tidak ada data</td>
@@ -230,15 +309,15 @@
                 @endforelse
             </tbody>
             <tfoot>
-                <tr>
+                <tr style="background:#f2f2f2; font-weight:bold;">
                     <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}">Total</td>
-                    <td>{{ $dataLest->sum('jamban') }}</td>
-                    <td>{{ $dataLest->sum('spal') }}</td>
-                    <td>{{ $dataLest->sum('tps') }}</td>
-                    <td>{{ $dataLest->sum('mck') }}</td>
-                    <td>{{ $dataLest->sum('pdam') }}</td>
-                    <td>{{ $dataLest->sum('sumur') }}</td>
-                    <td>{{ $dataLest->sum('dll') }}</td>
+                    <td>{{ $t_jam }}</td>
+                    <td>{{ $t_spal }}</td>
+                    <td>{{ $t_tps }}</td>
+                    <td>{{ $t_mck }}</td>
+                    <td>{{ $t_pdam }}</td>
+                    <td>{{ $t_sumur }}</td>
+                    <td>{{ $t_dll }}</td>
                     <td>-</td>
                 </tr>
             </tfoot>
@@ -250,13 +329,36 @@
         @if($bidang == 'semua' || $bidang == 'perencanaan')
         @include('backend.includes.kesehatan_table_css')
         <h3>Laporan Perencanaan Sehat</h3>
-        @php $dataPer = collect($perencanaan); @endphp
-        <div class="tbl-kes-wrap">
-        <table class="tbl-kes">
-            @include('backend.includes.perencanaan_table_head', ['extra' => ['Catatan']])
+        <table>
+            <thead>
+                <tr style="background:#e0f2fe;">
+                    <th rowspan="3">No</th>
+                    @if (Auth::guard('web')->check())
+                        <th rowspan="3">Kecamatan</th>
+                        <th rowspan="3">Desa</th>
+                    @elseif (Auth::guard('pengguna')->check())
+                        <th rowspan="3">Desa</th>
+                    @endif
+                    <th colspan="5">Perencanaan Sehat</th>
+                    <th rowspan="3">Keterangan</th>
+                </tr>
+                <tr style="background:#e0f2fe;">
+                    <th rowspan="2">Jumlah PUS</th>
+                    <th rowspan="2">Jumlah WUS</th>
+                    <th colspan="2">Jumlah Aseptor KB</th>
+                    <th rowspan="2">Jumlah KK yang Memiliki Tabungan</th>
+                </tr>
+                <tr style="background:#e0f2fe;">
+                    <th>L</th>
+                    <th>P</th>
+                </tr>
+            </thead>
             <tbody>
-                @php $no = 1; @endphp
-                @forelse($dataPer as $item)
+                @php 
+                    $no = 1; 
+                    $t_pus = 0; $t_wus = 0; $t_kbp = 0; $t_kbw = 0; $t_tbg = 0; 
+                @endphp
+                @forelse($perencanaan as $item)
                 <tr>
                     <td>{{ $no++ }}</td>
                     @if (Auth::guard('web')->check())
@@ -265,24 +367,34 @@
                     @elseif (Auth::guard('pengguna')->check())
                         <td>{{ $item->nama_desa ?? '-' }}</td>
                     @endif
-                    @include('backend.includes.perencanaan_table_cells', ['item' => $item])
-                    <td class="k-teks">{{ $item->catatan ?: '-' }}</td>
+                    <td>{{ $item->J_Psubur ?? '0' }}</td>
+                    <td>{{ $item->J_Wsubur ?? '0' }}</td>
+                    <td>{{ $item->Kb_p ?? '0' }}</td>
+                    <td>{{ $item->Kb_w ?? '0' }}</td>
+                    <td>{{ $item->Kk_tbg ?? '0' }}</td>
+                    <td>{{ $item->catatan ?: '-' }}</td>
                 </tr>
+                @php 
+                    $t_pus += (int)($item->J_Psubur ?? 0); 
+                    $t_wus += (int)($item->J_Wsubur ?? 0); 
+                    $t_kbp += (int)($item->Kb_p ?? 0); 
+                    $t_kbw += (int)($item->Kb_w ?? 0); 
+                    $t_tbg += (int)($item->Kk_tbg ?? 0); 
+                @endphp
                 @empty
                 <tr>
-                    <td colspan="{{ Auth::guard('web')->check() ? 10 : 9 }}">Tidak ada data</td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 9 : 8 }}">Tidak ada data</td>
                 </tr>
                 @endforelse
             </tbody>
             <tfoot>
-                <tr>
+                <tr style="background:#f2f2f2; font-weight:bold;">
                     <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}">Total</td>
-                    <td>{{ $dataPer->sum('J_Psubur') }}</td>
-                    <td>{{ $dataPer->sum('J_Wsubur') }}</td>
-                    <td>{{ $dataPer->sum('Kb_p') }}</td>
-                    <td>{{ $dataPer->sum('Kb_w') }}</td>
-                    <td>{{ $dataPer->sum('Kk_tbg') }}</td>
-                    <td>{{ $dataPer->sum('Kk_asuransi') }}</td>
+                    <td>{{ $t_pus }}</td>
+                    <td>{{ $t_wus }}</td>
+                    <td>{{ $t_kbp }}</td>
+                    <td>{{ $t_kbw }}</td>
+                    <td>{{ $t_tbg }}</td>
                     <td>-</td>
                 </tr>
             </tfoot>

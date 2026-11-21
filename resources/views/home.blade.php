@@ -237,7 +237,7 @@
             <div class="swiper-slide">
               <div class="gallery-card staggered-{{ $index % 3 }} hover-3d">
                 <div class="gallery-image">
-                  <img src="{{ asset('storage/gallery/' . $tampil->gambar) }}" alt="{{ $tampil->deskripsi }}">
+                  <img src="{{ asset('storage/gallery/' . $tampil->gambar) }}" alt="{{ $tampil->deskripsi }}" onerror="this.onerror=null; this.src='{{ asset('frontend/assets/img/logopkk.png') }}';">
                   <div class="gallery-overlay">
                     <div class="gallery-caption-box">
                       <p class="gallery-title">{{ $tampil->deskripsi }}</p>

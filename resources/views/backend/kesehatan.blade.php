@@ -142,9 +142,37 @@
           <div>Scroll horizontal untuk melihat semua kolom data.</div>
         </div>
 
-        <div class="tbl-kes-wrap mt-3">
-          <table class="tbl-kes">
-            @include('backend.includes.kesehatan_table_head', ['extra' => ['Catatan','Status','Tanggal','Aksi']])
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th scope="col" rowspan="4" class="text-center align-middle">No</th>
+                @if (Auth::guard('web')->check())
+                  <th class="text-center align-middle" rowspan="4" scope="col">Kecamatan</th>
+                  <th class="text-center align-middle" rowspan="4" scope="col">Desa</th>
+                @elseif (Auth::guard('pengguna')->check())
+                  <th class="text-center align-middle" rowspan="4" scope="col">Desa</th>
+                @endif
+                <th scope="col" colspan="5" class="text-center align-middle">Kesehatan</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Keterangan</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Status</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Tanggal</th>
+                <th scope="col" rowspan="4" class="text-center align-middle">Aksi</th>
+              </tr>
+              <tr>
+                <th scope="col" colspan="5" class="text-center align-middle">Posyandu</th>
+              </tr>
+              <tr>
+                <th scope="col" rowspan="2" class="text-center align-middle">Jumlah</th>
+                <th scope="col" rowspan="2" class="text-center align-middle">Terintegrasi</th>
+                <th scope="col" colspan="3" class="text-center align-middle">Lansia</th>
+              </tr>
+              <tr>
+                <th scope="col" class="text-center align-middle">Jml Klp</th>
+                <th scope="col" class="text-center align-middle">Jml Anggota</th>
+                <th scope="col" class="text-center align-middle">Jml yg Memiliki<br>Kartu Berobat Gratis</th>
+              </tr>
+            </thead>
             <tbody>
               @php $no = 1; @endphp
               @forelse ($data as $sehat)
@@ -157,8 +185,11 @@
                   <td class="text-center">{{ $sehat->nama_desa ?? '-' }}</td>
                 @endif
                 
-                {{-- Data Kolom Kesehatan 3-11 --}}
-                @include('backend.includes.kesehatan_table_cells', ['item' => $sehat])
+                <td class="text-center">{{ $sehat->jumlah_posyandu ?? '0' }}</td>
+                <td class="text-center">{{ $sehat->jumlah_posyandu_iterasi ?? '0' }}</td>
+                <td class="text-center">{{ $sehat->jumlah_klp ?? '0' }}</td>
+                <td class="text-center">{{ $sehat->jumlah_anggota ?? '0' }}</td>
+                <td class="text-center">{{ $sehat->jumlah_kartu_gratis ?? '0' }}</td>
                 <td class="text-center">{{ $sehat->catatan ?: '-' }}</td>
                 
                 <td class="text-center">
@@ -187,7 +218,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="16" class="text-center py-5">
+                <td colspan="11" class="text-center py-5">
                   <div class="alert alert-danger mb-0">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan kesehatan.
                   </div>

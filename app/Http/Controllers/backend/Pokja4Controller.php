@@ -903,36 +903,25 @@ class Pokja4Controller extends Controller
                 ];
 
                 if ($bidang == 'kesehatan') {
-                    // Kolom 3-11 Buku 4 Pokja IV (Kesehatan)
-                    $row['Kader Kesehatan'] = $item->kader_kesehatan ?? 0;
-                    $row['Kader Gizi'] = $item->kader_gizi ?? 0;
-                    $row['Kader Kesling'] = $item->kader_kesling ?? 0;
-                    $row['Kader PHBS'] = $item->kader_phbs ?? 0;
-                    $row['Kader KB'] = $item->kader_kb ?? 0;
-                    $row['Posyandu'] = $item->posyandu ?? 0;
-                    $row['Imunisasi/Vaksinasi Bayi/Balita'] = $item->imunisasi_vaksinasi ?? 0;
-                    $row['PKG'] = $item->pkg ?? 0;
-                    $row['TBC'] = $item->tbc ?? 0;
-                    $row['Catatan'] = !empty($item->catatan) ? $item->catatan : '-';
+                    $row['Posyandu'] = $item->jumlah_posyandu ?? 0;
+                    $row['Posyandu Terintegrasi'] = $item->jumlah_posyandu_iterasi ?? 0;
+                    $row['Kelompok Lansia'] = $item->jumlah_klp ?? 0;
+                    $row['Anggota Lansia'] = $item->jumlah_anggota ?? 0;
+                    $row['Kartu Berobat Gratis'] = $item->jumlah_kartu_gratis ?? 0;
                 } elseif ($bidang == 'kelestarian') {
-                    // Kolom 12-18 Buku 4 Pokja IV (Kelestarian Lingkungan Hidup)
-                    $row['Jamban (WC)'] = $item->jamban ?? 0;
+                    $row['Jamban'] = $item->jamban ?? 0;
                     $row['SPAL'] = $item->spal ?? 0;
                     $row['TPS'] = $item->tps ?? 0;
-                    $row['Jumlah MCK'] = $item->mck ?? 0;
-                    $row['KRT Air PDAM'] = $item->pdam ?? 0;
-                    $row['KRT Air Sumur'] = $item->sumur ?? 0;
-                    $row['KRT Air Lain-lain'] = $item->dll ?? 0;
-                    $row['Catatan'] = !empty($item->catatan) ? $item->catatan : '-';
+                    $row['MCK'] = $item->mck ?? 0;
+                    $row['PDAM'] = $item->pdam ?? 0;
+                    $row['Sumur'] = $item->sumur ?? 0;
+                    $row['Lainnya'] = $item->dll ?? 0;
                 } elseif ($bidang == 'perencanaan') {
-                    // Kolom 19-24 Buku 4 Pokja IV (Perencanaan Sehat)
-                    $row['Jml PUS'] = $item->J_Psubur ?? 0;
-                    $row['Jml WUS'] = $item->J_Wsubur ?? 0;
-                    $row['Jml Akseptor KB (L)'] = $item->Kb_p ?? 0;
-                    $row['Jml Akseptor KB (P)'] = $item->Kb_w ?? 0;
-                    $row['Jml KK Tabungan Keluarga'] = $item->Kk_tbg ?? 0;
-                    $row['Jml KK Asuransi Kesehatan'] = $item->Kk_asuransi ?? 0;
-                    $row['Catatan'] = !empty($item->catatan) ? $item->catatan : '-';
+                    $row['Pasangan Usia Subur'] = $item->J_Psubur ?? 0;
+                    $row['Wanita Usia Subur'] = $item->J_Wsubur ?? 0;
+                    $row['Akseptor KB Pria'] = $item->Kb_p ?? 0;
+                    $row['Akseptor KB Wanita'] = $item->Kb_w ?? 0;
+                    $row['KK Tabungan'] = $item->Kk_tbg ?? 0;
                 } elseif ($bidang == 'kader') {
                     $row['Kader Posyandu'] = $item->posyandu ?? 0;
                     $row['Kader Gizi'] = $item->gizi ?? 0;

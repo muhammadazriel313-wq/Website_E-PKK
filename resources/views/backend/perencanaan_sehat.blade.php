@@ -136,34 +136,9 @@
     <div class="card mt-2">
       <div class="card-body">
         
-        <div class="table-responsive mt-3">
-          <table class="table table-bordered table-hover">
-            <thead>
-              <tr>
-                <th scope="col" rowspan="3" class="text-center align-middle">No</th>
-                @if (Auth::guard('web')->check())
-                  <th class="text-center align-middle" rowspan="3" scope="col">Kecamatan</th>
-                  <th class="text-center align-middle" rowspan="3" scope="col">Desa</th>
-                @elseif (Auth::guard('pengguna')->check())
-                  <th class="text-center align-middle" rowspan="3" scope="col">Desa</th>
-                @endif
-                <th scope="col" colspan="5" class="text-center align-middle">Perencanaan Sehat</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Keterangan</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
-              </tr>
-              <tr>
-                <th scope="col" rowspan="2" class="text-center align-middle">Jumlah PUS</th>
-                <th scope="col" rowspan="2" class="text-center align-middle">Jumlah WUS</th>
-                <th scope="col" colspan="2" class="text-center align-middle">Jumlah Aseptor KB</th>
-                <th scope="col" rowspan="2" class="text-center align-middle">Jumlah KK yang Memiliki Tabungan</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-center align-middle">L</th>
-                <th scope="col" class="text-center align-middle">P</th>
-              </tr>
-            </thead>
+        <div class="tbl-kes-wrap mt-3">
+          <table class="tbl-kes">
+            @include('backend.includes.perencanaan_table_head', ['extra' => ['Catatan','Status','Tanggal','Aksi']])
             <tbody>
               @php $no = 1; @endphp
               @forelse ($data as $p_sehat)
@@ -175,11 +150,7 @@
                 @elseif (Auth::guard('pengguna')->check())
                   <td class="text-center">{{ $p_sehat->nama_desa ?? '-' }}</td>
                 @endif
-                <td class="text-center">{{ $p_sehat->J_Psubur ?? '0' }}</td>
-                <td class="text-center">{{ $p_sehat->J_Wsubur ?? '0' }}</td>
-                <td class="text-center">{{ $p_sehat->Kb_p ?? '0' }}</td>
-                <td class="text-center">{{ $p_sehat->Kb_w ?? '0' }}</td>
-                <td class="text-center">{{ $p_sehat->Kk_tbg ?? '0' }}</td>
+                @include('backend.includes.perencanaan_table_cells', ['item' => $p_sehat])
                 <td class="text-center">{{ $p_sehat->catatan ?: '-' }}</td>
                 
                 <td class="text-center">
@@ -209,7 +180,7 @@
               </tr>
               @empty
               <tr>
-                <td colspan="12" class="text-center py-5">
+                <td colspan="16" class="text-center py-5">
                   <div class="alert alert-danger mb-0">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan perencanaan sehat.
                   </div>

@@ -114,7 +114,14 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>Daftar Laporan Sudah Disetujui (Riwayat)</h1>
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <a href="{{ route('accpangansandang.index') }}" onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+          class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center"
+          style="width: 40px; height: 40px; padding: 0; flex: 0 0 40px;" aria-label="Kembali" title="Kembali">
+          <i class="bi bi-arrow-left"></i>
+        </a>
+        <h1 class="mb-0">Daftar Laporan Sudah Disetujui (Riwayat)</h1>
+      </div>
       <p class="text-muted" style="font-size:13px;">Program Pangan & Industri Rumah Tangga</p>
     </div>
 

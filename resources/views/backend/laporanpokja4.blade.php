@@ -126,7 +126,7 @@
 
     <div class="pagetitle">
       <div class="d-flex align-items-center gap-3">
-        <a href="{{ route('dashboard') }}" onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+        <a href="{{ route('acclaporanpokja4.index') }}" onclick="if (window.history.length > 1) { window.history.back(); return false; }"
           class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center"
           style="width: 40px; height: 40px; padding: 0; flex: 0 0 40px;" aria-label="Kembali" title="Kembali">
           <i class="bi bi-arrow-left"></i>

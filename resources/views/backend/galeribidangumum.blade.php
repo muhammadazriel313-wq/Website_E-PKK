@@ -260,7 +260,12 @@
 
                     </tr>
 
-                    <tr>
+                        <th>
+                            Deskripsi
+                        </th>
+                        <th>
+                            Nama Peserta
+                        </th>
 
                         <th style="width: 180px;">TANGGAL</th>
                         <th>TEMPAT</th>
@@ -305,6 +310,21 @@
 
                             {{ \Carbon\Carbon::parse($tampil->created_at)->format('d-m-Y H:i') }}
 
+                        </td>
+
+                        <td>
+                            @php
+                                $peserta = json_decode($tampil->nama_peserta, true);
+                            @endphp
+                            @if(!empty($peserta) && is_array($peserta))
+                                <ol class="mb-0 ps-3" style="font-size: 13px;">
+                                    @foreach($peserta as $p)
+                                        <li>{{ $p }}</li>
+                                    @endforeach
+                                </ol>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
                         </td>
 
                         <td class="table-lokasi">

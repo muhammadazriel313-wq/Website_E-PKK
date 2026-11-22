@@ -82,39 +82,6 @@
                     <small class="text-muted">Daftar nama peserta (satu nama per baris)</small>
                 </div>
 
-                {{-- JABATAN --}}
-                <div class="form-group mt-3">
-
-                    <label for="jabatan" class="form-label">
-                        Jabatan :
-                    </label>
-
-                    @php
-                        $daftarJabatan = \App\Support\JabatanKegiatan::LIST;
-                        $jabatanSaatIni = old('jabatan', $data->jabatan);
-                    @endphp
-
-                    <select name="jabatan" id="jabatan" class="form-control" required
-                        oninvalid="this.setCustomValidity('Harap pilih Jabatan')"
-                        oninput="this.setCustomValidity('')">
-                        <option value="">-- Pilih Jabatan --</option>
-
-                        {{-- Nilai lama (isian bebas) yang tidak ada di daftar tetap ditampilkan --}}
-                        @if (!empty($jabatanSaatIni) && !in_array($jabatanSaatIni, $daftarJabatan, true))
-                            <option value="{{ $jabatanSaatIni }}" selected>{{ $jabatanSaatIni }} (nilai lama)</option>
-                        @endif
-
-                        @foreach ($daftarJabatan as $opsi)
-                            <option value="{{ $opsi }}" {{ $jabatanSaatIni === $opsi ? 'selected' : '' }}>{{ $opsi }}</option>
-                        @endforeach
-                    </select>
-
-                    @error('jabatan')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-
-                </div>
-
                 {{-- TEMPAT KEGIATAN --}}
                 <div class="form-group mt-3">
 

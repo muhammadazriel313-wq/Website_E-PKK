@@ -60,7 +60,17 @@ class LaporanPokja3Controller extends Controller
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     // KECAMATAN HANYA BISA MELIHAT DATA MENTAH
-                    ->whereIn('laporan_kader_pokja3.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_kader_pokja3.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
+                    ->orderBy('laporan_kader_pokja3.id_kader_pokja3', 'desc')
+                    ->get();
+            } else { // DESA: Melihat laporan miliknya sendiri yang masih Menunggu / Proses
+                $data = DB::table('laporan_kader_pokja3')
+                    ->leftJoin('users_mobile', 'laporan_kader_pokja3.id_user', '=', 'users_mobile.id')
+                    ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
+                    ->leftJoin('village', 'users_mobile.id_village', '=', 'village.id')
+                    ->select('laporan_kader_pokja3.*', 'subdistrict.name as nama_kec', 'village.name as nama_desa')
+                    ->where('laporan_kader_pokja3.id_user', $user->id)
+                    ->whereIn('laporan_kader_pokja3.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->orderBy('laporan_kader_pokja3.id_kader_pokja3', 'desc')
                     ->get();
             }

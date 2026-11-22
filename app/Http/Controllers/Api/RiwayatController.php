@@ -704,6 +704,26 @@ class RiwayatController extends Controller
 
             /// ================= UPDATE =================
 
+            $currentStatus = strtolower($existing->status ?? '');
+            if (in_array($currentStatus, ['disetujui1', 'disetujui2'])) {
+                return response()->json([
+                    'statusCode' => 400,
+                    'message'    => 'Laporan yang sudah disetujui tidak dapat diedit.',
+                    'data'       => null,
+                    'error'      => [
+                        'message' => 'Status tidak mengizinkan pengeditan'
+                    ]
+                ], 400);
+            }
+
+            // Kembalikan status menjadi 'Menunggu' (diajukan ulang/menunggu review admin)
+            if (in_array($currentStatus, ['revisi', 'ditolak', 'proses', 'menunggu'])) {
+                $data['status'] = 'Menunggu';
+            }
+
+            unset($data['uuid'], $data['id'], $data['created_at']);
+            $data['updated_at'] = now();
+
             if ($table === 'galerys') {
 
                 // Kegiatan hanya boleh diedit saat masih berstatus Proses

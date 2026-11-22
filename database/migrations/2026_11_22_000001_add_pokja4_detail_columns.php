@@ -34,8 +34,33 @@ return new class extends Migration
         }
     }
 
+    // Rollback bersifat destruktif: backup database sebelum dijalankan.
     public function down(): void
     {
-        // Intentionally left empty to preserve columns and existing data.
+        $kesehatanColumns = [
+            'kader_kesehatan',
+            'kader_gizi',
+            'kader_kesling',
+            'kader_phbs',
+            'kader_kb',
+            'posyandu',
+            'imunisasi_vaksinasi',
+            'pkg',
+            'tbc',
+        ];
+
+        foreach ($kesehatanColumns as $column) {
+            if (Schema::hasColumn('laporan_bidang_kesehatan', $column)) {
+                Schema::table('laporan_bidang_kesehatan', function ($table) use ($column) {
+                    $table->dropColumn($column);
+                });
+            }
+        }
+
+        if (Schema::hasColumn('laporan_perencanaan_sehat', 'Kk_asuransi')) {
+            Schema::table('laporan_perencanaan_sehat', function ($table) {
+                $table->dropColumn('Kk_asuransi');
+            });
+        }
     }
 };

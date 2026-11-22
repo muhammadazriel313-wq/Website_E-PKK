@@ -376,15 +376,21 @@ class ReportController extends Controller
     public function insertKaderPokja1(Request $request)
     {
         try {
-            //  validasi
+            //  validasi (mendukung format baru website dan format lama mobile)
             $request->validate([
-                'PKBN' => 'required',
-                'PKDRT' => 'required',
-                'pola_asuh' => 'required',
+                'PKBN' => 'required_without:kader_umum',
+                'PKDRT' => 'required_without:kader_khusus',
+                'pola_asuh' => 'nullable',
+                'kader_umum' => 'required_without:PKBN',
+                'kader_khusus' => 'required_without:PKDRT',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
             ]);
+
+            $pkbn = $request->input('PKBN', $request->input('kader_umum'));
+            $pkdrt = $request->input('PKDRT', $request->input('kader_khusus'));
+            $polaAsuh = $request->input('pola_asuh', 0);
 
             //  UUID custom
             $uuid = 'KP1-' . strtoupper(\Illuminate\Support\Str::random(6));
@@ -393,9 +399,11 @@ class ReportController extends Controller
             DB::table('laporan_kader_pokja1')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'PKBN' => $request->PKBN,
-                'PKDRT' => $request->PKDRT,
-                'pola_asuh' => $request->pola_asuh,
+                'PKBN' => $pkbn,
+                'PKDRT' => $pkdrt,
+                'pola_asuh' => $polaAsuh,
+                'kader_umum' => $request->input('kader_umum', $pkbn),
+                'kader_khusus' => $request->input('kader_khusus', $pkdrt),
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -460,17 +468,37 @@ class ReportController extends Controller
     public function insertGotongRoyong(Request $request)
     {
         try {
-            //  validasi
+            //  validasi (format baru mobile + format lama website)
             $request->validate([
-                'kerja_bakti' => 'required',
-                'rukun_kematian' => 'required',
-                'keagamaan' => 'required',
-                'jimpitan' => 'required',
-                'arisan' => 'required',
+                'kerja_bakti' => 'nullable',
+                'rukun_kematian' => 'nullable',
+                'keagamaan' => 'nullable',
+                'jimpitan' => 'nullable',
+                'arisan' => 'nullable',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
             ]);
+
+            $toInt = static function ($value) {
+                if ($value === null || $value === '') {
+                    return 0;
+                }
+
+                if (is_numeric($value)) {
+                    return (int) $value;
+                }
+
+                preg_match('/-?\d+/', (string) $value, $match);
+
+                return isset($match[0]) ? (int) $match[0] : 0;
+            };
+
+            $kerjaBakti = $toInt($request->input('kerja_bakti', $request->input('kerja_bakti_vol')));
+            $rukunKematian = $toInt($request->input('rukun_kematian', $request->input('bantuan_yatim_vol')));
+            $keagamaan = $toInt($request->input('keagamaan', $request->input('kegiatan_sosial_vol')));
+            $jimpitan = $toInt($request->input('jimpitan'));
+            $arisan = $toInt($request->input('arisan'));
 
             //  UUID custom (sama seperti kode lama)
             $uuid = 'KP1B2-' . strtoupper(\Illuminate\Support\Str::random(6));
@@ -479,11 +507,27 @@ class ReportController extends Controller
             DB::table('laporan_gotong_royong')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kerja_bakti' => $request->kerja_bakti,
-                'rukun_kematian' => $request->rukun_kematian,
-                'keagamaan' => $request->keagamaan,
-                'jimpitan' => $request->jimpitan,
-                'arisan' => $request->arisan,
+                'kerja_bakti' => $kerjaBakti,
+                'rukun_kematian' => $rukunKematian,
+                'keagamaan' => $keagamaan,
+                'jimpitan' => $jimpitan,
+                'arisan' => $arisan,
+                'kerja_bakti_kegiatan' => $request->input('kerja_bakti_kegiatan'),
+                'kerja_bakti_vol' => $request->input('kerja_bakti_vol'),
+                'kerja_bakti_metode' => $request->input('kerja_bakti_metode'),
+                'kerja_bakti_sasaran' => $request->input('kerja_bakti_sasaran'),
+                'bantuan_yatim_kegiatan' => $request->input('bantuan_yatim_kegiatan'),
+                'bantuan_yatim_vol' => $request->input('bantuan_yatim_vol'),
+                'bantuan_yatim_metode' => $request->input('bantuan_yatim_metode'),
+                'bantuan_yatim_sasaran' => $request->input('bantuan_yatim_sasaran'),
+                'kegiatan_sosial_kegiatan' => $request->input('kegiatan_sosial_kegiatan'),
+                'kegiatan_sosial_vol' => $request->input('kegiatan_sosial_vol'),
+                'kegiatan_sosial_metode' => $request->input('kegiatan_sosial_metode'),
+                'kegiatan_sosial_sasaran' => $request->input('kegiatan_sosial_sasaran'),
+                'jenis_kegiatan' => $request->input('jenis_kegiatan'),
+                'sumber_dana' => $request->input('sumber_dana'),
+                'hasil_kegiatan' => $request->input('hasil_kegiatan'),
+                'catatan' => $request->input('catatan', ''),
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -550,19 +594,34 @@ class ReportController extends Controller
     public function insertPenghayatan(Request $request)
     {
         try {
+            //  validasi (format baru mobile + format lama website)
             $request->validate([
-                'jumlah_kel_simulasi1' => 'required',
-                'jumlah_anggota1' => 'required',
-                'jumlah_kel_simulasi2' => 'required',
-                'jumlah_anggota2' => 'required',
-                'jumlah_kel_simulasi3' => 'required',
-                'jumlah_anggota3' => 'required',
-                'jumlah_kel_simulasi4' => 'required',
-                'jumlah_anggota4' => 'required',
+                'jumlah_kel_simulasi1' => 'nullable',
+                'jumlah_anggota1' => 'nullable',
+                'jumlah_kel_simulasi2' => 'nullable',
+                'jumlah_anggota2' => 'nullable',
+                'jumlah_kel_simulasi3' => 'nullable',
+                'jumlah_anggota3' => 'nullable',
+                'jumlah_kel_simulasi4' => 'nullable',
+                'jumlah_anggota4' => 'nullable',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
             ]);
+
+            $toInt = static function ($value) {
+                if ($value === null || $value === '') {
+                    return 0;
+                }
+
+                if (is_numeric($value)) {
+                    return (int) $value;
+                }
+
+                preg_match('/-?\d+/', (string) $value, $match);
+
+                return isset($match[0]) ? (int) $match[0] : 0;
+            };
 
             // UUID sama seperti native kamu
             $uuid = 'KP1B1-' . strtoupper(Str::random(6));
@@ -571,14 +630,41 @@ class ReportController extends Controller
             DB::table('laporan_penghayatan_n_pengamalan')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'jumlah_kel_simulasi1' => $request->jumlah_kel_simulasi1,
-                'jumlah_anggota1' => $request->jumlah_anggota1,
-                'jumlah_kel_simulasi2' => $request->jumlah_kel_simulasi2,
-                'jumlah_anggota2' => $request->jumlah_anggota2,
-                'jumlah_kel_simulasi3' => $request->jumlah_kel_simulasi3,
-                'jumlah_anggota3' => $request->jumlah_anggota3,
-                'jumlah_kel_simulasi4' => $request->jumlah_kel_simulasi4,
-                'jumlah_anggota4' => $request->jumlah_anggota4,
+                'jumlah_kel_simulasi1' => $toInt($request->input('jumlah_kel_simulasi1')),
+                'jumlah_anggota1' => $toInt($request->input('jumlah_anggota1')),
+                'jumlah_kel_simulasi2' => $toInt($request->input('jumlah_kel_simulasi2')),
+                'jumlah_anggota2' => $toInt($request->input('jumlah_anggota2')),
+                'jumlah_kel_simulasi3' => $toInt($request->input('jumlah_kel_simulasi3')),
+                'jumlah_anggota3' => $toInt($request->input('jumlah_anggota3')),
+                'jumlah_kel_simulasi4' => $toInt($request->input('jumlah_kel_simulasi4')),
+                'jumlah_anggota4' => $toInt($request->input('jumlah_anggota4')),
+                'kisah_kegiatan' => $request->input('kisah_kegiatan'),
+                'kisah_vol' => $toInt($request->input('kisah_vol')),
+                'kisah_metode' => $request->input('kisah_metode'),
+                'kisah_sasaran' => $toInt($request->input('kisah_sasaran')),
+                'krisan_kegiatan' => $request->input('krisan_kegiatan'),
+                'krisan_vol' => $toInt($request->input('krisan_vol')),
+                'krisan_metode' => $request->input('krisan_metode'),
+                'krisan_sasaran' => $toInt($request->input('krisan_sasaran')),
+                'kilas_kegiatan' => $request->input('kilas_kegiatan'),
+                'kilas_vol' => $toInt($request->input('kilas_vol')),
+                'kilas_metode' => $request->input('kilas_metode'),
+                'kilas_sasaran' => $toInt($request->input('kilas_sasaran')),
+                'kiat_kegiatan' => $request->input('kiat_kegiatan'),
+                'kiat_vol' => $toInt($request->input('kiat_vol')),
+                'kiat_metode' => $request->input('kiat_metode'),
+                'kiat_sasaran' => $toInt($request->input('kiat_sasaran')),
+                'kisak_kegiatan' => $request->input('kisak_kegiatan'),
+                'kisak_vol' => $toInt($request->input('kisak_vol')),
+                'kisak_metode' => $request->input('kisak_metode'),
+                'kisak_sasaran' => $toInt($request->input('kisak_sasaran')),
+                'pkbn_kegiatan' => $request->input('pkbn_kegiatan'),
+                'pkbn_vol' => $toInt($request->input('pkbn_vol')),
+                'pkbn_metode' => $request->input('pkbn_metode'),
+                'pkbn_sasaran' => $toInt($request->input('pkbn_sasaran')),
+                'sumber_dana' => $request->input('sumber_dana'),
+                'hasil_kegiatan' => $request->input('hasil_kegiatan'),
+                'catatan' => $request->input('catatan', ''),
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),

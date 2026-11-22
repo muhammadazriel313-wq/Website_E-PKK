@@ -837,17 +837,23 @@ class RiwayatController extends Controller
 
             try {
 
+                $columns = [
+
+                    'uuid',
+                    'id_user',
+                    'status',
+                    'created_at',
+                    'id_role',
+                    'id_organization'
+                ];
+
+                if (\Illuminate\Support\Facades\Schema::hasColumn($table, 'catatan')) {
+                    $columns[] = 'catatan';
+                }
+
                 $data = DB::table($table)
 
-                    ->select(
-
-                        'uuid',
-                        'id_user',
-                        'status',
-                        'created_at',
-                        'id_role',
-                        'id_organization'
-                    )
+                    ->select($columns)
 
                     ->where(
                         'id_organization',
@@ -870,6 +876,10 @@ class RiwayatController extends Controller
 
                     if ($table === 'galerys') {
                         $row->status = $this->mapGaleriStatus($row->status);
+                    }
+
+                    if (!property_exists($row, 'catatan')) {
+                        $row->catatan = null;
                     }
 
                     $results[] = $row;

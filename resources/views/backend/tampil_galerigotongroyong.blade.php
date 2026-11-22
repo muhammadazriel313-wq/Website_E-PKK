@@ -23,10 +23,10 @@
                     </div>
 
                     <div class="form-group mt-4">
-                        <label for="deskripsi" class="form-label">Deskripsi :</label>
+                        <label for="deskripsi" class="form-label">Nama Kegiatan :</label>
                         <input type="text" name="deskripsi" id="deskripsi" class="form-control" required readonly
-                            oninvalid="this.setCustomValidity('Harap lengkapi Deskripsi')"
-                            oninput="this.setCustomValidity('')" placeholder="Masukkan Deskripsi"
+                            oninvalid="this.setCustomValidity('Harap lengkapi Nama Kegiatan')"
+                            oninput="this.setCustomValidity('')" placeholder="Masukkan Nama Kegiatan"
                             value="{{ $data->deskripsi }}" />
                     </div>
 

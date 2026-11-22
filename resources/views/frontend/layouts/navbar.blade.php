@@ -46,10 +46,20 @@
   /* ===== DROPDOWN PROFIL & TOMBOL MASUK ADMIN ===== */
   .navbar .dropdown ul {
     border-radius: 14px !important;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12) !important;
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
     padding: 8px 0 8px 0 !important;
     overflow: hidden;
+  }
+
+  /* Pastikan dropdown profil di paling kanan terbuka ke arah dalam (ke kiri), tidak terpotong tepi layar */
+  @media (min-width: 992px) {
+    .navbar .dropdown:last-child ul,
+    .navbar .dropdown ul.dropdown-menu-profile {
+      left: auto !important;
+      right: 0 !important;
+      min-width: 220px !important;
+    }
   }
 
   .navbar .dropdown ul li a {
@@ -69,7 +79,7 @@
   /* Kotak Pembatas & Tombol Masuk Admin */
   .navbar .dropdown ul .admin-login-wrapper {
     margin-top: 6px;
-    padding: 8px 12px 4px 12px !important;
+    padding: 10px 14px 10px 14px !important;
     border-top: 1px solid #e2e8f0;
     background-color: #f8fafc;
   }
@@ -83,11 +93,13 @@
     color: #ffffff !important;
     font-weight: 600 !important;
     font-size: 13px !important;
-    padding: 9px 16px !important;
+    padding: 10px 16px !important;
     border-radius: 8px !important;
     text-align: center;
     box-shadow: 0 4px 12px rgba(1, 106, 163, 0.25) !important;
     transition: all 0.25s ease !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .navbar .dropdown ul .btn-masuk-admin:hover {

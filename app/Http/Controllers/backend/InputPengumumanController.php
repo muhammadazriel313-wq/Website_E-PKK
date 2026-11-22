@@ -29,14 +29,19 @@ class InputPengumumanController extends Controller
             'judulPengumuman' => 'required|string|max:255',
             'deskripsiPengumuman' => 'required|string',
             'tempatPengumuman' => 'required|string|max:255',
-            'tanggalPengumuman' => 'required|date',
+            'tanggalPengumuman' => 'required|date|before:2100-01-01|after:1970-01-01',
+        ], [
+            'tanggalPengumuman.before' => 'Tahun pada tanggal pengumuman tidak valid (maksimal tahun 2099)',
+            'tanggalPengumuman.after' => 'Tahun pada tanggal pengumuman tidak valid',
         ]);
+
+        $tanggal = Carbon::parse($request->tanggalPengumuman)->format('Y-m-d');
 
         Pengumuman::create([
             'judulPengumuman' => $request->judulPengumuman,
             'deskripsiPengumuman' => $request->deskripsiPengumuman,
             'tempatPengumuman' => $request->tempatPengumuman,
-            'tanggalPengumuman' => $request->tanggalPengumuman,
+            'tanggalPengumuman' => $tanggal,
         ]);
 
         return redirect()->route('input_pengumuman.index')
@@ -61,15 +66,20 @@ class InputPengumumanController extends Controller
             'judulPengumuman' => 'required|string|max:255',
             'deskripsiPengumuman' => 'required|string',
             'tempatPengumuman' => 'required|string|max:255',
-            'tanggalPengumuman' => 'required|date',
+            'tanggalPengumuman' => 'required|date|before:2100-01-01|after:1970-01-01',
+        ], [
+            'tanggalPengumuman.before' => 'Tahun pada tanggal pengumuman tidak valid (maksimal tahun 2099)',
+            'tanggalPengumuman.after' => 'Tahun pada tanggal pengumuman tidak valid',
         ]);
 
         $pengu = Pengumuman::findOrFail($id);
+        $tanggal = Carbon::parse($request->tanggalPengumuman)->format('Y-m-d');
+
         $pengu->update([
             'judulPengumuman' => $request->judulPengumuman,
             'deskripsiPengumuman' => $request->deskripsiPengumuman,
             'tempatPengumuman' => $request->tempatPengumuman,
-            'tanggalPengumuman' => $request->tanggalPengumuman,
+            'tanggalPengumuman' => $tanggal,
         ]);
 
         return redirect()->route('input_pengumuman.index')

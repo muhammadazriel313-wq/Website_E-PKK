@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Validation\Rule;
-use App\Support\JabatanKegiatan;
 
 class ReportController extends Controller
 {
@@ -17,10 +15,11 @@ class ReportController extends Controller
     {
         try {
 
-            // Jabatan: wajib & harus salah satu dari 15 pilihan untuk akun Bidang Umum (id_organization 5)
-            $jabatanRules = ['nullable', 'string', Rule::in(JabatanKegiatan::LIST)];
+            // Jabatan: untuk akun Bidang Umum (id_organization 5) wajib, untuk akun lainnya opsional
             if ((string) $request->id_organization === '5') {
-                $jabatanRules = ['required', 'string', Rule::in(JabatanKegiatan::LIST)];
+                $jabatanRules = ['required', 'string'];
+            } else {
+                $jabatanRules = ['nullable', 'string'];
             }
 
             // VALIDASI

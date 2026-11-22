@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,8 +24,6 @@ class ReportController extends Controller
 
             // VALIDASI
             $request->validate([
-                // [PERUBAHAN 03-10-2026] Menambahkan format webp pada validasi mimes; kode lama di bawah dinonaktifkan
-                // 'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif',
                 'gambar' => 'required|image|mimes:heic,jpeg,jpg,png,gif,webp',
                 'id_user' => 'required',
                 'deskripsi' => 'required',
@@ -34,8 +32,7 @@ class ReportController extends Controller
                 'id_role' => 'required',
                 'id_organization' => 'required',
 
-                // TAMBAHAN NAMA PESERTA & LOKASI
-                'nama_peserta' => 'nullable',
+                // TAMBAHAN LOKASI
                 'lokasi' => 'nullable|string',
                 'latitude' => 'nullable',
                 'longitude' => 'nullable',
@@ -91,27 +88,11 @@ class ReportController extends Controller
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
                 'deskripsi' => $request->deskripsi,
-                // [PERUBAHAN 03-10-2026] Menyimpan nama_peserta (JSON)
-                'nama_peserta' => (function() use ($request) {
-                    $val = $request->nama_peserta;
-                    if (is_array($val)) {
-                        return json_encode(array_values(array_filter(array_map('trim', $val))));
-                    } elseif (is_string($val) && trim($val) !== '') {
-                        $decoded = json_decode($val, true);
-                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                            return json_encode(array_values(array_filter(array_map('trim', $decoded))));
-                        }
-                        return json_encode([trim($val)]);
-                    }
-                    return null;
-                })(),
-
-                // JABATAN (kolom JABATAN di Buku Kegiatan)
+                'nama_peserta' => $this->normalizeNamaPeserta($request->nama_peserta),
                 'jabatan' => trim((string) $request->jabatan) !== '' ? trim($request->jabatan) : null,
 
                 // Tanggal kegiatan (kolom TANGGAL di Buku Kegiatan) = tanggal kirim
                 'tanggal' => now(),
-
                 'gambar' => $fileName,
                 'pokja' => $request->pokja,
                 'bidang' => $request->bidang,
@@ -172,7 +153,8 @@ class ReportController extends Controller
                     'uuid' => $data->uuid,
                     'id_user' => $data->id_user,
                     'deskripsi' => $data->deskripsi,
-                    'nama_peserta' => $data->nama_peserta,
+                    'nama_peserta' => json_decode($data->nama_peserta ?? '[]', true) ?: [],
+                    'jabatan' => $data->jabatan ?? null,
                     'gambar' => $data->gambar,
                     'pokja' => $data->pokja,
                     'bidang' => $data->bidang,
@@ -643,6 +625,7 @@ class ReportController extends Controller
             // UUID sama seperti native kamu
             $uuid = 'KP1B1-' . strtoupper(Str::random(6));
 
+            // INSERT
             DB::table('laporan_penghayatan_n_pengamalan')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
@@ -680,22 +663,35 @@ class ReportController extends Controller
                 'pkbn_sasaran' => $toInt($request->input('pkbn_sasaran')),
                 'sumber_dana' => $request->input('sumber_dana'),
                 'hasil_kegiatan' => $request->input('hasil_kegiatan'),
-                // [PERUBAHAN 03-10-2026] disamakan dengan endpoint lain ('Proses'); kode lama di bawah dinonaktifkan
-                // 'status' => 'Menunggu',
+                'catatan' => $request->input('catatan', ''),
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'id_role' => $request->id_role,
-                'id_organization' => $request->id_organization,
-                'catatan' => $request->input('catatan', '')
+                'id_organization' => $request->id_organization
             ]);
 
+            // SELECT + JOIN (SAMA PERSIS LOGIKA LAMA)
             $data = DB::table('laporan_penghayatan_n_pengamalan')
                 ->leftJoin('role_users_mobile', 'laporan_penghayatan_n_pengamalan.id_role', '=', 'role_users_mobile.id')
                 ->leftJoin('role_organization', 'laporan_penghayatan_n_pengamalan.id_organization', '=', 'role_organization.id')
                 ->where('laporan_penghayatan_n_pengamalan.uuid', $uuid)
                 ->select(
-                    'laporan_penghayatan_n_pengamalan.*',
+                    'laporan_penghayatan_n_pengamalan.id_pokja1_bidang1',
+                    'laporan_penghayatan_n_pengamalan.uuid',
+                    'laporan_penghayatan_n_pengamalan.id_user',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi1',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota1',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi2',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota2',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi3',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota3',
+                    'laporan_penghayatan_n_pengamalan.jumlah_kel_simulasi4',
+                    'laporan_penghayatan_n_pengamalan.jumlah_anggota4',
+                    'laporan_penghayatan_n_pengamalan.catatan',
+                    'laporan_penghayatan_n_pengamalan.status',
+                    'laporan_penghayatan_n_pengamalan.created_at',
+                    'laporan_penghayatan_n_pengamalan.updated_at',
                     'role_users_mobile.id AS role_id',
                     'role_users_mobile.uuid AS role_uuid',
                     'role_users_mobile.name AS role_name',
@@ -712,57 +708,43 @@ class ReportController extends Controller
                     "id_pokja1_bidang1" => $data->id_pokja1_bidang1,
                     "uuid" => $data->uuid,
                     "id_user" => $data->id_user,
-                    "kisah_kegiatan" => $data->kisah_kegiatan,
-                    "kisah_vol" => $data->kisah_vol,
-                    "kisah_metode" => $data->kisah_metode,
-                    "kisah_sasaran" => $data->kisah_sasaran,
-                    "krisan_kegiatan" => $data->krisan_kegiatan,
-                    "krisan_vol" => $data->krisan_vol,
-                    "krisan_metode" => $data->krisan_metode,
-                    "krisan_sasaran" => $data->krisan_sasaran,
-                    "kilas_kegiatan" => $data->kilas_kegiatan,
-                    "kilas_vol" => $data->kilas_vol,
-                    "kilas_metode" => $data->kilas_metode,
-                    "kilas_sasaran" => $data->kilas_sasaran,
-                    "kiat_kegiatan" => $data->kiat_kegiatan,
-                    "kiat_vol" => $data->kiat_vol,
-                    "kiat_metode" => $data->kiat_metode,
-                    "kiat_sasaran" => $data->kiat_sasaran,
-                    "kisak_kegiatan" => $data->kisak_kegiatan,
-                    "kisak_vol" => $data->kisak_vol,
-                    "kisak_metode" => $data->kisak_metode,
-                    "kisak_sasaran" => $data->kisak_sasaran,
-                    "pkbn_kegiatan" => $data->pkbn_kegiatan,
-                    "pkbn_vol" => $data->pkbn_vol,
-                    "pkbn_metode" => $data->pkbn_metode,
-                    "pkbn_sasaran" => $data->pkbn_sasaran,
+                    "jumlah_kel_simulasi1" => $data->jumlah_kel_simulasi1,
+                    "jumlah_anggota1" => $data->jumlah_anggota1,
+                    "jumlah_kel_simulasi2" => $data->jumlah_kel_simulasi2,
+                    "jumlah_anggota2" => $data->jumlah_anggota2,
+                    "jumlah_kel_simulasi3" => $data->jumlah_kel_simulasi3,
+                    "jumlah_anggota3" => $data->jumlah_anggota3,
+                    "jumlah_kel_simulasi4" => $data->jumlah_kel_simulasi4,
+                    "jumlah_anggota4" => $data->jumlah_anggota4,
                     "catatan" => $data->catatan,
                     "status" => $data->status,
                     "created_at" => $data->created_at,
                     "updated_at" => $data->updated_at,
                     "role" => [
                         "id" => $data->role_id,
-                        "uuid"=> $data->role_uuid,
+                        "uuid" => $data->role_uuid,
                         "name" => $data->role_name
                     ],
                     "organization" => [
                         "id" => $data->organization_id,
                         "uuid" => $data->organization_uuid,
                         "name" => $data->organization_name
-                    ]
+                    ],
                 ],
                 'error' => null
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'statusCode' => 500,
-                'message' => 'Failed to upload report kader pokja 1',
+                'message' => 'Failed to upload report penghayatan',
                 'data' => null,
                 'error' => ['message' => $e->getMessage()]
-            ]);
+            ], 500);
         }
     }
 
+    // POKJA 2 //
+    // PENDIDIKAN DAN KETERAMPILAN (POKJA 2)
     public function insertPendidikanKeterampilan(Request $request)
     {
         try {
@@ -1125,15 +1107,10 @@ class ReportController extends Controller
             // UUID (SAMA PERSIS)
             $uuid = 'KP3B1-' . strtoupper(Str::random(6));
 
-            $user = DB::table('users_mobile')->where('id', $request->id_user)->first();
-
             // INSERT
             DB::table('laporan_pangan')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kecamatan_id' => $user->id_subdistrict ?? $request->kecamatan_id ?? $request->id_subdistrict ?? null,
-                'desa_id' => $user->id_village ?? $request->desa_id ?? $request->id_village ?? null,
-                'kader_pangan' => $request->kader_pangan ?? 0,
                 'beras' => $request->beras ?? 0,
                 'non_beras' => $request->non_beras ?? 0,
                 'peternakan' => $request->peternakan ?? 0,
@@ -1143,9 +1120,8 @@ class ReportController extends Controller
                 'toga' => $request->toga ?? 0,
                 'tanaman_keras' => $request->tanaman_keras ?? 0,
                 'tanaman_lainnya' => $request->tanaman_lainnya ?? 0,
-                'industri_pangan' => $request->industri_pangan ?? 0,
                 'catatan' => $request->catatan ?? '',
-                'status' => 'Menunggu',
+                'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'id_role' => $request->id_role,
@@ -1158,8 +1134,7 @@ class ReportController extends Controller
                 ->leftJoin('role_organization', 'laporan_pangan.id_organization', '=', 'role_organization.id')
                 ->where('laporan_pangan.uuid', $uuid)
                 ->select(
-                    'laporan_pangan.id as id_pokja3_bidang1',
-                    'laporan_pangan.id',
+                    'laporan_pangan.id_pokja3_bidang1',
                     'laporan_pangan.uuid',
                     'laporan_pangan.id_user',
                     'laporan_pangan.beras',
@@ -1240,17 +1215,12 @@ class ReportController extends Controller
             // UUID (SAMA PERSIS)
             $uuid = 'KP3B2-' . strtoupper(Str::random(6));
 
-            $user = DB::table('users_mobile')->where('id', $request->id_user)->first();
-
             // INSERT
             DB::table('laporan_sandang')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kecamatan_id' => $user->id_subdistrict ?? null,
-                'desa_id' => $user->id_village ?? null,
-                'kader_sandang' => $request->kader_sandang ?? 0,
-                'industri_pangan' => $request->industri_pangan ?? $request->pangan ?? 0,
-                'industri_sandang' => $request->industri_sandang ?? $request->sandang ?? 0,
+                'pangan' => $request->pangan ?? 0,
+                'sandang' => $request->sandang ?? 0,
                 'jasa' => $request->jasa ?? 0,
                 'catatan' => $request->catatan ?? '',
                 'status' => 'Proses',
@@ -1266,15 +1236,11 @@ class ReportController extends Controller
                 ->leftJoin('role_organization', 'laporan_sandang.id_organization', '=', 'role_organization.id')
                 ->where('laporan_sandang.uuid', $uuid)
                 ->select(
-                    'laporan_sandang.id as id_pokja3_bidang2',
-                    'laporan_sandang.id',
+                    'laporan_sandang.id_pokja3_bidang2',
                     'laporan_sandang.uuid',
                     'laporan_sandang.id_user',
-                    'laporan_sandang.kader_sandang',
-                    'laporan_sandang.industri_pangan as pangan',
-                    'laporan_sandang.industri_pangan',
-                    'laporan_sandang.industri_sandang as sandang',
-                    'laporan_sandang.industri_sandang',
+                    'laporan_sandang.pangan',
+                    'laporan_sandang.sandang',
                     'laporan_sandang.jasa',
                     'laporan_sandang.catatan',
                     'laporan_sandang.status',

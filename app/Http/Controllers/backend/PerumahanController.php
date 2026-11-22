@@ -60,17 +60,7 @@ class PerumahanController extends Controller
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     // KECAMATAN HANYA BISA MELIHAT DATA MENTAH
-                    ->whereIn('laporan_perumahan.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
-                    ->orderBy('laporan_perumahan.id_pokja3_bidang3', 'desc')
-                    ->get();
-            } else { // DESA: Melihat laporan miliknya sendiri yang masih Menunggu / Proses
-                $data = DB::table('laporan_perumahan')
-                    ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')
-                    ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
-                    ->leftJoin('village', 'users_mobile.id_village', '=', 'village.id')
-                    ->select('laporan_perumahan.*', 'subdistrict.name as nama_kec', 'village.name as nama_desa')
-                    ->where('laporan_perumahan.id_user', $user->id)
-                    ->whereIn('laporan_perumahan.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
+                    ->whereIn('laporan_perumahan.status', ['proses', 'Proses', 'PROSES'])
                     ->orderBy('laporan_perumahan.id_pokja3_bidang3', 'desc')
                     ->get();
             }

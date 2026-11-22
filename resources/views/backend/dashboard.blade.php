@@ -2,46 +2,6 @@
 
 @section('content')
 
-<style>
-  .chart-tab-group {
-    display: inline-flex;
-    background: #f1f5f9;
-    padding: 3px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    gap: 3px;
-  }
-  .chart-tab-btn {
-    border: 1px solid transparent;
-    background: transparent;
-    color: #64748b;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 13px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    line-height: 1.2;
-    outline: none;
-  }
-  .chart-tab-btn:hover {
-    color: #0f172a;
-    background: rgba(255, 255, 255, 0.6);
-  }
-  .chart-tab-btn.active {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    font-weight: 600;
-    border-color: #cbd5e1;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  }
-  .chart-tab-btn i {
-    font-size: 13px;
-  }
-</style>
-
 <main id="main" class="main">
   @if ($message = Session::get('success'))
   <div class="alert alert-success" role="alert">
@@ -207,14 +167,14 @@
                     </div>
 
                     <!-- TOGGLE VIEW TABS -->
-                    <div class="chart-tab-group" role="group" aria-label="Tampilan Grafik">
-                      <button type="button" class="chart-tab-btn active" id="btnViewArea" onclick="switchChartMode('area')">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Tampilan Grafik">
+                      <button type="button" class="btn btn-outline-primary active" id="btnViewArea" onclick="switchChartMode('area')">
                         <i class="bi bi-graph-up me-1"></i>Tren Bulanan
                       </button>
-                      <button type="button" class="chart-tab-btn" id="btnViewPokja" onclick="switchChartMode('pokja')">
+                      <button type="button" class="btn btn-outline-primary" id="btnViewPokja" onclick="switchChartMode('pokja')">
                         <i class="bi bi-bar-chart-fill me-1"></i>Per Pokja
                       </button>
-                      <button type="button" class="chart-tab-btn" id="btnViewDetail" onclick="switchChartMode('detail')">
+                      <button type="button" class="btn btn-outline-primary" id="btnViewDetail" onclick="switchChartMode('detail')">
                         <i class="bi bi-list-task me-1"></i>Detail 15 Program
                       </button>
                     </div>

@@ -83,14 +83,8 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-          <h1>Laporan Program Pangan</h1>
-          <nav>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="{{ route('pokja3.index') }}">Pokja 3</a></li>
-              <li class="breadcrumb-item active">Program Pangan</li>
-            </ol>
-          </nav>
-        </div>
+            <h1>Laporan Program Pangan</h1>
+          </div><!-- End Page Title -->
 
       <section class="section dashboard">
         <div class="row">

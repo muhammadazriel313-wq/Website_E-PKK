@@ -139,39 +139,32 @@ class AuthController extends Controller
             if ($exists) {
                 return response()->json([
                     'statusCode' => 409,
-                    'message' => 'Nomor WhatsApp sudah terdaftar untuk role/bidang ini',
                     'data' => null,
-                    'error' => ['message' => 'Nomor WhatsApp sudah terdaftar untuk role/bidang ini']
+                    'error' => ['message' => 'Phone number already used']
                 ], 409);
             }
 
-            //  ambil subdistrict by name atau id
+            //  ambil subdistrict by name
             $subdistrict = DB::table('subdistrict')
                 ->where('name', $request->id_subdistrict)
-                ->orWhere('id', $request->id_subdistrict)
                 ->first();
 
             if (!$subdistrict) {
                 return response()->json([
                     'statusCode' => 404,
-                    'message' => 'Subdistrict tidak ditemukan',
                     'data' => null,
                     'error' => ['message' => 'Subdistrict tidak ditemukan']
                 ], 404);
             }
 
-            //  ambil village by name atau id
+            //  ambil village by name
             $village = DB::table('village')
-                ->where(function ($q) use ($request) {
-                    $q->where('name', $request->id_village)
-                      ->orWhere('id', $request->id_village);
-                })
+                ->where('name', $request->id_village)
                 ->first();
 
             if (!$village) {
                 return response()->json([
                     'statusCode' => 404,
-                    'message' => 'Village tidak ditemukan',
                     'data' => null,
                     'error' => ['message' => 'Village tidak ditemukan']
                 ], 404);
@@ -266,7 +259,6 @@ class AuthController extends Controller
 
             return response()->json([
                 'statusCode' => 500,
-                'message' => 'Server error: ' . $e->getMessage(),
                 'data' => null,
                 'error' => ['message' => 'Server error ' . $e->getMessage()]
             ], 500);

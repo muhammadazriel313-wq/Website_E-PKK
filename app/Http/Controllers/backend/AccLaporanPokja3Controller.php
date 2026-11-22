@@ -68,25 +68,14 @@ class AccLaporanPokja3Controller extends Controller
                     ->leftJoin('users_mobile', 'laporan_kader_pokja3.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_kader_pokja3.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
+                    ->whereIn('laporan_kader_pokja3.status', ['proses', 'Proses', 'PROSES'])
                     ->count();
 
                 $lap2 = DB::table('laporan_kader_pokja3')
                     ->leftJoin('users_mobile', 'laporan_kader_pokja3.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_kader_pokja3.status', ['Disetujui1', 'disetujui1', 'DISETUJUI1', 'Disetujui2', 'disetujui2', 'DISETUJUI2'])
-                    ->count();
-            } else {
-                // Desa: Laporan miliknya sendiri
-                $lap1 = DB::table('laporan_kader_pokja3')
-                    ->where('id_user', $user->id)
-                    ->whereIn('status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
-                    ->count();
-
-                $lap2 = DB::table('laporan_kader_pokja3')
-                    ->where('id_user', $user->id)
-                    ->whereIn('status', ['Disetujui1', 'disetujui1', 'DISETUJUI1', 'Disetujui2', 'disetujui2', 'DISETUJUI2'])
+                    ->whereIn('laporan_kader_pokja3.status', ['Disetujui1', 'disetujui1', 'DISETUJUI1'])
                     ->count();
             }
         }

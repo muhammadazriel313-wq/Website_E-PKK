@@ -50,8 +50,7 @@
 
             <img
               src="{{ asset('storage/gallery/'.$tampil->gambar) }}"
-              alt="{{ $tampil->deskripsi }}"
-              onerror="this.onerror=null; this.src='{{ asset('frontend/assets/img/logopkk.png') }}';">
+              alt="{{ $tampil->deskripsi }}">
 
           </div>
 

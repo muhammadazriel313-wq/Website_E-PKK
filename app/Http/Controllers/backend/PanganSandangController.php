@@ -9,12 +9,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-/**
- * [LEGACY / DEPRECATED]
- * Controller gabungan Pangan & Sandang lama.
- * Telah dipecah menjadi PanganController dan SandangController.
- * Aman dihapus setelah verifikasi pengujian manual selesai.
- */
 class PanganSandangController extends Controller
 {
     /**

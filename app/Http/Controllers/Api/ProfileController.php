@@ -67,8 +67,8 @@ class ProfileController extends Controller
             // [PERUBAHAN 08-10-2026] Format URL foto jika ada
             if ($data && !empty($data->foto)) {
                 // [PERUBAHAN 08-10-2026] Menggunakan endpoint /api/profile/photo agar memiliki header CORS untuk Chrome CanvasKit dan Emulator
-                // Gunakan root() agar menyertakan subfolder (/Website_E-PKK/public) jika ada
-                $data->foto = $request->root() . '/api/profile/photo/' . $data->foto;
+                // $data->foto = $request->getSchemeAndHttpHost() . '/storage/profile/' . $data->foto;
+                $data->foto = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/api/profile/photo/' . $data->foto;
             } else if ($data) {
                 $data->foto = null;
             }
@@ -269,8 +269,8 @@ class ProfileController extends Controller
 
             // Bangun URL foto penuh memakai host request yang sedang aktif
             // [PERUBAHAN 08-10-2026] Menggunakan endpoint /api/profile/photo agar memiliki header CORS untuk Chrome CanvasKit dan Emulator
-            // Gunakan root() agar menyertakan subfolder (/Website_E-PKK/public) jika ada
-            $photoUrl = $request->root() . '/api/profile/photo/' . $fileName;
+            // $photoUrl = $request->getSchemeAndHttpHost() . '/storage/profile/' . $fileName;
+            $photoUrl = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . '/api/profile/photo/' . $fileName;
 
             return response()->json([
                 'statusCode' => 200,

@@ -498,12 +498,27 @@ class Pokja1Controller extends Controller
                     $row['PKBN: Vol'] = $item->pkbn_vol ?? 0;
                     $row['PKBN: Metode'] = $item->pkbn_metode ?? '-';
                     $row['PKBN: Sasaran'] = $item->pkbn_sasaran ?? 0;
+
+                    $row['Sumber Dana'] = $item->sumber_dana ?? '-';
+                    $row['Hasil Kegiatan'] = $item->hasil_kegiatan ?? '-';
                 } elseif ($bidang == 'gotongroyong') {
-                    $row['Kerja Bakti'] = $item->kerja_bakti ?? 0;
-                    $row['Rukun Kematian'] = $item->rukun_kematian ?? 0;
-                    $row['Keagamaan'] = $item->keagamaan ?? 0;
-                    $row['Jimpitan'] = $item->jimpitan ?? 0;
-                    $row['Arisan'] = $item->arisan ?? 0;
+                    $row['KERJA BAKTI: Kegiatan'] = $item->kerja_bakti_kegiatan ?? ($item->jenis_kegiatan == 'Kerja Bakti' ? 'Kerja Bakti' : '-');
+                    $row['KERJA BAKTI: Vol'] = $item->kerja_bakti_vol ?? ($item->kerja_bakti > 0 ? $item->kerja_bakti : 0);
+                    $row['KERJA BAKTI: Metode'] = $item->kerja_bakti_metode ?? '-';
+                    $row['KERJA BAKTI: Sasaran'] = $item->kerja_bakti_sasaran ?? 0;
+
+                    $row['BANTUAN YATIM: Kegiatan'] = $item->bantuan_yatim_kegiatan ?? ($item->jenis_kegiatan == 'Bantuan Anak Yatim' ? 'Santunan Yatim' : '-');
+                    $row['BANTUAN YATIM: Vol'] = $item->bantuan_yatim_vol ?? ($item->rukun_kematian > 0 ? $item->rukun_kematian : 0);
+                    $row['BANTUAN YATIM: Metode'] = $item->bantuan_yatim_metode ?? '-';
+                    $row['BANTUAN YATIM: Sasaran'] = $item->bantuan_yatim_sasaran ?? 0;
+
+                    $row['KEGIATAN SOSIAL: Kegiatan'] = $item->kegiatan_sosial_kegiatan ?? ($item->jenis_kegiatan == 'Kegiatan Sosial' ? 'Kegiatan Sosial' : '-');
+                    $row['KEGIATAN SOSIAL: Vol'] = $item->kegiatan_sosial_vol ?? (($item->keagamaan ?? 0) > 0 ? $item->keagamaan : (($item->jimpitan ?? 0) > 0 ? $item->jimpitan : (($item->arisan ?? 0) > 0 ? $item->arisan : 0)));
+                    $row['KEGIATAN SOSIAL: Metode'] = $item->kegiatan_sosial_metode ?? '-';
+                    $row['KEGIATAN SOSIAL: Sasaran'] = $item->kegiatan_sosial_sasaran ?? 0;
+
+                    $row['Sumber Dana'] = $item->sumber_dana ?? '-';
+                    $row['Hasil Kegiatan'] = $item->hasil_kegiatan ?? '-';
                 } elseif ($bidang == 'kader') {
                     $row['Kader PKBN'] = $item->PKBN ?? 0;
                     $row['Kader PKDRT'] = $item->PKDRT ?? 0;

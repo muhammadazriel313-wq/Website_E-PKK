@@ -35,11 +35,6 @@ return [
     'sheets' => [
         'script_url' => env('SHEETS_APPS_SCRIPT_URL'),
         'spreadsheet_url' => env('SHEETS_SPREADSHEET_URL'),
-        'trigger_token' => env('SHEETS_TRIGGER_TOKEN'),
-    ],
-
-    'export_api' => [
-        'token' => env('EXPORT_API_TOKEN'),
     ],
 
 ];

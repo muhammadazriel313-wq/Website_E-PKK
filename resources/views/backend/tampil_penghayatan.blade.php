@@ -216,16 +216,6 @@
                       <label class="form-label">Jml Sasaran</label>
                       <input type="text" class="form-control" value="{{ $data->pkbn_sasaran ?? '-' }}" readonly />
                     </div>
-
-                    <div class="col-12 mt-4 mb-2"><h5>Informasi Tambahan</h5><hr></div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Sumber Dana</label>
-                      <input type="text" class="form-control" value="{{ $data->sumber_dana ?? '-' }}" readonly />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Hasil Kegiatan</label>
-                      <textarea class="form-control" rows="3" readonly>{{ $data->hasil_kegiatan ?? '-' }}</textarea>
-                    </div>
                   </div>
 
                   <div class="form-outline mb-4 mt-3">

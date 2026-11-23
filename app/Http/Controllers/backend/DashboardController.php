@@ -86,6 +86,16 @@ class DashboardController extends Controller
                             $query->where($model->getTable() . '.status', 'Proses')
                                 ->orWhere($model->getTable() . '.status', 'Disetujui1');
                         });
+                } elseif ($user->id_role == 1) {
+                    // ROLE DESA: Hanya laporan milik user desa terkait
+                    return $model
+                        ->where($model->getTable() . '.id_user', $user->id)
+                        ->whereIn($model->getTable() . '.status', [
+                            'Menunggu', 'menunggu', 'MENUNGGU',
+                            'Proses', 'proses', 'PROSES',
+                            'Disetujui1', 'disetujui1', 'DISETUJUI1',
+                            'Disetujui2', 'disetujui2', 'DISETUJUI2'
+                        ]);
                 }
             }
 

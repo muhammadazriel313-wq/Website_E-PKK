@@ -182,10 +182,8 @@
                   <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
                 @endif
                 
-                <th scope="col" colspan="24" class="text-center header-group-title">PENGHAYATAN DAN PENGAMALAN PANCASILA</th>
+                <th scope="col" colspan="24" class="text-center header-group-title">PENGHAYATAN DAN PENGAMALAN PANCASILA - GOTONG ROYONG</th>
                 
-                <th scope="col" rowspan="3" class="text-center align-middle">Sumber Dana</th>
-                <th scope="col" rowspan="3" class="text-center align-middle">Hasil Kegiatan</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Tanggal</th>
                 <th scope="col" rowspan="3" class="text-center align-middle">Aksi</th>
@@ -267,9 +265,6 @@
                   <td class="text-center">{{ $peng1->pkbn_vol ?? '-' }}</td>
                   <td class="text-center">{{ $peng1->pkbn_metode ?? '-' }}</td>
                   <td class="text-center">{{ $peng1->pkbn_sasaran ?? '-' }}</td>
-
-                  <td class="text-center">{{ $peng1->sumber_dana ?? '-' }}</td>
-                  <td class="text-center" style="max-width: 250px; white-space: normal;">{{ $peng1->hasil_kegiatan ?? '-' }}</td>
 
                   <td class="text-center">
                     @if(in_array(strtolower($peng1->status), ['proses', 'revisi']))

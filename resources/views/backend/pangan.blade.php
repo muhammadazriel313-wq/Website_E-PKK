@@ -114,7 +114,14 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>Daftar Laporan Program Pangan</h1>
+      <h1>Daftar Laporan Program Pangan (Menunggu Persetujuan)</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ route('pokja3.index') }}">Pokja 3</a></li>
+          <li class="breadcrumb-item"><a href="{{ route('accpangan.index') }}">Program Pangan</a></li>
+          <li class="breadcrumb-item active">Menunggu Persetujuan</li>
+        </ol>
+      </nav>
     </div>
 
     @if ($message = Session::get('success'))
@@ -129,7 +136,7 @@
         
         <div class="alert alert-info d-flex align-items-center mt-3" role="alert">
           <i class="bi bi-info-circle-fill me-2"></i>
-          <div>Scroll horizontal untuk melihat semua kolom data.</div>
+          <div>Tabel Program Pangan resmi: Kader Pangan, Makanan Pokok, dan Pemanfaatan Pekarangan/HATINYA PKK. Scroll horizontal untuk melihat semua data.</div>
         </div>
 
         <div class="table-responsive mt-3">
@@ -144,6 +151,7 @@
                   <th scope="col" rowspan="3" class="text-center align-middle">Desa</th>
                 @endif
                 
+                <th scope="col" rowspan="3" class="text-center align-middle header-group-title" style="background-color: #fef9c3;">JML KADER PANGAN</th>
                 <th scope="col" colspan="9" class="text-center header-group-title" style="background-color: #eef2ff;">PANGAN</th>
                 
                 <th scope="col" rowspan="3" class="text-center align-middle">Status</th>
@@ -153,8 +161,7 @@
 
               <tr>
                 <th scope="col" colspan="2" class="text-center header-sub-title bg-light">MAKANAN POKOK</th>
-                <th scope="col" colspan="6" class="text-center header-sub-title bg-light">PEMANFAATAN PEKARANGAN / HATINYA PKK</th>
-                <th scope="col" rowspan="2" class="text-center align-middle header-sub-title bg-light text-primary">TANAMAN LAINNYA</th>
+                <th scope="col" colspan="7" class="text-center header-sub-title bg-light">PEMANFAATAN PEKARANGAN / HATINYA PKK</th>
               </tr>
 
               <tr>
@@ -166,6 +173,7 @@
                 <th scope="col" class="text-center header-sub-title bg-light">Lumbung Hidup</th>
                 <th scope="col" class="text-center header-sub-title bg-light">Toga</th>
                 <th scope="col" class="text-center header-sub-title bg-light">Tan. Keras</th>
+                <th scope="col" class="text-center header-sub-title bg-light">Tan. Lainnya</th>
               </tr>
             </thead>
             <tbody>
@@ -181,18 +189,19 @@
                     <td class="text-center">{{ $row->nama_desa }}</td>
                   @endif
                   
-                  <td class="text-center">{{ $row->beras ?? '0' }}</td>
-                  <td class="text-center">{{ $row->non_beras ?? '0' }}</td>
-                  <td class="text-center">{{ $row->peternakan ?? '0' }}</td>
-                  <td class="text-center">{{ $row->perikanan ?? '0' }}</td>
-                  <td class="text-center">{{ $row->warung_hidup ?? '0' }}</td>
-                  <td class="text-center">{{ $row->lumbung_hidup ?? '0' }}</td>
-                  <td class="text-center">{{ $row->toga ?? '0' }}</td>
-                  <td class="text-center">{{ $row->tanaman_keras ?? '0' }}</td>
-                  <td class="text-center">{{ $row->tanaman_lainnya ?? '0' }}</td> 
+                  <td class="text-center fw-semibold text-primary">{{ $row->kader_pangan ?? 0 }}</td>
+                  <td class="text-center">{{ $row->beras ?? 0 }}</td>
+                  <td class="text-center">{{ $row->non_beras ?? 0 }}</td>
+                  <td class="text-center">{{ $row->peternakan ?? 0 }}</td>
+                  <td class="text-center">{{ $row->perikanan ?? 0 }}</td>
+                  <td class="text-center">{{ $row->warung_hidup ?? 0 }}</td>
+                  <td class="text-center">{{ $row->lumbung_hidup ?? 0 }}</td>
+                  <td class="text-center">{{ $row->toga ?? 0 }}</td>
+                  <td class="text-center">{{ $row->tanaman_keras ?? 0 }}</td>
+                  <td class="text-center">{{ $row->tanaman_lainnya ?? 0 }}</td> 
 
                   <td class="text-center">
-                    @if(in_array(strtolower($row->status), ['proses', 'revisi']))
+                    @if(in_array(strtolower($row->status), ['menunggu', 'proses', 'revisi']))
                       <span class="badge bg-warning text-dark">{{ $row->status }}</span>
                     @elseif(in_array(strtolower($row->status), ['disetujui1', 'disetujui2']))
                       <span class="badge bg-success">{{ $row->status }}</span>
@@ -204,10 +213,10 @@
                   <td class="text-center">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y H:i') }}</td>
                   
                   <td class="text-center" style="white-space: nowrap;">
-                    <a href="{{ route('pangan.edit', $row->id_pokja3_bidang1) }}" class="btn btn-sm btn-info text-white me-1" data-bs-toggle="tooltip" title="Review Data">
-                      <i class="bi bi-search"></i>
+                    <a href="{{ route('pangan.edit', $row->id ?? $row->id_pokja3_bidang1) }}" class="btn btn-sm btn-info text-white me-1" data-bs-toggle="tooltip" title="Review Data">
+                      <i class="bi bi-search"></i> Review
                     </a>
-                    <form action="{{ route('pangan.destroy', $row->id_pokja3_bidang1)}}" method="POST" class="d-inline delete-form">
+                    <form action="{{ route('pangan.destroy', $row->id ?? $row->id_pokja3_bidang1)}}" method="POST" class="d-inline delete-form">
                       @csrf
                       @method('DELETE')
                       <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(this)" data-bs-toggle="tooltip" title="Hapus Data">
@@ -218,9 +227,9 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="15" class="text-center py-5">
+                  <td colspan="16" class="text-center py-5">
                     <div class="alert alert-danger mb-0">
-                      <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan program pangan.
+                      <i class="bi bi-exclamation-triangle-fill me-2"></i> Tidak ada data laporan program pangan yang menunggu persetujuan.
                     </div>
                   </td>
                 </tr>

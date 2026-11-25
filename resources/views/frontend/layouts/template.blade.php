@@ -103,9 +103,9 @@
           <!-- Kolom 3: Lokasi PKK dengan Maps -->
           <div class="col-lg-3 col-md-3">
             <div style="background: #fff; border-radius: 12px; overflow: hidden; padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-              <a href="https://maps.app.goo.gl/37AmTwodTWA6hius7" target="_blank" style="display: block;">
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=Kantor+Bupati+Nganjuk" target="_blank" style="display: block;">
                 <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.9876543210987!2d111.90345678901234!3d-7.603456789012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7856f123456789%3A0x1234567890abcdef!2sJl.%20Dermojoyo%20No.21%2C%20Payaman%2C%20Kec.%20Nganjuk%2C%20Kabupaten%20Nganjuk%2C%20Jawa%20Timur%2064418!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid" 
+                  src="https://www.google.com/maps?q=Kantor+Bupati+Nganjuk,+Jl.+Basuki+Rahmat+No.1,+Mangundikaran,+Kec.+Nganjuk,+Kabupaten+Nganjuk&amp;z=17&amp;hl=id&amp;output=embed" 
                   width="100%" 
                   height="110" 
                   style="border:0; border-radius: 6px; display: block;" 

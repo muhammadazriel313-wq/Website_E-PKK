@@ -198,7 +198,29 @@ class ReportController extends Controller
 
                 'error' => null
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            // Validasi gagal: tampilkan alasan sebenarnya (mis. "gambar harus berupa gambar")
+            $pesan = collect($e->errors())->flatten()->first() ?? 'Data tidak valid';
+
+            return response()->json([
+
+                'statusCode' => 422,
+
+                'message' => $pesan,
+
+                'data' => null,
+
+                'error' => [
+                    'message' => $e->getMessage(),
+                    'fields' => $e->errors()
+                ]
+
+            ], 422);
         } catch (\Exception $e) {
+
+            // Catat penyebab asli di storage/logs/laravel.log
+            \Illuminate\Support\Facades\Log::error('insertGaleri gagal: ' . $e->getMessage());
 
             // HAPUS FILE JIKA GAGAL
             if (isset($fileName)) {

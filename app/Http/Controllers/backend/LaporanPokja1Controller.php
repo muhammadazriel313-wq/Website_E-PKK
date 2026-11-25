@@ -62,7 +62,7 @@ class LaporanPokja1Controller extends Controller
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     // KECAMATAN HANYA BISA MELIHAT DATA MENTAH
-                    ->whereIn('laporan_kader_pokja1.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_kader_pokja1.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->orderBy('laporan_kader_pokja1.id_kader_pokja1', 'desc')
                     ->get();
             }

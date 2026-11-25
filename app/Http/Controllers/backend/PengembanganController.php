@@ -64,7 +64,7 @@ class PengembanganController extends Controller
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     // KECAMATAN HANYA BISA MELIHAT DATA MENTAH
-                    ->whereIn('laporan_pengembangan_kehidupan.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_pengembangan_kehidupan.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->orderBy('laporan_pengembangan_kehidupan.id_pokja2_bidang2', 'desc')
                     ->get();
             }

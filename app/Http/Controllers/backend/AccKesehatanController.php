@@ -66,7 +66,7 @@ class AccKesehatanController extends Controller
                     ->leftJoin('users_mobile', 'laporan_bidang_kesehatan.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_bidang_kesehatan.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_bidang_kesehatan.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->count();
 
                 $kes2 = DB::table('laporan_bidang_kesehatan')

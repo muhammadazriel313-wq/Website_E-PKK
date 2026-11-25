@@ -57,7 +57,7 @@ class AccPanganSandangController extends Controller
                     ->leftJoin('users_mobile', 'laporan_pangan_sandang.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_pangan_sandang.status', ['Proses', 'proses', 'PROSES'])
+                    ->whereIn('laporan_pangan_sandang.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->count();
 
                 $disetujui = DB::table('laporan_pangan_sandang')

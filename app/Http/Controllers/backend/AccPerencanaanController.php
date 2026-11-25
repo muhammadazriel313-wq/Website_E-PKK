@@ -37,7 +37,7 @@ class AccperencanaanController extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_perencanaan_sehat.status',
-                                    ['Proses', 'proses', 'PROSES']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                                 );
                         });
                 })
@@ -63,7 +63,7 @@ class AccperencanaanController extends Controller
                     ->leftJoin('users_mobile', 'laporan_perencanaan_sehat.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_perencanaan_sehat.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_perencanaan_sehat.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->count();
 
                 $per2 = DB::table('laporan_perencanaan_sehat')

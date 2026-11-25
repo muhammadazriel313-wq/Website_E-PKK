@@ -29,3 +29,5 @@ add_device_preview.php
 cookies_*.txt
 *.sql
 storage/logs/*.log
+# Skrip Apps Script pribadi, tidak ikut di-pull teman
+apps_script/Code.gs

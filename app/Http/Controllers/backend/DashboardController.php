@@ -131,7 +131,7 @@ class DashboardController extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     $model->getTable() . '.status',
-                                    ['Proses', 'Disetujui1','Disetujui2']
+                                    ['Proses', 'Menunggu', 'Disetujui1', 'Disetujui2']
                                 );
                         });
                 });

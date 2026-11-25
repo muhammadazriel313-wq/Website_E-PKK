@@ -40,7 +40,7 @@ class PanganSandangController extends Controller
                     })
                     ->orWhere(function ($q) {
                         $q->where('users_mobile.id_role', 2)
-                            ->whereIn('laporan_pangan_sandang.status', ['Proses', 'proses', 'PROSES']);
+                            ->whereIn('laporan_pangan_sandang.status', ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']);
                     });
                 })
                 ->orderBy('laporan_pangan_sandang.id_pangan_sandang', 'desc')
@@ -60,7 +60,7 @@ class PanganSandangController extends Controller
                     ->select('laporan_pangan_sandang.*', 'subdistrict.name as nama_kec', 'village.name as nama_desa')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_pangan_sandang.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_pangan_sandang.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->orderBy('laporan_pangan_sandang.id_pangan_sandang', 'desc')
                     ->get();
             }

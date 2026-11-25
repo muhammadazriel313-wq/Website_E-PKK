@@ -42,7 +42,7 @@ class Pokja2Controller extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_pendidikan_n_keterampilan.status',
-                                    ['Proses', 'proses', 'PROSES', 'Disetujui2']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui2']
                                 );
                         });
                 })
@@ -69,7 +69,7 @@ class Pokja2Controller extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_pengembangan_kehidupan.status',
-                                    ['Proses', 'proses', 'PROSES', 'Disetujui2']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui2']
                                 );
                         });
                 })
@@ -82,7 +82,7 @@ class Pokja2Controller extends Controller
             $user = Auth::guard('pengguna')->user();
 
             if ($user->id_role == 2) {
-                $statusKecamatan = ['Proses', 'Disetujui1'];
+                $statusKecamatan = ['Proses', 'Menunggu', 'Disetujui1'];
 
                 $modelPertama = DB::table('laporan_pendidikan_n_keterampilan')
                     ->leftJoin('users_mobile', 'laporan_pendidikan_n_keterampilan.id_user', '=', 'users_mobile.id')
@@ -133,7 +133,7 @@ class Pokja2Controller extends Controller
             } elseif (Auth::guard('pengguna')->check()) {
                 $user = Auth::guard('pengguna')->user();
                 if ($user->id_role == 2) {
-                    $statusKecamatan = ['Proses', 'proses', 'PROSES', 'Disetujui1', 'disetujui1', 'DISETUJUI1'];
+                    $statusKecamatan = ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui1', 'disetujui1', 'DISETUJUI1'];
                     $query->whereIn("$tabel.status", $statusKecamatan)
                         ->where('users_mobile.id_subdistrict', $user->id_subdistrict);
                 } else {

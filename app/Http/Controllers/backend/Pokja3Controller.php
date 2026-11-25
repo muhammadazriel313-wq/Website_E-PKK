@@ -40,7 +40,7 @@ class Pokja3Controller extends Controller
                     })
                     ->orWhere(function ($q) {
                         $q->where('users_mobile.id_role', 2)
-                            ->whereIn('laporan_pangan.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
+                            ->whereIn('laporan_pangan.status', ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui2']);
                     });
                 })->count();
 
@@ -53,7 +53,7 @@ class Pokja3Controller extends Controller
                     })
                     ->orWhere(function ($q) {
                         $q->where('users_mobile.id_role', 2)
-                            ->whereIn('laporan_sandang.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
+                            ->whereIn('laporan_sandang.status', ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui2']);
                     });
                 })->count();
 
@@ -66,7 +66,7 @@ class Pokja3Controller extends Controller
                     })
                     ->orWhere(function ($q) {
                         $q->where('users_mobile.id_role', 2)
-                            ->whereIn('laporan_perumahan.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
+                            ->whereIn('laporan_perumahan.status', ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui2']);
                     });
                 })->count();
 
@@ -79,7 +79,7 @@ class Pokja3Controller extends Controller
                     })
                     ->orWhere(function ($q) {
                         $q->where('users_mobile.id_role', 2)
-                            ->whereIn('laporan_kader_pokja3.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
+                            ->whereIn('laporan_kader_pokja3.status', ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui2']);
                     });
                 })->count();
         }
@@ -196,7 +196,7 @@ class Pokja3Controller extends Controller
             } elseif (Auth::guard('pengguna')->check()) {
                 $user = Auth::guard('pengguna')->user();
                 if ($user->id_role == 2) {
-                    $statusKecamatan = ['Proses', 'proses', 'PROSES', 'Disetujui1', 'disetujui1', 'DISETUJUI1'];
+                    $statusKecamatan = ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui1', 'disetujui1', 'DISETUJUI1'];
                     $query->whereIn("{$tabel}.status", $statusKecamatan)
                         ->where(function ($q) use ($tabel, $user) {
                             $q->where('users_mobile.id_subdistrict', $user->id_subdistrict)

@@ -40,7 +40,7 @@ class PanganSandangController extends Controller
                     })
                     ->orWhere(function ($q) {
                         $q->where('users_mobile.id_role', 2)
-                            ->whereIn('laporan_pangan_sandang.status', ['Proses', 'proses', 'PROSES']);
+                            ->whereIn('laporan_pangan_sandang.status', ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']);
                     });
                 })
                 ->orderBy('laporan_pangan_sandang.id_pangan_sandang', 'desc')

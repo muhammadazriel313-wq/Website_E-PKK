@@ -150,7 +150,10 @@ class RekapBulananController extends Controller
                                         [
                                             'Proses',
                                             'proses',
-                                            'PROSES'
+                                            'PROSES',
+                                            'Menunggu',
+                                            'menunggu',
+                                            'MENUNGGU'
                                         ]
                                     );
                             });
@@ -246,7 +249,10 @@ class RekapBulananController extends Controller
                             : [
                                 'Proses',
                                 'proses',
-                                'PROSES'
+                                'PROSES',
+                                'Menunggu',
+                                'menunggu',
+                                'MENUNGGU'
                             ]
                     )
 
@@ -550,7 +556,10 @@ class RekapBulananController extends Controller
                                         [
                                             'Proses',
                                             'proses',
-                                            'PROSES'
+                                            'PROSES',
+                                            'Menunggu',
+                                            'menunggu',
+                                            'MENUNGGU'
                                         ]
                                     );
                             });
@@ -640,7 +649,10 @@ class RekapBulananController extends Controller
                             : [
                                 'Proses',
                                 'proses',
-                                'PROSES'
+                                'PROSES',
+                                'Menunggu',
+                                'menunggu',
+                                'MENUNGGU'
                             ]
                     )
 

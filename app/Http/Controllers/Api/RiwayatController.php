@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class RiwayatController extends Controller
 {
@@ -446,12 +447,34 @@ class RiwayatController extends Controller
                 ], 404);
             }
 
+            // Hak aksi dihitung dari status ASLI di database, sebelum
+            // status diubah untuk tampilan mobile.
+            $rawStatus = strtolower(trim((string) $data->status));
+
+            $bisaDiedit = in_array($rawStatus, ['proses', 'revisi', 'ditolak'], true);
+            $bisaDikirimUlang = in_array($rawStatus, ['revisi', 'ditolak'], true);
+            $bisaDibatalkan = in_array($rawStatus, ['proses', 'menunggu'], true);
+
+            // Kegiatan (galerys) hanya bisa diedit selama masih Proses
+            if ($table === 'galerys') {
+                $bisaDiedit = $rawStatus === 'proses';
+                $bisaDikirimUlang = false;
+                $bisaDibatalkan = $rawStatus === 'proses';
+            }
+
             // Khusus mobile: 'Menunggu' ditampilkan sebagai 'Proses'.
             $data->status = $this->mapStatusUntukMobile($data->status);
 
             // Kegiatan (galerys): tampilkan hanya field yang relevan
             if ($table === 'galerys') {
                 $data = $this->formatGaleriDetail($data);
+                $data['bisa_diedit'] = $bisaDiedit;
+                $data['bisa_dikirim_ulang'] = $bisaDikirimUlang;
+                $data['bisa_dibatalkan'] = $bisaDibatalkan;
+            } else {
+                $data->bisa_diedit = $bisaDiedit;
+                $data->bisa_dikirim_ulang = $bisaDikirimUlang;
+                $data->bisa_dibatalkan = $bisaDibatalkan;
             }
 
             return response()->json([
@@ -547,6 +570,46 @@ class RiwayatController extends Controller
             }
 
             /// ================= UPDATE STATUS =================
+
+            $existing = DB::table($table)
+                ->where('uuid', $uuid)
+                ->first();
+
+            if (!$existing) {
+
+                return response()->json([
+
+                    'statusCode' => 404,
+
+                    'message' =>
+                    'Data laporan tidak ditemukan',
+
+                    'data' => null,
+
+                    'error' => null
+
+                ], 404);
+            }
+
+            // Laporan yang sudah disetujui/dibatalkan tidak boleh dibatalkan lagi.
+            $currentStatus = strtolower($existing->status ?? '');
+            if (in_array($currentStatus, ['disetujui1', 'disetujui2', 'upload1', 'upload2', 'upload', 'dibatalkan'], true)) {
+
+                return response()->json([
+
+                    'statusCode' => 400,
+
+                    'message' =>
+                    'Laporan yang sudah disetujui atau dibatalkan tidak dapat dibatalkan.',
+
+                    'data' => null,
+
+                    'error' => [
+                        'message' => 'Status tidak mengizinkan pembatalan'
+                    ]
+
+                ], 400);
+            }
 
             $updated = DB::table($table)
 
@@ -707,11 +770,24 @@ class RiwayatController extends Controller
 
             /// ================= UPDATE =================
 
-            $currentStatus = strtolower($existing->status ?? '');
-            if (in_array($currentStatus, ['disetujui1', 'disetujui2'])) {
+            if (!is_array($data)) {
                 return response()->json([
                     'statusCode' => 400,
-                    'message'    => 'Laporan yang sudah disetujui tidak dapat diedit.',
+                    'message'    => 'Format data tidak valid.',
+                    'data'       => null,
+                    'error'      => [
+                        'message' => 'Data harus berupa objek'
+                    ]
+                ], 400);
+            }
+
+            $currentStatus = strtolower($existing->status ?? '');
+
+            // Laporan final tidak boleh diedit lagi.
+            if (in_array($currentStatus, ['disetujui1', 'disetujui2', 'upload1', 'upload2', 'upload', 'dibatalkan'], true)) {
+                return response()->json([
+                    'statusCode' => 400,
+                    'message'    => 'Laporan yang sudah disetujui atau dibatalkan tidak dapat diedit.',
                     'data'       => null,
                     'error'      => [
                         'message' => 'Status tidak mengizinkan pengeditan'
@@ -719,17 +795,24 @@ class RiwayatController extends Controller
                 ], 400);
             }
 
-            // Kembalikan status menjadi 'Menunggu' (diajukan ulang/menunggu review admin)
-            if (in_array($currentStatus, ['revisi', 'ditolak', 'proses', 'menunggu'])) {
-                $data['status'] = 'Menunggu';
+            // Laporan yang sedang menunggu review admin dikunci supaya isinya
+            // tidak berubah saat sedang diperiksa.
+            if ($currentStatus === 'menunggu') {
+                return response()->json([
+                    'statusCode' => 400,
+                    'message'    => 'Laporan sedang menunggu persetujuan admin sehingga belum bisa diedit.',
+                    'data'       => null,
+                    'error'      => [
+                        'message' => 'Laporan sedang dikunci'
+                    ]
+                ], 400);
             }
 
-            // Catatan revisi hanya diisi admin website; mobile tidak boleh
-            // menimpa catatan yang sudah ditulis admin.
+            // Simpan TIDAK mengubah status. Status hanya berubah lewat tombol
+            // Kirim Ulang (revisi/ditolak -> menunggu) atau persetujuan admin
+            // di website. Catatan revisi hanya diisi admin website, jadi
+            // mobile tidak boleh menimpanya.
             unset($data['catatan']);
-
-            unset($data['uuid'], $data['id'], $data['created_at']);
-            $data['updated_at'] = now();
 
             if ($table === 'galerys') {
 
@@ -798,6 +881,31 @@ class RiwayatController extends Controller
                     ->where('uuid', $uuid)
                     ->update($payload);
             } else {
+
+                // Hanya kolom yang benar-benar ada di tabel yang boleh
+                // ditulis, dan kolom identitas/relasi tidak boleh diubah
+                // dari mobile. Ini mencegah field tak sengaja tertimpa.
+                $columns = Schema::getColumnListing($table);
+
+                $data = array_intersect_key($data, array_flip($columns));
+
+                $data = array_filter(
+                    $data,
+                    function ($key) {
+                        return !str_starts_with($key, 'id_') && !str_ends_with($key, '_id');
+                    },
+                    ARRAY_FILTER_USE_KEY
+                );
+
+                unset(
+                    $data['uuid'],
+                    $data['status'],
+                    $data['catatan'],
+                    $data['created_at'],
+                    $data['updated_at']
+                );
+
+                $data['updated_at'] = now();
 
                 DB::table($table)
 
@@ -917,8 +1025,8 @@ class RiwayatController extends Controller
 
             $currentStatus = strtolower($existing->status ?? '');
 
-            // Laporan yang sudah disetujui tidak boleh dikirim ulang
-            if (in_array($currentStatus, ['disetujui1', 'disetujui2', 'upload1', 'upload2', 'upload'])) {
+            // Laporan yang sudah disetujui/dibatalkan tidak boleh dikirim ulang
+            if (in_array($currentStatus, ['disetujui1', 'disetujui2', 'upload1', 'upload2', 'upload', 'dibatalkan'])) {
 
                 return response()->json([
 

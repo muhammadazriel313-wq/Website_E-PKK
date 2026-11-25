@@ -122,7 +122,10 @@ class PosyanduController extends Controller
                                         [
                                             'Proses',
                                             'proses',
-                                            'PROSES'
+                                            'PROSES',
+                                            'Menunggu',
+                                            'menunggu',
+                                            'MENUNGGU'
                                         ]
                                     );
                             });
@@ -197,7 +200,10 @@ class PosyanduController extends Controller
                             : [
                                 'Proses',
                                 'proses',
-                                'PROSES'
+                                'PROSES',
+                                'Menunggu',
+                                'menunggu',
+                                'MENUNGGU'
                             ]
                     )
 
@@ -416,7 +422,10 @@ class PosyanduController extends Controller
                                         [
                                             'Proses',
                                             'proses',
-                                            'PROSES'
+                                            'PROSES',
+                                            'Menunggu',
+                                            'menunggu',
+                                            'MENUNGGU'
                                         ]
                                     );
                             });
@@ -491,7 +500,10 @@ class PosyanduController extends Controller
                             : [
                                 'Proses',
                                 'proses',
-                                'PROSES'
+                                'PROSES',
+                                'Menunggu',
+                                'menunggu',
+                                'MENUNGGU'
                             ]
                     )
 

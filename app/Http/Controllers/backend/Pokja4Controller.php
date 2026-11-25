@@ -33,6 +33,9 @@ class Pokja4Controller extends Controller
             'Proses',
             'proses',
             'PROSES',
+            'Menunggu',
+            'menunggu',
+            'MENUNGGU',
             'Disetujui1',
             'disetujui1',
             'DISETUJUI1'
@@ -51,6 +54,9 @@ class Pokja4Controller extends Controller
             'Proses',
             'proses',
             'PROSES',
+            'Menunggu',
+            'menunggu',
+            'MENUNGGU',
             'Disetujui2',
             'disetujui2',
             'DISETUJUI2'
@@ -853,7 +859,7 @@ class Pokja4Controller extends Controller
                 $query->where("$tabel.kategori", $kategoriNilai);
             }
 
-            $statusValid = ['Proses', 'proses', 'PROSES', 'Disetujui1', 'disetujui1', 'DISETUJUI1', 'Disetujui2', 'disetujui2', 'DISETUJUI2'];
+            $statusValid = ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU', 'Disetujui1', 'disetujui1', 'DISETUJUI1', 'Disetujui2', 'disetujui2', 'DISETUJUI2'];
             $query->whereIn("$tabel.status", $statusValid);
 
             if (Auth::guard('pengguna')->check()) {

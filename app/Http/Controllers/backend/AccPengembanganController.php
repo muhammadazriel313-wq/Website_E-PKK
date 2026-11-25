@@ -39,7 +39,7 @@ class AccPengembanganController extends Controller
                         $q->where('users_mobile.id_role', 2)
                             ->whereIn(
                                 'laporan_pengembangan_kehidupan.status',
-                                ['Proses', 'proses', 'PROSES']
+                                ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                             );
                     });
                 })

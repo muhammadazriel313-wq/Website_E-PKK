@@ -724,6 +724,10 @@ class RiwayatController extends Controller
                 $data['status'] = 'Menunggu';
             }
 
+            // Catatan revisi hanya diisi admin website; mobile tidak boleh
+            // menimpa catatan yang sudah ditulis admin.
+            unset($data['catatan']);
+
             unset($data['uuid'], $data['id'], $data['created_at']);
             $data['updated_at'] = now();
 

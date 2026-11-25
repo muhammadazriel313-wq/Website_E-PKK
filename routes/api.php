@@ -65,6 +65,7 @@ Route::get('/report', [RiwayatController::class, 'getReport']);
 Route::get('/report/detail', [RiwayatController::class, 'getDetailReport']);
 Route::post('/report/cancel', [RiwayatController::class, 'cancelReport']);
 Route::post('/report/update', [RiwayatController::class, 'updateLaporan']);
+Route::post('/report/resubmit', [RiwayatController::class, 'resubmitLaporan']);
 
 
 // LAPORAN

@@ -446,6 +446,9 @@ class RiwayatController extends Controller
                 ], 404);
             }
 
+            // Khusus mobile: 'Menunggu' ditampilkan sebagai 'Proses'.
+            $data->status = $this->mapStatusUntukMobile($data->status);
+
             // Kegiatan (galerys): tampilkan hanya field yang relevan
             if ($table === 'galerys') {
                 $data = $this->formatGaleriDetail($data);
@@ -841,6 +844,142 @@ class RiwayatController extends Controller
     }
 
     /// =======================================================
+    /// KIRIM ULANG LAPORAN (dari tab Revisi di mobile)
+    /// =======================================================
+
+    public function resubmitLaporan(Request $request)
+    {
+        try {
+
+            $uuid  = $request->uuid;
+            $orgId = $request->org_id;
+
+            if (!$uuid || !$orgId) {
+
+                return response()->json([
+
+                    'statusCode' => 400,
+
+                    'message' =>
+                    'Parameter uuid dan org_id wajib diisi.',
+
+                    'data' => null,
+
+                    'error' => [
+                        'message' =>
+                        'Parameter tidak lengkap'
+                    ]
+
+                ], 400);
+            }
+
+            $table = $this->determineTableFromUUID($uuid, $orgId);
+
+            if (!$table) {
+
+                return response()->json([
+
+                    'statusCode' => 404,
+
+                    'message' =>
+                    'Tabel laporan tidak ditemukan.',
+
+                    'data' => null,
+
+                    'error' => null
+
+                ], 404);
+            }
+
+            $existing = DB::table($table)
+                ->where('uuid', $uuid)
+                ->first();
+
+            if (!$existing) {
+
+                return response()->json([
+
+                    'statusCode' => 404,
+
+                    'message' =>
+                    'Data laporan tidak ditemukan',
+
+                    'data' => null,
+
+                    'error' => null
+
+                ], 404);
+            }
+
+            $currentStatus = strtolower($existing->status ?? '');
+
+            // Laporan yang sudah disetujui tidak boleh dikirim ulang
+            if (in_array($currentStatus, ['disetujui1', 'disetujui2', 'upload1', 'upload2', 'upload'])) {
+
+                return response()->json([
+
+                    'statusCode' => 400,
+
+                    'message' =>
+                    'Laporan yang sudah disetujui tidak dapat dikirim ulang.',
+
+                    'data' => null,
+
+                    'error' => [
+                        'message' =>
+                        'Status tidak mengizinkan kirim ulang'
+                    ]
+
+                ], 400);
+            }
+
+            // Revisi/Ditolak -> Menunggu (menunggu review admin di website).
+            // Status lain (Proses/Menunggu) tidak diubah, cukup dianggap berhasil.
+            if (in_array($currentStatus, ['revisi', 'ditolak'])) {
+
+                DB::table($table)
+                    ->where('uuid', $uuid)
+                    ->update([
+                        'status'     => 'Menunggu',
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            return response()->json([
+
+                'statusCode' => 200,
+
+                'message' =>
+                'Laporan berhasil dikirim ulang dan menunggu review admin.',
+
+                'data' => [
+                    'uuid' => $uuid
+                ],
+
+                'error' => null
+
+            ], 200);
+        } catch (\Exception $e) {
+
+            return response()->json([
+
+                'statusCode' => 500,
+
+                'message' =>
+                'Terjadi kesalahan server',
+
+                'data' => null,
+
+                'error' => [
+                    'message' =>
+                    $e->getMessage()
+                ]
+
+            ], 500);
+        }
+    }
+
+    /// =======================================================
     /// FETCH REPORTS
     /// =======================================================
 
@@ -898,6 +1037,8 @@ class RiwayatController extends Controller
                         $row->status = $this->mapGaleriStatus($row->status);
                     }
 
+                    $row->status = $this->mapStatusUntukMobile($row->status);
+
                     if (!property_exists($row, 'catatan')) {
                         $row->catatan = null;
                     }
@@ -930,6 +1071,16 @@ class RiwayatController extends Controller
             default:
                 return $status;
         }
+    }
+
+    // Khusus aplikasi mobile: status 'Menunggu' (menunggu review admin)
+    // ditampilkan sebagai 'Proses' supaya laporan hasil kirim ulang tetap
+    // muncul di tab Proses. Di website tetap tampil 'Menunggu'.
+    private function mapStatusUntukMobile($status)
+    {
+        return strtolower(trim((string) $status)) === 'menunggu'
+            ? 'Proses'
+            : $status;
     }
 
     private function formatGaleriDetail($row)

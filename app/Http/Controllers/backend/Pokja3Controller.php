@@ -57,22 +57,6 @@ class Pokja3Controller extends Controller
                     });
                 })->count();
 
-            $countSandang = DB::table('laporan_sandang')
-                ->leftJoin('users_mobile', 'laporan_sandang.id_user', '=', 'users_mobile.id')
-                ->where(function ($query) {
-                    $query->where(function ($q) {
-                        $q->where('users_mobile.id_role', 1)
-                            ->whereIn('laporan_sandang.status', ['Disetujui1', 'Disetujui2']);
-                    })
-                        ->orWhere(function ($q) {
-                            $q->where('users_mobile.id_role', 2)
-                                ->whereIn('laporan_sandang.status', ['Proses', 'proses', 'PROSES', 'Disetujui2']);
-                        });
-                })->count();
-
-            $modelPertama = $countPangan + $countSandang;
-            $modelKedua = 0;
-
             $modelKetiga = DB::table('laporan_perumahan')
                 ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')
                 ->where(function ($query) {
@@ -133,16 +117,6 @@ class Pokja3Controller extends Controller
                     })
                     ->whereIn('laporan_sandang.status', $statusKecamatan)
                     ->count();
-
-                $countSandang = DB::table('laporan_sandang')
-                    ->leftJoin('users_mobile', 'laporan_sandang.id_user', '=', 'users_mobile.id')
-                    ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
-                    ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_sandang.status', $statusKecamatan)
-                    ->count();
-
-                $modelPertama = $countPangan + $countSandang;
-                $modelKedua = 0;
 
                 $modelKetiga = DB::table('laporan_perumahan')
                     ->leftJoin('users_mobile', 'laporan_perumahan.id_user', '=', 'users_mobile.id')

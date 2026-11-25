@@ -60,6 +60,8 @@
     .sidebar-nav .nav-link i { font-size: 18px; margin-right: 12px; color: #6b7280; }
     .sidebar-nav .nav-link:hover { background: #f3f4f6; color: #4154f1; }
     i, .bi, [class^="bi-"], [class*=" bi-"], [class^="fa"], [class*=" fa-"] { font-family: unset !important; }
+    /* Judul seksi tidak bold, sama seperti halaman review Gotong Royong & Jumlah Kader */
+    .card h5 { font-size: 15px; font-weight: 400; color: #475569; }
   </style>
 </head>
 

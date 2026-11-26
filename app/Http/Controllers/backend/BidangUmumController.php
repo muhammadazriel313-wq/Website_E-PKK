@@ -120,13 +120,6 @@ class BidangUmumController extends Controller
         $statusTarget = Auth::guard('web')->check() ? 'Disetujui2' : 'Disetujui1';
 
         // [PERUBAHAN 2026-10-09] Tambahkan leftJoin village untuk menyertakan nama_desa sesuai tampilan web
-        /*
-        $query = DB::table('laporan_umum')
-            ->join('users_mobile', 'laporan_umum.id_user', '=', 'users_mobile.id')
-            ->join('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
-            ->select('laporan_umum.*', 'subdistrict.name as nama_kec')
-            ->where('laporan_umum.status', $statusTarget);
-        */
         $query = DB::table('laporan_umum')
             ->leftJoin('users_mobile', 'laporan_umum.id_user', '=', 'users_mobile.id')
             ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
@@ -170,8 +163,10 @@ class BidangUmumController extends Controller
         BidangUmum::where('id_laporan_umum', $id)->delete();
         return redirect()->route('bidangumum.index')->with('success', 'Berhasil Menghapus Laporan');
     }
+
     // ==========================================
-    // FUNGSI BARU: EXPORT JSON BIDANG UMUM
+    // EXPORT JSON BIDANG UMUM (untuk Google Sheets)
+    // Mengambil data dari tabel laporan_umum, sesuai tabel di website
     // ==========================================
     public function getExportData(Request $request)
     {
@@ -182,9 +177,6 @@ class BidangUmumController extends Controller
         $statusTarget = ['Proses', 'proses', 'PROSES', 'Disetujui1', 'Disetujui2', 'disetujui1', 'disetujui2', 'DISETUJUI1', 'DISETUJUI2', 'Upload', 'upload', 'upload1', 'upload2', 'UPLOAD1', 'UPLOAD2'];
 
         try {
-            // ==========================================
-            // 🧹 [PERUBAHAN 03-10-2026] Menggunakan tabel galerys untuk ekspor Bidang Umum sesuai format kegiatan (No, Tanggal, Kecamatan, Desa, Nama Kegiatan, Nama Peserta, Lokasi, Status); kode lama query laporan_umum dinonaktifkan
-            /*
             $query = DB::table('laporan_umum')
                 ->leftJoin('users_mobile', 'laporan_umum.id_user', '=', 'users_mobile.id')
                 ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
@@ -194,7 +186,7 @@ class BidangUmumController extends Controller
 
             // Filter Role (Keamanan Data)
             if (Auth::guard('web')->check()) {
-                // Admin: Biarkan query utuh (Tembus semua wilayah)
+                // Admin Kabupaten: semua wilayah
             } elseif (Auth::guard('pengguna')->check()) {
                 $user = Auth::guard('pengguna')->user();
                 if ($user->id_role == 2) {
@@ -208,79 +200,42 @@ class BidangUmumController extends Controller
             if (!empty($bulan)) $query->whereMonth('laporan_umum.created_at', $bulan);
             if (!empty($tahun)) $query->whereYear('laporan_umum.created_at', $tahun);
 
-            $data = $query->get();
+            $data = $query->orderBy('laporan_umum.created_at', 'asc')->get();
 
             if ($data->isEmpty()) {
                 return response()->json([
-                    'status' => 'empty', 
+                    'status' => 'empty',
                     'message' => 'Tidak ada data laporan pada periode tersebut.'
-                ]);
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'bidang' => 'BIDANG UMUM',
-                'data' => $data
-            ]);
-            */
-            $query = DB::table('galerys')
-                ->leftJoin('users_mobile', 'galerys.id_user', '=', 'users_mobile.id')
-                ->leftJoin('subdistrict', 'users_mobile.id_subdistrict', '=', 'subdistrict.id')
-                ->leftJoin('village', 'users_mobile.id_village', '=', 'village.id')
-                ->select('subdistrict.name as nama_kecamatan', 'village.name as nama_desa', 'galerys.*')
-                ->where(function($q) {
-                    $q->where('galerys.bidang', 'Laporan Umum')
-                      ->orWhere('galerys.id_organization', 5)
-                      ->orWhere('galerys.pokja', 'Bidang Umum');
-                })
-                ->whereIn('galerys.status', $statusTarget);
-
-            // Filter Role (Keamanan Data)
-            if (Auth::guard('web')->check()) {
-                // Admin Kabupaten: Semua wilayah
-            } elseif (Auth::guard('pengguna')->check()) {
-                $user = Auth::guard('pengguna')->user();
-                if ($user->id_role == 2) {
-                    $query->where('users_mobile.id_subdistrict', $user->id_subdistrict);
-                } else {
-                    $query->where('galerys.id_user', $user->id);
-                }
-            }
-
-            // Filter Waktu
-            if (!empty($bulan)) $query->whereMonth('galerys.created_at', $bulan);
-            if (!empty($tahun)) $query->whereYear('galerys.created_at', $tahun);
-
-            $data = $query->latest('galerys.created_at')->get();
-
-            if ($data->isEmpty()) {
-                return response()->json([
-                    'status' => 'empty', 
-                    'message' => 'Tidak ada data laporan kegiatan pada periode tersebut.'
                 ]);
             }
 
             $no = 1;
             $data = $data->map(function ($item) use (&$no) {
-                $namaPesertaStr = '-';
-                if (!empty($item->nama_peserta)) {
-                    $peserta = json_decode($item->nama_peserta, true);
-                    if (is_array($peserta) && !empty($peserta)) {
-                        $namaPesertaStr = implode(', ', $peserta);
-                    } elseif (is_string($item->nama_peserta) && trim($item->nama_peserta) !== '') {
-                        $namaPesertaStr = trim($item->nama_peserta);
-                    }
-                }
-
                 return [
                     'No' => $no++,
-                    'Tanggal' => !empty($item->created_at) ? date('d-m-Y', strtotime($item->created_at)) : '-',
                     'Kecamatan' => !empty($item->nama_kecamatan) ? ucwords(strtolower($item->nama_kecamatan)) : '-',
                     'Desa' => !empty($item->nama_desa) ? ucwords(strtolower($item->nama_desa)) : '-',
-                    'Nama Kegiatan' => $item->deskripsi ?? '-',
-                    'Nama Peserta' => $namaPesertaStr,
-                    'Lokasi' => $item->lokasi ?? '-',
-                    'Status' => !empty($item->status) ? ucfirst(strtolower($item->status)) : '-',
+                    'Dusun/Lingkungan' => $item->dusun_lingkungan ?? 0,
+                    'PKK/RW' => $item->PKK_RW ?? 0,
+                    'PKK/RT' => $item->PKK_RT ?? 0,
+                    'Desa/Wisma' => $item->desa_wisma ?? 0,
+                    'KRT' => $item->KRT ?? 0,
+                    'KK' => $item->KK ?? 0,
+                    'Jiwa Laki-laki' => $item->jiwa_laki ?? 0,
+                    'Jiwa Perempuan' => $item->jiwa_perempuan ?? 0,
+                    'Anggota TP PKK L' => $item->anggota_laki ?? 0,
+                    'Anggota TP PKK P' => $item->anggota_perempuan ?? 0,
+                    'Umum L' => $item->umum_laki ?? 0,
+                    'Umum P' => $item->umum_perempuan ?? 0,
+                    'Khusus L' => $item->khusus_laki ?? 0,
+                    'Khusus P' => $item->khusus_perempuan ?? 0,
+                    'Honorer L' => $item->honorer_laki ?? 0,
+                    'Honorer P' => $item->honorer_perempuan ?? 0,
+                    'Bantuan L' => $item->bantuan_laki ?? 0,
+                    'Bantuan P' => $item->bantuan_perempuan ?? 0,
+                    'Keterangan' => !empty($item->keterangan) ? $item->keterangan : '-',
+                    'Status' => $item->status ?? '-',
+                    'Tanggal' => !empty($item->created_at) ? date('d/m/Y H:i', strtotime($item->created_at)) : '-',
                 ];
             });
 
@@ -289,22 +244,22 @@ class BidangUmumController extends Controller
                 'bidang' => 'BIDANG UMUM',
                 'data' => $data
             ]);
-            // ==========================================
 
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()
             ], 500);
         }
     }
-    public function cetak(Request $request) 
-{
-    // ... proses ambil data ...
-    
-    $tanggal = $request->tahun; // Atau dari mana saja sumber tanggalnya didapat
 
-    // Pastikan 'tanggal' masuk ke dalam compact()
-    return view('backend.cetak_tahun_bidangumum', compact('data', 'tanggal'));
-}
+    public function cetak(Request $request) 
+    {
+        // ... proses ambil data ...
+        
+        $tanggal = $request->tahun; // Atau dari mana saja sumber tanggalnya didapat
+
+        // Pastikan 'tanggal' masuk ke dalam compact()
+        return view('backend.cetak_tahun_bidangumum', compact('data', 'tanggal'));
+    }
 }

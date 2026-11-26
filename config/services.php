@@ -2,18 +2,6 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Third Party Services
-    |--------------------------------------------------------------------------
-    |
-    | This file is for storing the credentials for third party services such
-    | as Mailgun, Postmark, AWS and more. This file provides the de facto
-    | location for this type of information, allowing packages to have
-    | a conventional file to locate the various service credentials.
-    |
-    */
-
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
@@ -31,10 +19,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    // [PERUBAHAN 2026-10-09] Konfigurasi integrasi Google Sheets & Google Apps Script
     'sheets' => [
         'script_url' => env('SHEETS_APPS_SCRIPT_URL'),
         'spreadsheet_url' => env('SHEETS_SPREADSHEET_URL'),
+        'trigger_token' => env('SHEETS_TRIGGER_TOKEN'),
     ],
 
 ];

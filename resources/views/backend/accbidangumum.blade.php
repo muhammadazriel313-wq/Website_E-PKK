@@ -258,6 +258,8 @@
                 dbResult.pokja = 'BIDANG UMUM';
                 dbResult.bulan = bulan;
                 dbResult.tahun = tahun;
+                // [PERUBAHAN] Kunci pengaman Apps Script, diambil dari .env (SHEETS_TRIGGER_TOKEN)
+                dbResult.secret_key = "{{ config('services.sheets.trigger_token') }}";
 
                 Swal.update({ text: `Ditemukan ${dbResult.data.length} baris. Mengirim ke Google Sheets...` });
 

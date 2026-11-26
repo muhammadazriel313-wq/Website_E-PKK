@@ -302,7 +302,7 @@
                     </th>
 
                     <th width="30%">
-                        Deskripsi
+                        Nama Kegiatan
                     </th>
 
                 </tr>

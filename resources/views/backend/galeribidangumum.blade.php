@@ -269,7 +269,7 @@
 
                         <th style="width: 180px;">TANGGAL</th>
                         <th>TEMPAT</th>
-                        <th>URAIAN</th>
+                        <th>NAMA KEGIATAN</th>
 
                     </tr>
 

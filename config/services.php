@@ -25,4 +25,8 @@ return [
         'trigger_token' => env('SHEETS_TRIGGER_TOKEN'),
     ],
 
+    'export_api' => [
+        'token' => env('EXPORT_API_TOKEN'),
+    ],
+
 ];

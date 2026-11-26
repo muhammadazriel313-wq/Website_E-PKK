@@ -60,6 +60,8 @@
     .sidebar-nav .nav-link i { font-size: 18px; margin-right: 12px; color: #6b7280; }
     .sidebar-nav .nav-link:hover { background: #f3f4f6; color: #4154f1; }
     i, .bi, [class^="bi-"], [class*=" bi-"], [class^="fa"], [class*=" fa-"] { font-family: unset !important; }
+    /* Judul seksi tidak bold, sama seperti halaman review Gotong Royong & Jumlah Kader */
+    .card h5 { font-size: 15px; font-weight: 400; color: #475569; }
   </style>
 </head>
 
@@ -215,6 +217,16 @@
                     <div class="col-md-3 mb-3">
                       <label class="form-label">Jml Sasaran</label>
                       <input type="text" class="form-control" value="{{ $data->pkbn_sasaran ?? '-' }}" readonly />
+                    </div>
+
+                    <div class="col-12 mt-4 mb-2"><h5>Informasi Tambahan</h5><hr></div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Sumber Dana</label>
+                      <input type="text" class="form-control" value="{{ $data->sumber_dana ?? '-' }}" readonly />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Hasil Kegiatan</label>
+                      <textarea class="form-control" rows="3" readonly>{{ $data->hasil_kegiatan ?? '-' }}</textarea>
                     </div>
                   </div>
 

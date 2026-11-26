@@ -176,7 +176,7 @@
                         </th>
 
                         <th>
-                            Deskripsi
+                            Nama Kegiatan
                         </th>
                         <th>
                             Nama Peserta

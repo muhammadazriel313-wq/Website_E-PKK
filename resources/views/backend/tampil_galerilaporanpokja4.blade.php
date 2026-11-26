@@ -48,7 +48,7 @@
                 <div class="form-group">
 
                     <label for="deskripsi" class="form-label">
-                        Deskripsi :
+                        Nama Kegiatan :
                     </label>
 
                     <input type="text"
@@ -57,9 +57,9 @@
                         class="form-control"
                         required
                         readonly
-                        oninvalid="this.setCustomValidity('Harap lengkapi Deskripsi')"
+                        oninvalid="this.setCustomValidity('Harap lengkapi Nama Kegiatan')"
                         oninput="this.setCustomValidity('')"
-                        placeholder="Masukkan Deskripsi"
+                        placeholder="Masukkan Nama Kegiatan"
                         value="{{ $data->deskripsi }}" />
 
                 </div>

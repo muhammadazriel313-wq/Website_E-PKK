@@ -37,7 +37,7 @@ class AccKelestarianController extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_kelestarian_lingkungan_hidup.status',
-                                    ['Proses', 'proses', 'PROSES']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                                 );
                         });
                 })
@@ -62,7 +62,7 @@ class AccKelestarianController extends Controller
                     ->leftJoin('users_mobile', 'laporan_kelestarian_lingkungan_hidup.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_kelestarian_lingkungan_hidup.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_kelestarian_lingkungan_hidup.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->count();
 
                 $kel2 = DB::table('laporan_kelestarian_lingkungan_hidup')

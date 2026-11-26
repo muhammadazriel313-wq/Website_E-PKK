@@ -36,7 +36,7 @@ class KesehatanController extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_bidang_kesehatan.status',
-                                    ['Proses', 'proses', 'PROSES']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                                 );
                         });
                 })
@@ -57,7 +57,7 @@ class KesehatanController extends Controller
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     // KECAMATAN HANYA BISA MELIHAT DATA MENTAH
-                    ->whereIn('laporan_bidang_kesehatan.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_bidang_kesehatan.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->orderBy('laporan_bidang_kesehatan.id_pokja4_bidang1', 'desc')
                     ->get();
             }

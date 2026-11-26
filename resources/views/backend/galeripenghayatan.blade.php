@@ -118,6 +118,24 @@
         color: white !important;
         transform: translateY(-1px);
     }
+
+    /* Kolom Aksi tetap terlihat walau tabel lebih lebar dari layar */
+    .table-card {
+        overflow-x: auto !important;
+    }
+
+    .table-ttd th:last-child,
+    .table-ttd td:last-child {
+        position: sticky;
+        right: 0;
+        background: #fff;
+        box-shadow: -6px 0 10px -6px rgba(15, 23, 42, 0.18);
+        z-index: 1;
+    }
+
+    .table-ttd thead th:last-child {
+        background: #f7fafc;
+    }
 </style>
 
 <main id="main" class="main">
@@ -176,7 +194,7 @@
                         </th>
 
                         <th>
-                            Deskripsi
+                            Nama Kegiatan
                         </th>
                         <th>
                             Nama Peserta

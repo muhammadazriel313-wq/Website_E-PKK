@@ -40,7 +40,7 @@ class GotongRoyongController extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_gotong_royong.status',
-                                    ['Proses', 'proses', 'PROSES']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                                 );
                         });
                 })
@@ -65,7 +65,7 @@ class GotongRoyongController extends Controller
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
                     // KECAMATAN HANYA BISA MELIHAT DATA MENTAH
-                    ->whereIn('laporan_gotong_royong.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_gotong_royong.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->orderBy('laporan_gotong_royong.id_pokja1_bidang2', 'desc')
                     ->get();
             }

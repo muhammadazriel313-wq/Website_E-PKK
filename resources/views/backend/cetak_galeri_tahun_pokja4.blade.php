@@ -294,7 +294,7 @@
                     </th>
 
                     <th width="32%">
-                        Deskripsi
+                        Nama Kegiatan
                     </th>
 
                 </tr>

@@ -252,7 +252,7 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="30%">Deskripsi</th>
+                    <th width="30%">Nama Kegiatan</th>
                     <th width="25%">Nama Peserta</th>
 
                 </tr>
@@ -318,7 +318,7 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="30%">Deskripsi</th>
+                    <th width="30%">Nama Kegiatan</th>
                     <th width="25%">Nama Peserta</th>
 
                 </tr>
@@ -384,7 +384,7 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="30%">Deskripsi</th>
+                    <th width="30%">Nama Kegiatan</th>
                     <th width="25%">Nama Peserta</th>
 
                 </tr>
@@ -450,7 +450,7 @@
                     <th width="5%">No</th>
                     <th width="20%">Tanggal</th>
                     <th width="30%">Lokasi Kegiatan</th>
-                    <th width="30%">Deskripsi</th>
+                    <th width="30%">Nama Kegiatan</th>
                     <th width="25%">Nama Peserta</th>
 
                 </tr>
@@ -517,7 +517,7 @@
                     <th width="20%">Tanggal</th>
                     <th width="25%">Kategori Inovasi</th>
                     <th width="20%">Lokasi Kegiatan</th>
-                    <th width="30%">Deskripsi</th>
+                    <th width="30%">Nama Kegiatan</th>
 
                 </tr>
 

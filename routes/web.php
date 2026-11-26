@@ -29,6 +29,8 @@ use App\Http\Controllers\backend\PosyanduController;
 use App\Http\Controllers\backend\RekapTahunanController;
 use App\Http\Controllers\backend\KegiatanPokja4Controller;
 use App\Http\Controllers\backend\GaleriBidangUmumController;
+use App\Http\Controllers\backend\KeuanganController;
+use App\Http\Controllers\backend\SerahTerimaJabatanController;
 
 
 
@@ -530,6 +532,14 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
 
     // === TAMBAHKAN RUTE INI KE DALAM MIDDLEWARE ===
     Route::get('/cetak-pokja1', [App\Http\Controllers\backend\Pokja1Controller::class, 'cetak'])->name('pokja1.cetak');
+
+    // === FITUR KEUANGAN ===
+    Route::get('/keuangan/cetak', [KeuanganController::class, 'cetak'])->name('keuangan.cetak');
+    Route::resource('keuangan', KeuanganController::class);
+
+    // === FITUR SERAH TERIMA JABATAN ===
+    Route::get('/serah_terima_jabatan/{id}/cetak', [SerahTerimaJabatanController::class, 'cetak'])->name('serah_terima_jabatan.cetak');
+    Route::resource('serah_terima_jabatan', SerahTerimaJabatanController::class);
 
     
     // ... rute lainnya ...

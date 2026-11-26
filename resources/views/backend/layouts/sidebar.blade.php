@@ -83,6 +83,28 @@
     </li>
   @endif
 
+    {{-- Garis pemisah dari menu sebelumnya --}}
+    <li><hr class="sidebar-divider" style="border: none; border-top: 1.5px solid #94a3b8; opacity: 0.75; margin: 12px 14px;"></li>
+
+    {{-- Keuangan --}}
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('keuangan*') ? '' : 'collapsed' }}" href="{{ route('keuangan.index') }}">
+        <i class="bi bi-wallet2"></i>
+        <span>Keuangan</span>
+      </a>
+    </li>
+
+    {{-- Serah Terima Jabatan --}}
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('serah_terima_jabatan*') ? '' : 'collapsed' }}" href="{{ route('serah_terima_jabatan.index') }}">
+        <i class="bi bi-person-badge"></i>
+        <span>Serah Terima Jabatan</span>
+      </a>
+    </li>
+
+    {{-- Garis pemisah dengan profil serta logout --}}
+    <li><hr class="sidebar-divider" style="border: none; border-top: 1.5px solid #94a3b8; opacity: 0.75; margin: 12px 14px;"></li>
+
     {{-- Profil & Logout (semua user) --}}
     <li class="nav-heading">Halaman</li>
 

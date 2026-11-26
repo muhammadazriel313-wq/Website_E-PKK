@@ -5,8 +5,9 @@
 <main id="main" class="main">
 
   <section class="section">
-    <div class="row">
-      <div class="col-xl-6">
+    <div class="row align-items-stretch">
+      {{-- KOLOM KIRI: INFORMASI PRIBADI --}}
+      <div class="col-lg-6 mb-4 d-flex flex-column">
         <h1 class="page-heading">Informasi Pribadi</h1>
 
         @if ($message = Session::get('success'))
@@ -15,46 +16,45 @@
           </div>
         @endif
 
-        <div class="form-card">
-          <div class="row mb-3">
-            <div class="col-5" style="font-weight: 500; color: #6b7280;">Nama lengkap :</div>
-            <div class="col-7" style="color: #2d3748; font-weight: 500;">
-              {{ $userType == 'pengguna' ? $user->full_name : $user->name }}
+        <div class="form-card flex-grow-1 d-flex flex-column justify-content-between">
+          <div class="info-content">
+            <div class="row py-3 border-bottom" style="border-color: #f1f5f9 !important;">
+              <div class="col-sm-4 col-5" style="font-weight: 500; color: #64748b;">Nama lengkap :</div>
+              <div class="col-sm-8 col-7" style="color: #1e293b; font-weight: 600;">
+                {{ $userType == 'pengguna' ? $user->full_name : $user->name }}
+              </div>
             </div>
+            
+            @if($userType == 'user')
+              <div class="row py-3 border-bottom" style="border-color: #f1f5f9 !important;">
+                <div class="col-sm-4 col-5" style="font-weight: 500; color: #64748b;">Email :</div>
+                <div class="col-sm-8 col-7" style="color: #1e293b; font-weight: 600;">{{ $user->email }}</div>
+              </div>
+            @endif
+            
+            <div class="row py-3 border-bottom" style="border-color: #f1f5f9 !important;">
+              <div class="col-sm-4 col-5" style="font-weight: 500; color: #64748b;">Nomor telepon :</div>
+              <div class="col-sm-8 col-7" style="color: #1e293b; font-weight: 600;">
+                {{ $userType == 'pengguna' ? $user->phone_number : $user->nomer_telepon }}
+              </div>
+            </div>
+            
+            @if($userType == 'user')
+              <div class="row py-3" style="border-color: #f1f5f9 !important;">
+                <div class="col-sm-4 col-5" style="font-weight: 500; color: #64748b;">Alamat :</div>
+                <div class="col-sm-8 col-7" style="color: #1e293b; font-weight: 600;">{{ $user->alamat }}</div>
+              </div>
+            @endif
           </div>
-          
-          @if($userType == 'user')
-            <div class="row mb-3">
-              <div class="col-5" style="font-weight: 500; color: #6b7280;">Email :</div>
-              <div class="col-7" style="color: #2d3748; font-weight: 500;">{{ $user->email }}</div>
-            </div>
-          @endif
-          
-          <div class="row mb-3">
-            <div class="col-5" style="font-weight: 500; color: #6b7280;">Nomor telepon :</div>
-            <div class="col-7" style="color: #2d3748; font-weight: 500;">
-              {{ $userType == 'pengguna' ? $user->phone_number : $user->nomer_telepon }}
-            </div>
-          </div>
-          
-          @if($userType == 'user')
-            <div class="row mb-3">
-              <div class="col-5" style="font-weight: 500; color: #6b7280;">Alamat :</div>
-              <div class="col-7" style="color: #2d3748; font-weight: 500;">{{ $user->alamat }}</div>
-            </div>
-          @endif
 
-          <div class="text-end" style="margin-top: 24px;">
+          <div class="text-end mt-auto pt-4">
             <button class="btn-kirim" type="button" onclick="openEditModal()">Edit</button>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="section" style="margin-top: 30px;">
-    <div class="row">
-      <div class="col-xl-6">
+      {{-- KOLOM KANAN: UBAH KATA SANDI --}}
+      <div class="col-lg-6 mb-4 d-flex flex-column">
         <h1 class="page-heading">Ubah kata sandi</h1>
 
         @if ($message = Session::get('successs'))
@@ -69,42 +69,44 @@
           </div>
         @endif
 
-        <div class="form-card">
-          <form action="{{ route('change_password.update', $user->id) }}" method="POST">
+        <div class="form-card flex-grow-1 d-flex flex-column justify-content-between">
+          <form action="{{ route('change_password.update', $user->id) }}" method="POST" class="h-100 d-flex flex-column justify-content-between">
             @method('PUT')
             @csrf
 
-            <div class="form-group">
-              <label for="currentPassword" class="form-label">Masukkan Kata Sandi</label>
-              <input name="currentPassword" type="password" minlength="8"
-                class="form-control @error('currentPassword') is-invalid @enderror" id="currentPassword"
-                required placeholder="Masukkan kata sandi saat ini">
-              @error('currentPassword')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
+            <div class="password-inputs">
+              <div class="form-group">
+                <label for="currentPassword" class="form-label">Masukkan Kata Sandi</label>
+                <input name="currentPassword" type="password" minlength="8"
+                  class="form-control @error('currentPassword') is-invalid @enderror" id="currentPassword"
+                  required placeholder="Masukkan kata sandi saat ini">
+                @error('currentPassword')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+              </div>
+
+              <div class="form-group">
+                <label for="newpassword" class="form-label">Masukkan Kata Sandi Baru</label>
+                <input name="newpassword" type="password" minlength="8"
+                  class="form-control @error('newpassword') is-invalid @enderror" id="newPassword"
+                  placeholder="Masukkan kata sandi baru" required>
+                @error('newpassword')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+              </div>
+
+              <div class="form-group">
+                <label for="renewpassword" class="form-label">Konfirmasi Kata Sandi Baru</label>
+                <input name="renewpassword" type="password" minlength="8"
+                  class="form-control @error('renewpassword') is-invalid @enderror" id="renewPassword"
+                  placeholder="Konfirmasi kata sandi anda" required>
+                @error('renewpassword')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="newpassword" class="form-label">Masukkan Kata Sandi Baru</label>
-              <input name="newpassword" type="password" minlength="8"
-                class="form-control @error('newpassword') is-invalid @enderror" id="newPassword"
-                placeholder="Masukkan kata sandi baru" required>
-              @error('newpassword')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
-            <div class="form-group">
-              <label for="renewpassword" class="form-label">Konfirmasi Kata Sandi Baru</label>
-              <input name="renewpassword" type="password" minlength="8"
-                class="form-control @error('renewpassword') is-invalid @enderror" id="renewPassword"
-                placeholder="Konfirmasi kata sandi anda" required>
-              @error('renewpassword')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
-            <div class="text-end">
+            <div class="text-end mt-auto pt-3">
               <button class="btn-kirim" type="submit">Simpan</button>
             </div>
           </form>

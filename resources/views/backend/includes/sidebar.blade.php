@@ -146,8 +146,29 @@
             </ul>
         </li>
 
-        {{-- Garis pemisah --}}
-        <li><hr class="sidebar-divider"></li>
+        {{-- Garis pemisah dari menu sebelumnya --}}
+        <li><hr class="sidebar-divider" style="border: none; border-top: 1.5px solid #94a3b8; opacity: 0.75; margin: 12px 14px;"></li>
+
+        {{-- Keuangan --}}
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('keuangan.*') ? '' : 'collapsed' }}"
+                href="{{ route('keuangan.index') }}">
+                <i class="bi bi-wallet2"></i>
+                <span>Keuangan</span>
+            </a>
+        </li>
+
+        {{-- Serah Terima Jabatan --}}
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('serah_terima_jabatan.*') ? '' : 'collapsed' }}"
+                href="{{ route('serah_terima_jabatan.index') }}">
+                <i class="bi bi-person-badge"></i>
+                <span>Serah Terima Jabatan</span>
+            </a>
+        </li>
+
+        {{-- Garis pemisah dengan profil serta logout --}}
+        <li><hr class="sidebar-divider" style="border: none; border-top: 1.5px solid #94a3b8; opacity: 0.75; margin: 12px 14px;"></li>
 
         {{-- Profil --}}
         <li class="nav-item">
@@ -238,6 +259,14 @@
         transition: all 0.2s ease-in-out;
     }
     
+    /* Garis pemisah sidebar yang lebih tegas dan terlihat jelas */
+    .sidebar-divider {
+        border: none !important;
+        border-top: 1.5px solid #94a3b8 !important;
+        opacity: 0.75 !important;
+        margin: 12px 14px !important;
+    }
+
     .swal2-cancel.btn-secondary:hover {
         background-color: #5a6268 !important;
         transform: translateY(-2px);

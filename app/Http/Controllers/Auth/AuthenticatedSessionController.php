@@ -66,6 +66,27 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
+    /**
+     * Dipakai tombol "Masuk Admin" di navbar publik.
+     * Bila sesi masih aktif, sesi diakhiri lebih dulu supaya pengguna
+     * diarahkan ke form login, bukan langsung ke dashboard.
+     */
+    public function masukAdmin(Request $request): RedirectResponse
+    {
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+
+        if (Auth::guard('pengguna')->check()) {
+            Auth::guard('pengguna')->logout();
+        }
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+
     public function destroy(Request $request)
     {
         // 1. Pastikan kedua guard benar-benar di-logout

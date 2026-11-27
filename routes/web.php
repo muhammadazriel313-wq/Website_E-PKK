@@ -68,6 +68,11 @@ Route::get('/otp/verify', function () {
 Route::post('/otp/verify', [OtpController::class, 'verifyOtp'])->name('otp.verify');
 Route::post('/otp/reset', [OtpController::class, 'resetPassword'])->name('otp.reset');
 
+// Tombol "Masuk Admin" di navbar: akhiri sesi yang masih aktif lalu
+// tampilkan form login, sehingga pengguna harus memasukkan akun lagi.
+Route::post('/masuk-admin', [AuthenticatedSessionController::class, 'masukAdmin'])
+    ->name('masuk-admin');
+
 
 /*
 |--------------------------------------------------------------------------

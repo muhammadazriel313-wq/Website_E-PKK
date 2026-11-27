@@ -47,6 +47,13 @@
       <span>Pengumuman</span>
       </a>
     </li>
+
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('pengguna*') ? '' : 'collapsed' }}" href="{{ route('pengguna.index') }}">
+      <i class="fa-solid fa-users"></i>
+      <span>Pengguna</span>
+      </a>
+    </li>
   @endif
 
     {{-- Galeri (admin & pengguna) --}}

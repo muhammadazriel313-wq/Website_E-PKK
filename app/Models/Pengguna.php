@@ -70,4 +70,20 @@ class Pengguna extends Authenticatable
     {
         return $this->phone_number;
     }
+
+    /**
+     * Relasi ke tabel subdistrict (Kecamatan)
+     */
+    public function subdistrict()
+    {
+        return $this->belongsTo(Subdistrict::class, 'id_subdistrict');
+    }
+
+    /**
+     * Relasi ke tabel village (Desa / Kelurahan)
+     */
+    public function village()
+    {
+        return $this->belongsTo(Village::class, 'id_village');
+    }
 }

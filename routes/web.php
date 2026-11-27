@@ -525,6 +525,8 @@ Route::middleware(['auth:web,pengguna', 'prevent-back-history'])->group(function
 
         Route::resource('input_berita', App\Http\Controllers\backend\InputBeritaController::class);
         Route::resource('input_pengumuman', App\Http\Controllers\backend\InputPengumumanController::class);
+        Route::get('pengguna/villages/{id_subdistrict}', [App\Http\Controllers\backend\PenggunaController::class, 'getVillages'])->name('pengguna.villages');
+        Route::resource('pengguna', App\Http\Controllers\backend\PenggunaController::class);
     });
     
 

@@ -192,7 +192,7 @@
 
     /* Header styling */
     .header {
-      background: #fff !important;
+      background: #0baaffff !important;
       box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important;
       height: 70px !important;
       padding: 0 20px !important;
@@ -220,12 +220,12 @@
       font-weight: 700;
       font-family: "Poppins", sans-serif !important;
       line-height: 1.3;
-      color: #1a1a1a;
+      color: #ffffffff;
       white-space: nowrap;
       display: inline-block;
     }
     .toggle-sidebar-btn {
-      color: #1a1a1a !important;
+      color: #ffffffff !important;
       font-size: 24px !important;
       margin-right: 0 !important;
       cursor: pointer !important;
@@ -235,7 +235,7 @@
 
     /* Sidebar Width - Make it wider */
     .sidebar {
-      width: 300px !important;
+      width: 250px !important;
       transition: all 0.3s ease;
       top: 70px !important;
       background: #fff !important;

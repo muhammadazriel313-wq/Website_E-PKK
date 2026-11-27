@@ -56,18 +56,24 @@
         {{-- CARD PENGGUNA --}}
         <div class="col-xxl-6 col-md-6">
           <div class="card info-card sales-card">
-            <div class="card-body">
-              <h5 class="card-title">Pengguna</h5>
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background: #e0f2fe;">
-                  <i class="bi bi-people-fill" style="color: #0284c7;"></i>
-                </div>
-                <div class="ps-3">
-                  <h6>{{ $jmlh_user }}</h6>
-                  <span class="text-muted small pt-2 ps-1">Jumlah total pengguna</span>
+            @if(Auth::guard('web')->check())
+              <a href="{{ route('pengguna.index') }}" style="text-decoration:none;">
+            @endif
+              <div class="card-body">
+                <h5 class="card-title">Pengguna</h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background: #e0f2fe;">
+                    <i class="bi bi-people-fill" style="color: #0284c7;"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6>{{ $jmlh_user }}</h6>
+                    <span class="text-muted small pt-2 ps-1">Jumlah total pengguna</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            @if(Auth::guard('web')->check())
+              </a>
+            @endif
           </div>
         </div>
 

@@ -10,6 +10,15 @@
             </a>
         </li>
 
+        {{-- Pengguna (Kabupaten) --}}
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('pengguna.*') ? '' : 'collapsed' }}"
+                href="{{ route('pengguna.index') }}">
+                <i class="bi bi-people"></i>
+                <span>Pengguna</span>
+            </a>
+        </li>
+
         {{-- Peringkat --}}
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('peringkat') ? '' : 'collapsed' }}"

@@ -90,6 +90,7 @@ class GaleriBidangUmumController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'tanggal'   => $request->tanggal,
                 'lokasi'    => $request->tempat_kegiatan,
+                'jabatan'   => $request->has('jabatan') ? $request->jabatan : $data->jabatan,
                 'nama_peserta' => $request->has('nama_peserta') ? (function() use ($request, $data) {
                     $val = $request->nama_peserta;
                     if (is_array($val)) return json_encode(array_values(array_filter(array_map('trim', $val))));
@@ -111,6 +112,7 @@ class GaleriBidangUmumController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'tanggal'   => $request->tanggal,
                 'lokasi'    => $request->tempat_kegiatan,
+                'jabatan'   => $request->has('jabatan') ? $request->jabatan : $data->jabatan,
                 'nama_peserta' => $request->has('nama_peserta') ? (function() use ($request, $data) {
                     $val = $request->nama_peserta;
                     if (is_array($val)) return json_encode(array_values(array_filter(array_map('trim', $val))));

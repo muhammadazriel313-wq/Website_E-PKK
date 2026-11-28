@@ -140,7 +140,7 @@
                         <p class="mb-2" style="font-size: 12px; color: #475569;">Data akan diekspor dan disusun otomatis ke tab di Google Sheets berikut:</p>
                         {{-- [PERUBAHAN 2026-10-09] Mengambil URL Spreadsheet dari config services; URL hardcode dinonaktifkan --}}
                         {{-- <a href="https://docs.google.com/spreadsheets/d/1jQo74NIJiUAcrWdVE8O-Afup-ijjCY733F151trNlp4/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size: 12px; font-weight: 600; border: 1px solid #cce3fd;"> --}}
-                        <a id="linkSheetBidangUmum" href="{{ config('services.sheets.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size: 12px; font-weight: 600; border: 1px solid #cce3fd;">
+                        <a id="linkSheetBidangUmum" href="{{ config('services.bidang_umum.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size: 12px; font-weight: 600; border: 1px solid #cce3fd;">
                             <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet Laporan
                         </a>
                     </div>
@@ -163,9 +163,9 @@
     // URL GOOGLE APPS SCRIPT BIDANG UMUM
     // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dan Spreadsheet dari config services; URL hardcode dinonaktifkan
     // const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRFcqpMF2IP81GirLgjnNzaD5_k3DBF5yAwbP5nS82_DiFtKn7nbZCW-z3np4NvuMV/exec";
-    const APPS_SCRIPT_URL = "{{ config('services.sheets.script_url') }}";
+    const APPS_SCRIPT_URL = "{{ config('services.bidang_umum.script_url') }}";
     // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1jQo74NIJiUAcrWdVE8O-Afup-ijjCY733F151trNlp4/edit?usp=sharing";
-    const SHEET_HREF = "{{ config('services.sheets.spreadsheet_url') }}";
+    const SHEET_HREF = "{{ config('services.bidang_umum.spreadsheet_url') }}";
 
     // [PERUBAHAN 2026-10-09] Fungsi navigasi langsung ke tab Google Sheets Bidang Umum
     function updateLinkBidangUmum() {

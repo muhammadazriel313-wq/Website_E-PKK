@@ -122,7 +122,10 @@ class KegiatanPokja4Controller extends Controller
                                         [
                                             'Proses',
                                             'proses',
-                                            'PROSES'
+                                            'PROSES',
+                                            'Menunggu',
+                                            'menunggu',
+                                            'MENUNGGU'
                                         ]
                                     );
                             });
@@ -197,7 +200,10 @@ class KegiatanPokja4Controller extends Controller
                             : [
                                 'Proses',
                                 'proses',
-                                'PROSES'
+                                'PROSES',
+                                'Menunggu',
+                                'menunggu',
+                                'MENUNGGU'
                             ]
                     )
 
@@ -415,7 +421,10 @@ class KegiatanPokja4Controller extends Controller
                                         [
                                             'Proses',
                                             'proses',
-                                            'PROSES'
+                                            'PROSES',
+                                            'Menunggu',
+                                            'menunggu',
+                                            'MENUNGGU'
                                         ]
                                     );
                             });
@@ -490,7 +499,10 @@ class KegiatanPokja4Controller extends Controller
                             : [
                                 'Proses',
                                 'proses',
-                                'PROSES'
+                                'PROSES',
+                                'Menunggu',
+                                'menunggu',
+                                'MENUNGGU'
                             ]
                     )
 

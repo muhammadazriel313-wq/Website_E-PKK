@@ -139,7 +139,7 @@
           
           <div style="text-align: left; margin-bottom: 16px;">
             <label style="display: block; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; color: #6b7280; margin-bottom: 6px;">Nomor Telepon :</label>
-            <input name="nomer_telepon" type="tel" pattern="^08\\d{10,13}$" class="swal2-input" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 6px; font-family: 'Poppins', sans-serif; font-size: 14px; margin: 0;" value="{{ $userType == 'pengguna' ? $user->phone_number : $user->nomer_telepon }}" placeholder="08xxxxxxxxxx" required>
+            <input name="nomer_telepon" type="tel" maxlength="13" inputmode="numeric" pattern="^08\\d{10,13}$" class="swal2-input" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 6px; font-family: 'Poppins', sans-serif; font-size: 14px; margin: 0;" value="{{ $userType == 'pengguna' ? $user->phone_number : $user->nomer_telepon }}" placeholder="08xxxxxxxxxx" required>
           </div>
           
           @if($userType == 'user')

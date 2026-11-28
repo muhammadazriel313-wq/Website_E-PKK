@@ -22,6 +22,10 @@ class InovasiController extends Controller
             'proses',
             'PROSES',
 
+            'Menunggu',
+            'menunggu',
+            'MENUNGGU',
+
             'Disetujui1',
             'disetujui1',
             'DISETUJUI1'
@@ -357,6 +361,10 @@ class InovasiController extends Controller
                                     'proses',
                                     'PROSES',
 
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
+
                                     'Disetujui2',
                                     'disetujui2',
                                     'DISETUJUI2'
@@ -410,6 +418,10 @@ class InovasiController extends Controller
                                     'Proses',
                                     'proses',
                                     'PROSES',
+
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
 
                                     'Disetujui2',
                                     'disetujui2',
@@ -465,6 +477,10 @@ class InovasiController extends Controller
                                     'proses',
                                     'PROSES',
 
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
+
                                     'Disetujui2',
                                     'disetujui2',
                                     'DISETUJUI2'
@@ -518,6 +534,10 @@ class InovasiController extends Controller
                                     'Proses',
                                     'proses',
                                     'PROSES',
+
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
 
                                     'Disetujui2',
                                     'disetujui2',
@@ -585,6 +605,10 @@ class InovasiController extends Controller
                                     'proses',
                                     'PROSES',
 
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
+
                                     'Disetujui2',
                                     'disetujui2',
                                     'DISETUJUI2'
@@ -638,6 +662,10 @@ class InovasiController extends Controller
                                     'Proses',
                                     'proses',
                                     'PROSES',
+
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
 
                                     'Disetujui2',
                                     'disetujui2',
@@ -693,6 +721,10 @@ class InovasiController extends Controller
                                     'proses',
                                     'PROSES',
 
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
+
                                     'Disetujui2',
                                     'disetujui2',
                                     'DISETUJUI2'
@@ -746,6 +778,10 @@ class InovasiController extends Controller
                                     'Proses',
                                     'proses',
                                     'PROSES',
+
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
 
                                     'Disetujui2',
                                     'disetujui2',

@@ -28,10 +28,13 @@
             <li><a href="sejarah">Sejarah</a></li>
             <li><a href="mars">Mars PKK</a></li>
             <li class="admin-login-wrapper">
-              <a href="{{ route('login') }}" class="btn-masuk-admin">
-                <i class="bi bi-shield-lock-fill"></i>
-                <span>Masuk Admin</span>
-              </a>
+              <form action="{{ route('masuk-admin') }}" method="POST" class="form-masuk-admin">
+                @csrf
+                <button type="submit" class="btn-masuk-admin">
+                  <i class="bi bi-shield-lock-fill"></i>
+                  <span>Masuk Admin</span>
+                </button>
+              </form>
             </li>
           </ul>
         </li>
@@ -84,11 +87,18 @@
     background-color: #f8fafc;
   }
 
+  .navbar .dropdown ul .form-masuk-admin {
+    margin: 0;
+  }
+
   .navbar .dropdown ul .btn-masuk-admin {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 8px !important;
+    border: none !important;
+    cursor: pointer;
+    font-family: inherit;
     background: linear-gradient(135deg, #016AA3 0%, #0284c7 100%) !important;
     color: #ffffff !important;
     font-weight: 600 !important;

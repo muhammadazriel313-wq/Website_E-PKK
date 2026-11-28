@@ -158,7 +158,9 @@
                     @elseif (Auth::guard('pengguna')->check())
                     <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Desa</th>
                     @endif
-                    <th scope="col" colspan="24" align="center">PENGHAYATAN DAN PENGAMALAN PANCASILA - GOTONG ROYONG</th>
+                    <th scope="col" colspan="24" align="center">PENGHAYATAN DAN PENGAMALAN PANCASILA</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Sumber Dana</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Hasil Kegiatan</th>
                 </tr>
                 <tr style="background: #e0f2fe;">
                     <th scope="col" colspan="4" align="center">KISAH</th>
@@ -235,10 +237,13 @@
                     <td align="center">{{ $item->pkbn_vol ?? '-' }}</td>
                     <td align="center">{{ $item->pkbn_metode ?? '-' }}</td>
                     <td align="center">{{ $item->pkbn_sasaran ?? '-' }}</td>
+
+                    <td align="center">{{ $item->sumber_dana ?? '-' }}</td>
+                    <td align="center">{{ $item->hasil_kegiatan ?? '-' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="{{ Auth::guard('web')->check() ? 27 : 26 }}" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 29 : 28 }}" align="center"><i>Tidak ada data laporan untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
@@ -246,45 +251,41 @@
         @endif
 
         {{-- ========================================================= --}}
-        {{-- 2. TABEL GOTONG ROYONG (DITAMBAHKAN KARENA SEBELUMNYA HILANG) --}}
+        {{-- 2. TABEL GOTONG ROYONG                                     --}}
         {{-- ========================================================= --}}
         @if($bidang == 'semua' || $bidang == 'gotongroyong')
-        {{-- [PERUBAHAN 2026-10-09] Menambahkan tabel Gotong Royong sesuai decgotongroyong --}}
         <h3>Laporan Gotong Royong</h3>
-        <table align="center" style="font-size: 11px; width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+        <table align="center" class="table-penghayatan" style="font-size: 8.5px; width: 100%; border-collapse: collapse; margin-bottom: 25px;">
             <thead>
                 <tr style="background: #e0f2fe;">
-                    <th scope="col" align="center" style="vertical-align: middle;">No</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">No</th>
                     @if (Auth::guard('web')->check())
-                    <th scope="col" align="center" style="vertical-align: middle;">Kecamatan</th>
-                    <th scope="col" align="center" style="vertical-align: middle;">Desa</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Kecamatan</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Desa</th>
                     @elseif (Auth::guard('pengguna')->check())
-                    <th scope="col" align="center" style="vertical-align: middle;">Desa</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Desa</th>
                     @endif
-                    <th scope="col" align="center" style="vertical-align: middle;">Kerja Bakti</th>
-                    <th scope="col" align="center" style="vertical-align: middle;">Rukun Kematian</th>
-                    <th scope="col" align="center" style="vertical-align: middle;">Keagamaan</th>
-                    <th scope="col" align="center" style="vertical-align: middle;">Jimpitan</th>
-                    <th scope="col" align="center" style="vertical-align: middle;">Arisan</th>
+                    <th scope="col" colspan="12" align="center" style="vertical-align: middle;">GOTONG ROYONG</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Sumber Dana</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Hasil Kegiatan</th>
+                    <th scope="col" rowspan="3" align="center" style="vertical-align: middle;">Status</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th scope="col" colspan="4" align="center">KERJA BAKTI</th>
+                    <th scope="col" colspan="4" align="center">BANTUAN ANAK YATIM</th>
+                    <th scope="col" colspan="4" align="center">KEGIATAN SOSIAL</th>
+                </tr>
+                <tr style="background: #e0f2fe;">
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
+                    <th align="center">Keg</th><th align="center">Vol</th><th align="center">Metode</th><th align="center">Sasaran</th>
                 </tr>
             </thead>
             <tbody>
                 @php
                 $no_gr = 1;
-                $t_kerja_bakti = 0;
-                $t_rukun_kematian = 0;
-                $t_keagamaan = 0;
-                $t_jimpitan = 0;
-                $t_arisan = 0;
                 @endphp
                 @forelse($gotongroyong as $item)
-                @php
-                $t_kerja_bakti += $item->kerja_bakti ?? 0;
-                $t_rukun_kematian += $item->rukun_kematian ?? 0;
-                $t_keagamaan += $item->keagamaan ?? 0;
-                $t_jimpitan += $item->jimpitan ?? 0;
-                $t_arisan += $item->arisan ?? 0;
-                @endphp
                 <tr>
                     <td align="center">{{ $no_gr++ }}</td>
                     @if (Auth::guard('web')->check())
@@ -293,28 +294,35 @@
                     @elseif (Auth::guard('pengguna')->check())
                     <td align="center">{{ $item->nama_desa ?? '-' }}</td>
                     @endif
-                    <td align="center">{{ $item->kerja_bakti ?? '0' }}</td>
-                    <td align="center">{{ $item->rukun_kematian ?? '0' }}</td>
-                    <td align="center">{{ $item->keagamaan ?? '0' }}</td>
-                    <td align="center">{{ $item->jimpitan ?? '0' }}</td>
-                    <td align="center">{{ $item->arisan ?? '0' }}</td>
+
+                    {{-- KERJA BAKTI --}}
+                    <td align="center">{{ $item->kerja_bakti_kegiatan ?? ($item->jenis_kegiatan == 'Kerja Bakti' ? 'Kerja Bakti' : '-') }}</td>
+                    <td align="center">{{ $item->kerja_bakti_vol ?? ($item->kerja_bakti > 0 ? $item->kerja_bakti : '-') }}</td>
+                    <td align="center">{{ $item->kerja_bakti_metode ?? '-' }}</td>
+                    <td align="center">{{ $item->kerja_bakti_sasaran ?? '-' }}</td>
+
+                    {{-- BANTUAN ANAK YATIM --}}
+                    <td align="center">{{ $item->bantuan_yatim_kegiatan ?? ($item->jenis_kegiatan == 'Bantuan Anak Yatim' ? 'Santunan Yatim' : '-') }}</td>
+                    <td align="center">{{ $item->bantuan_yatim_vol ?? ($item->rukun_kematian > 0 ? $item->rukun_kematian : '-') }}</td>
+                    <td align="center">{{ $item->bantuan_yatim_metode ?? '-' }}</td>
+                    <td align="center">{{ $item->bantuan_yatim_sasaran ?? '-' }}</td>
+
+                    {{-- KEGIATAN SOSIAL --}}
+                    <td align="center">{{ $item->kegiatan_sosial_kegiatan ?? ($item->jenis_kegiatan == 'Kegiatan Sosial' ? 'Kegiatan Sosial' : '-') }}</td>
+                    <td align="center">{{ $item->kegiatan_sosial_vol ?? (($item->keagamaan ?? 0) > 0 ? $item->keagamaan : (($item->jimpitan ?? 0) > 0 ? $item->jimpitan : (($item->arisan ?? 0) > 0 ? $item->arisan : '-'))) }}</td>
+                    <td align="center">{{ $item->kegiatan_sosial_metode ?? '-' }}</td>
+                    <td align="center">{{ $item->kegiatan_sosial_sasaran ?? '-' }}</td>
+
+                    <td align="center">{{ $item->sumber_dana ?? '-' }}</td>
+                    <td align="center">{{ $item->hasil_kegiatan ?? '-' }}</td>
+                    <td align="center">{{ $item->status ?? 'Proses' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="{{ Auth::guard('web')->check() ? 8 : 7 }}" align="center"><i>Tidak ada data laporan gotong royong untuk dicetak</i></td>
+                    <td colspan="{{ Auth::guard('web')->check() ? 18 : 17 }}" align="center"><i>Tidak ada data laporan gotong royong untuk dicetak</i></td>
                 </tr>
                 @endforelse
             </tbody>
-            <tfoot>
-                <tr style="background-color: #f2f2f2; font-weight: bold;">
-                    <td colspan="{{ Auth::guard('web')->check() ? 3 : 2 }}" align="center">TOTAL</td>
-                    <td align="center">{{ $t_kerja_bakti }}</td>
-                    <td align="center">{{ $t_rukun_kematian }}</td>
-                    <td align="center">{{ $t_keagamaan }}</td>
-                    <td align="center">{{ $t_jimpitan }}</td>
-                    <td align="center">{{ $t_arisan }}</td>
-                </tr>
-            </tfoot>
         </table>
         @endif
 

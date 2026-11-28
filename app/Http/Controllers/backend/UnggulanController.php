@@ -30,6 +30,9 @@ class UnggulanController extends Controller
             'Proses',
             'proses',
             'PROSES',
+            'Menunggu',
+            'menunggu',
+            'MENUNGGU',
             'Disetujui1',
             'disetujui1',
             'DISETUJUI1'
@@ -145,6 +148,10 @@ class UnggulanController extends Controller
                                     'proses',
                                     'PROSES',
 
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
+
                                     'Disetujui2',
                                     'disetujui2',
                                     'DISETUJUI2'
@@ -198,6 +205,10 @@ class UnggulanController extends Controller
                                     'Proses',
                                     'proses',
                                     'PROSES',
+
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
 
                                     'Disetujui2',
                                     'disetujui2',
@@ -253,6 +264,10 @@ class UnggulanController extends Controller
                                     'proses',
                                     'PROSES',
 
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
+
                                     'Disetujui2',
                                     'disetujui2',
                                     'DISETUJUI2'
@@ -306,6 +321,10 @@ class UnggulanController extends Controller
                                     'Proses',
                                     'proses',
                                     'PROSES',
+
+                                    'Menunggu',
+                                    'menunggu',
+                                    'MENUNGGU',
 
                                     'Disetujui2',
                                     'disetujui2',
@@ -403,6 +422,10 @@ class UnggulanController extends Controller
                                         'proses',
                                         'PROSES',
 
+                                        'Menunggu',
+                                        'menunggu',
+                                        'MENUNGGU',
+
                                         'Disetujui2',
                                         'disetujui2',
                                         'DISETUJUI2'
@@ -455,6 +478,10 @@ class UnggulanController extends Controller
                         'Proses',
                         'proses',
                         'PROSES',
+
+                        'Menunggu',
+                        'menunggu',
+                        'MENUNGGU',
 
                         'Disetujui1',
                         'disetujui1',

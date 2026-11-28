@@ -39,7 +39,7 @@ class AccPerumahanController extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_perumahan.status',
-                                    ['Proses', 'proses', 'PROSES']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                                 );
                         });
                 })

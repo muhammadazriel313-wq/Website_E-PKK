@@ -7,11 +7,42 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Validation\Rule;
-use App\Support\JabatanKegiatan;
 
 class ReportController extends Controller
 {
+    /**
+     * Validasi input. Bila gagal, langsung balas 422 dengan pesan aslinya
+     * supaya aplikasi mobile tidak menerima error 500.
+     * Mengembalikan null bila input valid.
+     */
+    private function validasiData(Request $request, array $aturan)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make(
+            $request->all(),
+            $aturan
+        );
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            $field = array_key_first($errors->messages()) ?? 'Data';
+            $pesan = $errors->first($field);
+
+            if (is_string($pesan) && str_contains($pesan, 'must be an integer')) {
+                $pesan = 'Isian ' . str_replace('_', ' ', $field)
+                    . ' harus berupa angka.';
+            }
+
+            return response()->json([
+                'statusCode' => 422,
+                'message' => $pesan,
+                'data' => null,
+                'error' => ['message' => $pesan],
+            ], 422);
+        }
+
+        return null;
+    }
+
     // UPLOAD FOTO
     public function insertGaleri(Request $request)
     {
@@ -39,8 +70,8 @@ class ReportController extends Controller
                 // TAMBAHAN NAMA PESERTA & LOKASI
                 'nama_peserta' => 'nullable',
                 'lokasi' => 'nullable|string',
-                'latitude' => 'nullable',
-                'longitude' => 'nullable',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
 
                 // NAMA PESERTA KEGIATAN (array / JSON string / satu nama per baris)
                 'nama_peserta' => 'nullable',
@@ -107,6 +138,13 @@ class ReportController extends Controller
                     }
                     return null;
                 })(),
+
+                // JABATAN (kolom JABATAN di Buku Kegiatan)
+                'jabatan' => trim((string) $request->jabatan) !== '' ? trim($request->jabatan) : null,
+
+                // Tanggal kegiatan (kolom TANGGAL di Buku Kegiatan) = tanggal kirim
+                'tanggal' => now(),
+
                 'gambar' => $fileName,
                 'pokja' => $request->pokja,
                 'bidang' => $request->bidang,
@@ -193,7 +231,29 @@ class ReportController extends Controller
 
                 'error' => null
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            // Validasi gagal: tampilkan alasan sebenarnya (mis. "gambar harus berupa gambar")
+            $pesan = collect($e->errors())->flatten()->first() ?? 'Data tidak valid';
+
+            return response()->json([
+
+                'statusCode' => 422,
+
+                'message' => $pesan,
+
+                'data' => null,
+
+                'error' => [
+                    'message' => $e->getMessage(),
+                    'fields' => $e->errors()
+                ]
+
+            ], 422);
         } catch (\Exception $e) {
+
+            // Catat penyebab asli di storage/logs/laravel.log
+            \Illuminate\Support\Facades\Log::error('insertGaleri gagal: ' . $e->getMessage());
 
             // HAPUS FILE JIKA GAGAL
             if (isset($fileName)) {
@@ -271,11 +331,30 @@ class ReportController extends Controller
     {
         try {
             //  VALIDASI
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required',
-            ]);
+                'PKK_RW' => 'integer|min:0',
+                'PKK_RT' => 'integer|min:0',
+                'desa_wisma' => 'integer|min:0',
+                'KRT' => 'integer|min:0',
+                'KK' => 'integer|min:0',
+                'jiwa_laki' => 'integer|min:0',
+                'jiwa_perempuan' => 'integer|min:0',
+                'anggota_laki' => 'integer|min:0',
+                'anggota_perempuan' => 'integer|min:0',
+                'umum_laki' => 'integer|min:0',
+                'umum_perempuan' => 'integer|min:0',
+                'khusus_laki' => 'integer|min:0',
+                'khusus_perempuan' => 'integer|min:0',
+                'honorer_laki' => 'integer|min:0',
+                'honorer_perempuan' => 'integer|min:0',
+                'bantuan_laki' => 'integer|min:0',
+                'bantuan_perempuan' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             //  UUID
             $uuid = 'PKKUM-' . strtoupper(\Illuminate\Support\Str::random(6));
@@ -388,15 +467,23 @@ class ReportController extends Controller
     public function insertKaderPokja1(Request $request)
     {
         try {
-            //  validasi
-            $request->validate([
-                'PKBN' => 'required',
-                'PKDRT' => 'required',
-                'pola_asuh' => 'required',
+            //  validasi (mendukung format baru website dan format lama mobile)
+            if ($gagal = $this->validasiData($request, [
+                'PKBN' => 'required_without:kader_umum|integer|min:0',
+                'PKDRT' => 'required_without:kader_khusus|integer|min:0',
+                'pola_asuh' => 'nullable|integer|min:0',
+                'kader_umum' => 'required_without:PKBN|integer|min:0',
+                'kader_khusus' => 'required_without:PKDRT|integer|min:0',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
-            ]);
+            ])) {
+                return $gagal;
+            }
+
+            $pkbn = $request->input('PKBN', $request->input('kader_umum'));
+            $pkdrt = $request->input('PKDRT', $request->input('kader_khusus'));
+            $polaAsuh = $request->input('pola_asuh', 0);
 
             //  UUID custom
             $uuid = 'KP1-' . strtoupper(\Illuminate\Support\Str::random(6));
@@ -405,9 +492,11 @@ class ReportController extends Controller
             DB::table('laporan_kader_pokja1')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'PKBN' => $request->PKBN,
-                'PKDRT' => $request->PKDRT,
-                'pola_asuh' => $request->pola_asuh,
+                'PKBN' => $pkbn,
+                'PKDRT' => $pkdrt,
+                'pola_asuh' => $polaAsuh,
+                'kader_umum' => $request->input('kader_umum', $pkbn),
+                'kader_khusus' => $request->input('kader_khusus', $pkdrt),
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -472,17 +561,37 @@ class ReportController extends Controller
     public function insertGotongRoyong(Request $request)
     {
         try {
-            //  validasi
+            //  validasi (format baru mobile + format lama website)
             $request->validate([
-                'kerja_bakti' => 'required',
-                'rukun_kematian' => 'required',
-                'keagamaan' => 'required',
-                'jimpitan' => 'required',
-                'arisan' => 'required',
+                'kerja_bakti' => 'nullable',
+                'rukun_kematian' => 'nullable',
+                'keagamaan' => 'nullable',
+                'jimpitan' => 'nullable',
+                'arisan' => 'nullable',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
             ]);
+
+            $toInt = static function ($value) {
+                if ($value === null || $value === '') {
+                    return 0;
+                }
+
+                if (is_numeric($value)) {
+                    return (int) $value;
+                }
+
+                preg_match('/-?\d+/', (string) $value, $match);
+
+                return isset($match[0]) ? (int) $match[0] : 0;
+            };
+
+            $kerjaBakti = $toInt($request->input('kerja_bakti', $request->input('kerja_bakti_vol')));
+            $rukunKematian = $toInt($request->input('rukun_kematian', $request->input('bantuan_yatim_vol')));
+            $keagamaan = $toInt($request->input('keagamaan', $request->input('kegiatan_sosial_vol')));
+            $jimpitan = $toInt($request->input('jimpitan'));
+            $arisan = $toInt($request->input('arisan'));
 
             //  UUID custom (sama seperti kode lama)
             $uuid = 'KP1B2-' . strtoupper(\Illuminate\Support\Str::random(6));
@@ -491,11 +600,27 @@ class ReportController extends Controller
             DB::table('laporan_gotong_royong')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kerja_bakti' => $request->kerja_bakti,
-                'rukun_kematian' => $request->rukun_kematian,
-                'keagamaan' => $request->keagamaan,
-                'jimpitan' => $request->jimpitan,
-                'arisan' => $request->arisan,
+                'kerja_bakti' => $kerjaBakti,
+                'rukun_kematian' => $rukunKematian,
+                'keagamaan' => $keagamaan,
+                'jimpitan' => $jimpitan,
+                'arisan' => $arisan,
+                'kerja_bakti_kegiatan' => $request->input('kerja_bakti_kegiatan'),
+                'kerja_bakti_vol' => $request->input('kerja_bakti_vol'),
+                'kerja_bakti_metode' => $request->input('kerja_bakti_metode'),
+                'kerja_bakti_sasaran' => $request->input('kerja_bakti_sasaran'),
+                'bantuan_yatim_kegiatan' => $request->input('bantuan_yatim_kegiatan'),
+                'bantuan_yatim_vol' => $request->input('bantuan_yatim_vol'),
+                'bantuan_yatim_metode' => $request->input('bantuan_yatim_metode'),
+                'bantuan_yatim_sasaran' => $request->input('bantuan_yatim_sasaran'),
+                'kegiatan_sosial_kegiatan' => $request->input('kegiatan_sosial_kegiatan'),
+                'kegiatan_sosial_vol' => $request->input('kegiatan_sosial_vol'),
+                'kegiatan_sosial_metode' => $request->input('kegiatan_sosial_metode'),
+                'kegiatan_sosial_sasaran' => $request->input('kegiatan_sosial_sasaran'),
+                'jenis_kegiatan' => $request->input('jenis_kegiatan'),
+                'sumber_dana' => $request->input('sumber_dana'),
+                'hasil_kegiatan' => $request->input('hasil_kegiatan'),
+                'catatan' => $request->input('catatan', ''),
                 'status' => 'Proses',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -559,43 +684,78 @@ class ReportController extends Controller
     }
 
     // PENGHAYATAN DAN PENGALAMAN PANCASILA
-        public function insertPenghayatan(Request $request)
+    public function insertPenghayatan(Request $request)
     {
         try {
+            //  validasi (format baru mobile + format lama website)
             $request->validate([
+                'jumlah_kel_simulasi1' => 'nullable',
+                'jumlah_anggota1' => 'nullable',
+                'jumlah_kel_simulasi2' => 'nullable',
+                'jumlah_anggota2' => 'nullable',
+                'jumlah_kel_simulasi3' => 'nullable',
+                'jumlah_anggota3' => 'nullable',
+                'jumlah_kel_simulasi4' => 'nullable',
+                'jumlah_anggota4' => 'nullable',
                 'id_user' => 'required',
                 'id_role' => 'required',
                 'id_organization' => 'required'
             ]);
 
+            $toInt = static function ($value) {
+                if ($value === null || $value === '') {
+                    return 0;
+                }
+
+                if (is_numeric($value)) {
+                    return (int) $value;
+                }
+
+                preg_match('/-?\d+/', (string) $value, $match);
+
+                return isset($match[0]) ? (int) $match[0] : 0;
+            };
+
+            // UUID sama seperti native kamu
             $uuid = 'KP1B1-' . strtoupper(Str::random(6));
 
             DB::table('laporan_penghayatan_n_pengamalan')->insert([
                 'uuid' => $uuid,
                 'id_user' => $request->id_user,
-                'kisah_kegiatan' => $request->kisah_kegiatan,
-                'kisah_vol' => $request->kisah_vol,
-                'kisah_metode' => $request->kisah_metode,
-                'kisah_sasaran' => $request->kisah_sasaran,
-                'krisan_kegiatan' => $request->krisan_kegiatan,
-                'krisan_vol' => $request->krisan_vol,
-                'krisan_metode' => $request->krisan_metode,
-                'krisan_sasaran' => $request->krisan_sasaran,
-                'kilas_kegiatan' => $request->kilas_kegiatan,
-                'kilas_vol' => $request->kilas_vol,
-                'kilas_metode' => $request->kilas_metode,
-                'kilas_sasaran' => $request->kilas_sasaran,
-                'kiat_kegiatan' => $request->kiat_kegiatan,
-                'kiat_vol' => $request->kiat_vol,
-                'kiat_metode' => $request->kiat_metode,
-                'kiat_sasaran' => $request->kiat_sasaran,
-                'kisak_kegiatan' => $request->kisak_kegiatan,
-                'kisak_vol' => $request->kisak_vol,
-                'kisak_metode' => $request->kisak_metode,
-                'kisak_sasaran' => $request->kisak_sasaran,
-                'pkbn_kegiatan' => $request->pkbn_kegiatan,
-                'pkbn_vol' => $request->pkbn_vol,
-                'pkbn_metode' => $request->pkbn_metode,
+                'jumlah_kel_simulasi1' => $toInt($request->input('jumlah_kel_simulasi1')),
+                'jumlah_anggota1' => $toInt($request->input('jumlah_anggota1')),
+                'jumlah_kel_simulasi2' => $toInt($request->input('jumlah_kel_simulasi2')),
+                'jumlah_anggota2' => $toInt($request->input('jumlah_anggota2')),
+                'jumlah_kel_simulasi3' => $toInt($request->input('jumlah_kel_simulasi3')),
+                'jumlah_anggota3' => $toInt($request->input('jumlah_anggota3')),
+                'jumlah_kel_simulasi4' => $toInt($request->input('jumlah_kel_simulasi4')),
+                'jumlah_anggota4' => $toInt($request->input('jumlah_anggota4')),
+                'kisah_kegiatan' => $request->input('kisah_kegiatan'),
+                'kisah_vol' => $toInt($request->input('kisah_vol')),
+                'kisah_metode' => $request->input('kisah_metode'),
+                'kisah_sasaran' => $toInt($request->input('kisah_sasaran')),
+                'krisan_kegiatan' => $request->input('krisan_kegiatan'),
+                'krisan_vol' => $toInt($request->input('krisan_vol')),
+                'krisan_metode' => $request->input('krisan_metode'),
+                'krisan_sasaran' => $toInt($request->input('krisan_sasaran')),
+                'kilas_kegiatan' => $request->input('kilas_kegiatan'),
+                'kilas_vol' => $toInt($request->input('kilas_vol')),
+                'kilas_metode' => $request->input('kilas_metode'),
+                'kilas_sasaran' => $toInt($request->input('kilas_sasaran')),
+                'kiat_kegiatan' => $request->input('kiat_kegiatan'),
+                'kiat_vol' => $toInt($request->input('kiat_vol')),
+                'kiat_metode' => $request->input('kiat_metode'),
+                'kiat_sasaran' => $toInt($request->input('kiat_sasaran')),
+                'kisak_kegiatan' => $request->input('kisak_kegiatan'),
+                'kisak_vol' => $toInt($request->input('kisak_vol')),
+                'kisak_metode' => $request->input('kisak_metode'),
+                'kisak_sasaran' => $toInt($request->input('kisak_sasaran')),
+                'pkbn_kegiatan' => $request->input('pkbn_kegiatan'),
+                'pkbn_vol' => $toInt($request->input('pkbn_vol')),
+                'pkbn_metode' => $request->input('pkbn_metode'),
+                'pkbn_sasaran' => $toInt($request->input('pkbn_sasaran')),
+                'sumber_dana' => $request->input('sumber_dana'),
+                'hasil_kegiatan' => $request->input('hasil_kegiatan'),
                 // [PERUBAHAN 03-10-2026] disamakan dengan endpoint lain ('Proses'); kode lama di bawah dinonaktifkan
                 // 'status' => 'Menunggu',
                 'status' => 'Proses',
@@ -603,7 +763,7 @@ class ReportController extends Controller
                 'updated_at' => now(),
                 'id_role' => $request->id_role,
                 'id_organization' => $request->id_organization,
-                'catatan' => $request->catatan
+                'catatan' => $request->input('catatan', '')
             ]);
 
             $data = DB::table('laporan_penghayatan_n_pengamalan')
@@ -682,11 +842,36 @@ class ReportController extends Controller
     public function insertPendidikanKeterampilan(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'warga_buta' => 'integer|min:0',
+                'kel_belajarA' => 'integer|min:0',
+                'warga_belajarA' => 'integer|min:0',
+                'kel_belajarB' => 'integer|min:0',
+                'warga_belajarB' => 'integer|min:0',
+                'kel_belajarC' => 'integer|min:0',
+                'warga_belajarC' => 'integer|min:0',
+                'kel_belajarKF' => 'integer|min:0',
+                'warga_belajarKF' => 'integer|min:0',
+                'paud' => 'integer|min:0',
+                'taman_bacaan' => 'integer|min:0',
+                'jumlah_klp' => 'integer|min:0',
+                'jumlah_ibu_peserta' => 'integer|min:0',
+                'jumlah_ape' => 'integer|min:0',
+                'jumlah_kel_simulasi' => 'integer|min:0',
+                'KF' => 'integer|min:0',
+                'paud_tutor' => 'integer|min:0',
+                'BKB' => 'integer|min:0',
+                'koperasi' => 'integer|min:0',
+                'ketrampilan' => 'integer|min:0',
+                'LP3PKK' => 'integer|min:0',
+                'TP3PKK' => 'integer|min:0',
+                'damas_pkk' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP2B1-' . strtoupper(Str::random(6));
@@ -832,11 +1017,23 @@ class ReportController extends Controller
     public function insertPengembanganKehidupan(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'jumlah_kelompok_pemula' => 'integer|min:0',
+                'jumlah_peserta_pemula' => 'integer|min:0',
+                'jumlah_kelompok_madya' => 'integer|min:0',
+                'jumlah_peserta_madya' => 'integer|min:0',
+                'jumlah_kelompok_utama' => 'integer|min:0',
+                'jumlah_peserta_utama' => 'integer|min:0',
+                'jumlah_kelompok_mandiri' => 'integer|min:0',
+                'jumlah_peserta_mandiri' => 'integer|min:0',
+                'jumlah_kelompok_hukum' => 'integer|min:0',
+                'jumlah_peserta_hukum' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA)
             $uuid = 'KP2B2-' . strtoupper(Str::random(6));
@@ -944,11 +1141,16 @@ class ReportController extends Controller
     public function insertKaderPokja3(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'pangan' => 'integer|min:0',
+                'sandang' => 'integer|min:0',
+                'tata_laksana_rumah' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // DEFAULT VALUE (samain PHP lama)
             $pangan = $request->pangan ?? 0;
@@ -1032,11 +1234,24 @@ class ReportController extends Controller
     public function insertPangan(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'kader_pangan' => 'integer|min:0',
+                'beras' => 'integer|min:0',
+                'non_beras' => 'integer|min:0',
+                'peternakan' => 'integer|min:0',
+                'perikanan' => 'integer|min:0',
+                'warung_hidup' => 'integer|min:0',
+                'lumbung_hidup' => 'integer|min:0',
+                'toga' => 'integer|min:0',
+                'tanaman_keras' => 'integer|min:0',
+                'tanaman_lainnya' => 'integer|min:0',
+                'industri_pangan' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP3B1-' . strtoupper(Str::random(6));
@@ -1147,11 +1362,17 @@ class ReportController extends Controller
     public function insertSandang(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'kader_sandang' => 'integer|min:0',
+                'industri_pangan' => 'integer|min:0',
+                'industri_sandang' => 'integer|min:0',
+                'jasa' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP3B2-' . strtoupper(Str::random(6));
@@ -1246,11 +1467,15 @@ class ReportController extends Controller
     public function insertPerumahan(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'layak_huni' => 'integer|min:0',
+                'tidak_layak' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP3B3-' . strtoupper(Str::random(6));
@@ -1333,11 +1558,19 @@ class ReportController extends Controller
     public function insertKaderPokja4(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'posyandu' => 'integer|min:0',
+                'gizi' => 'integer|min:0',
+                'kesling' => 'integer|min:0',
+                'penyuluhan_narkoba' => 'integer|min:0',
+                'PHBS' => 'integer|min:0',
+                'KB' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP4-' . strtoupper(Str::random(6));
@@ -1433,11 +1666,27 @@ class ReportController extends Controller
     public function insertKesehatan(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'kader_kesehatan' => 'integer|min:0',
+                'kader_gizi' => 'integer|min:0',
+                'kader_kesling' => 'integer|min:0',
+                'kader_phbs' => 'integer|min:0',
+                'kader_kb' => 'integer|min:0',
+                'posyandu' => 'integer|min:0',
+                'jumlah_posyandu' => 'integer|min:0',
+                'jumlah_posyandu_iterasi' => 'integer|min:0',
+                'imunisasi_vaksinasi' => 'integer|min:0',
+                'pkg' => 'integer|min:0',
+                'tbc' => 'integer|min:0',
+                'jumlah_klp' => 'integer|min:0',
+                'jumlah_anggota' => 'integer|min:0',
+                'jumlah_kartu_gratis' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP4B1-' . strtoupper(Str::random(6));
@@ -1558,11 +1807,20 @@ class ReportController extends Controller
     public function insertLingkunganHidup(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'jamban' => 'integer|min:0',
+                'spal' => 'integer|min:0',
+                'tps' => 'integer|min:0',
+                'mck' => 'integer|min:0',
+                'pdam' => 'integer|min:0',
+                'sumur' => 'integer|min:0',
+                'dll' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP4B2-' . strtoupper(Str::random(6));
@@ -1660,11 +1918,19 @@ class ReportController extends Controller
     public function insertPerencanaanSehat(Request $request)
     {
         try {
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user' => 'required',
                 'id_role' => 'required',
-                'id_organization' => 'required'
-            ]);
+                'id_organization' => 'required',
+                'J_Psubur' => 'integer|min:0',
+                'J_Wsubur' => 'integer|min:0',
+                'Kb_p' => 'integer|min:0',
+                'Kb_w' => 'integer|min:0',
+                'Kk_tbg' => 'integer|min:0',
+                'Kk_asuransi' => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             // UUID (SAMA PERSIS)
             $uuid = 'KP4B3-' . strtoupper(Str::random(6));
@@ -1764,12 +2030,29 @@ class ReportController extends Controller
 
             /// ================= VALIDATION =================
 
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user'         => 'required',
                 'id_role'         => 'required',
                 'id_organization' => 'required',
                 'kategori'        => 'required',
-            ]);
+                'rw'                       => 'integer|min:0',
+                'rt'                       => 'integer|min:0',
+                'dasa_wisma'               => 'integer|min:0',
+                'hamil'                    => 'integer|min:0',
+                'melahirkan'               => 'integer|min:0',
+                'nifas'                    => 'integer|min:0',
+                'meninggal'                => 'integer|min:0',
+                'bayi_lahir_l'             => 'integer|min:0',
+                'bayi_lahir_p'             => 'integer|min:0',
+                'akte_kelahiran_ada'       => 'integer|min:0',
+                'akte_kelahiran_tidak'     => 'integer|min:0',
+                'bayi_meninggal_l'         => 'integer|min:0',
+                'bayi_meninggal_p'         => 'integer|min:0',
+                'balita_meninggal_l'       => 'integer|min:0',
+                'balita_meninggal_p'       => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             /// ================= UUID =================
 
@@ -1944,7 +2227,7 @@ class ReportController extends Controller
 
             /// ================= VALIDATION =================
 
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
 
                 'id_user'         => 'required',
 
@@ -1953,7 +2236,35 @@ class ReportController extends Controller
                 'id_organization' => 'required',
 
                 'kategori'        => 'required',
-            ]);
+
+                'kader_kesehatan'          => 'integer|min:0',
+                'gizi'                     => 'integer|min:0',
+                'kesling'                  => 'integer|min:0',
+                'phbs'                     => 'integer|min:0',
+                'kb'                       => 'integer|min:0',
+                'posyandu'                 => 'integer|min:0',
+                'imunisasi_vaksinasi_bayi_balita' => 'integer|min:0',
+                'pkg'                      => 'integer|min:0',
+                'tbc'                      => 'integer|min:0',
+                'jamban_wc'                => 'integer|min:0',
+                'spal'                     => 'integer|min:0',
+                'tps'                      => 'integer|min:0',
+                'jumlah_mck'               => 'integer|min:0',
+                'pdam'                     => 'integer|min:0',
+                'sumur'                    => 'integer|min:0',
+                'lain_lain'                => 'integer|min:0',
+                'jml_pus'                  => 'integer|min:0',
+                'jml_wus'                  => 'integer|min:0',
+                'akseptor_kb_l'            => 'integer|min:0',
+                'akseptor_kb_p'            => 'integer|min:0',
+                'jml_kk_tabungan'          => 'integer|min:0',
+                'jml_kk_asuransi'          => 'integer|min:0',
+                'kesehatan_program'        => 'integer|min:0',
+                'kelestarian_lingkungan_hidup' => 'integer|min:0',
+                'perencanaan_sehat_program'    => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             /// ================= UUID =================
 
@@ -2244,13 +2555,41 @@ class ReportController extends Controller
 
             /// ================= VALIDATION =================
 
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user'         => 'required',
                 'id_role'         => 'required',
                 'id_organization' => 'required',
                 'kategori'        => 'required',
                 'bulan'           => 'required',
-            ]);
+                'jml_ibu_hamil'    => 'integer|min:0',
+                'diperiksa'        => 'integer|min:0',
+                'fe_tablet_darah'  => 'integer|min:0',
+                'jml_ibu_menyusui' => 'integer|min:0',
+                'kondom'           => 'integer|min:0',
+                'pil'              => 'integer|min:0',
+                'implant'          => 'integer|min:0',
+                'mop'              => 'integer|min:0',
+                'mow'              => 'integer|min:0',
+                'iud'              => 'integer|min:0',
+                'suntikan'         => 'integer|min:0',
+                'lain_lain_kb'     => 'integer|min:0',
+                'jml_balita_l'     => 'integer|min:0',
+                'jml_balita_p'     => 'integer|min:0',
+                'buku_kia_l'       => 'integer|min:0',
+                'buku_kia_p'       => 'integer|min:0',
+                'datang_l'         => 'integer|min:0',
+                'datang_p'         => 'integer|min:0',
+                'naik_l'           => 'integer|min:0',
+                'naik_p'           => 'integer|min:0',
+                'vit_a_l'          => 'integer|min:0',
+                'vit_a_p'          => 'integer|min:0',
+                'pmt_l'            => 'integer|min:0',
+                'pmt_p'            => 'integer|min:0',
+                'imunisasi_tt_1'   => 'integer|min:0',
+                'imunisasi_tt_2'   => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             /// ================= UUID =================
 
@@ -2499,12 +2838,39 @@ class ReportController extends Controller
 
             /// ================= VALIDATION =================
 
-            $request->validate([
+            if ($gagal = $this->validasiData($request, [
                 'id_user'         => 'required',
                 'id_role'         => 'required',
                 'id_organization' => 'required',
                 'kategori'        => 'required',
-            ]);
+                'kader_kesehatan'          => 'integer|min:0',
+                'gizi'                     => 'integer|min:0',
+                'kesling'                  => 'integer|min:0',
+                'phbs'                     => 'integer|min:0',
+                'kb'                       => 'integer|min:0',
+                'posyandu'                 => 'integer|min:0',
+                'imunisasi_vaksinasi_bayi_balita' => 'integer|min:0',
+                'pkg'                      => 'integer|min:0',
+                'tbc'                      => 'integer|min:0',
+                'jamban_wc'                => 'integer|min:0',
+                'spal'                     => 'integer|min:0',
+                'tps'                      => 'integer|min:0',
+                'jumlah_mck'               => 'integer|min:0',
+                'pdam'                     => 'integer|min:0',
+                'sumur'                    => 'integer|min:0',
+                'lain_lain'                => 'integer|min:0',
+                'jml_pus'                  => 'integer|min:0',
+                'jml_wus'                  => 'integer|min:0',
+                'akseptor_kb_l'            => 'integer|min:0',
+                'akseptor_kb_p'            => 'integer|min:0',
+                'kk_memiliki_tabungan'     => 'integer|min:0',
+                'kk_memiliki_asuransi'     => 'integer|min:0',
+                'kesehatan'                => 'integer|min:0',
+                'kelestarian_lingkungan_hidup' => 'integer|min:0',
+                'perencanaan_sehat'            => 'integer|min:0',
+            ])) {
+                return $gagal;
+            }
 
             /// ================= UUID =================
 

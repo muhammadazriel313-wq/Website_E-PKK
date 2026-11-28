@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\Api\PeringkatController;
+use App\Http\Controllers\Api\Pokja1ExportApiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
@@ -63,6 +65,7 @@ Route::get('/report', [RiwayatController::class, 'getReport']);
 Route::get('/report/detail', [RiwayatController::class, 'getDetailReport']);
 Route::post('/report/cancel', [RiwayatController::class, 'cancelReport']);
 Route::post('/report/update', [RiwayatController::class, 'updateLaporan']);
+Route::post('/report/resubmit', [RiwayatController::class, 'resubmitLaporan']);
 
 
 // LAPORAN

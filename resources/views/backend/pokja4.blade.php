@@ -198,7 +198,7 @@
           <div class="alert alert-primary mt-3" id="infoLinkSheet" style="display:none; border-left:4px solid #0d6efd; background-color: #f0f7ff;">
             {{-- [PERUBAHAN 2026-10-09] Mengambil URL Spreadsheet dari config services; URL hardcode dinonaktifkan --}}
             {{-- <a href="https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;"> --}}
-            <a id="linkSheetPokja4" href="{{ config('services.sheets.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
+            <a id="linkSheetPokja4" href="{{ config('services.pokja4.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
               <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet
             </a>
           </div>
@@ -216,9 +216,9 @@
 <script>
   // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dan Spreadsheet dari config services; URL hardcode dinonaktifkan
   // const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzZHCfXfsAKfF9rdeLGNRnEGmWe8u7Wxzfw4tePj-aXmjypjntzlRkp8-n4LgThYc/exec";
-  const APPS_SCRIPT_URL = "{{ config('services.sheets.script_url') }}";
+  const APPS_SCRIPT_URL = "{{ config('services.pokja4.script_url') }}";
   // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1sG9520UiJQIXg3u7YHXPPIpjU41w8fkyrw3fP37u-9c/edit?usp=sharing";
-  const SHEET_HREF = "{{ config('services.sheets.spreadsheet_url') }}";
+  const SHEET_HREF = "{{ config('services.pokja4.spreadsheet_url') }}";
 
   // [PERUBAHAN 2026-10-09] Fungsi navigasi langsung ke tab Google Sheets Pokja 4
   function updateLinkPokja4() {

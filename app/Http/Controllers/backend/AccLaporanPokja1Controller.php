@@ -37,7 +37,7 @@ class AccLaporanPokja1Controller extends Controller
                             $q->where('users_mobile.id_role', 2)
                                 ->whereIn(
                                     'laporan_kader_pokja1.status',
-                                    ['Proses', 'proses', 'PROSES']
+                                    ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                                 );
                         });
                 })
@@ -62,7 +62,7 @@ class AccLaporanPokja1Controller extends Controller
                     ->leftJoin('users_mobile', 'laporan_kader_pokja1.id_user', '=', 'users_mobile.id')
                     ->where('users_mobile.id_subdistrict', $user->id_subdistrict)
                     ->where('users_mobile.id_role', 1)
-                    ->whereIn('laporan_kader_pokja1.status', ['proses', 'Proses', 'PROSES'])
+                    ->whereIn('laporan_kader_pokja1.status', ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU'])
                     ->count();
 
                 $lap2 = DB::table('laporan_kader_pokja1')

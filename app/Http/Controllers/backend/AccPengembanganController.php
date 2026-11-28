@@ -39,7 +39,7 @@ class AccPengembanganController extends Controller
                         $q->where('users_mobile.id_role', 2)
                             ->whereIn(
                                 'laporan_pengembangan_kehidupan.status',
-                                ['Proses', 'proses', 'PROSES']
+                                ['Proses', 'proses', 'PROSES', 'Menunggu', 'menunggu', 'MENUNGGU']
                             );
                     });
                 })
@@ -72,7 +72,7 @@ class AccPengembanganController extends Controller
                     ->where('users_mobile.id_role', 1)
                     ->whereIn(
                         'laporan_pengembangan_kehidupan.status',
-                        ['proses', 'Proses', 'PROSES']
+                        ['proses', 'Proses', 'PROSES', 'menunggu', 'Menunggu', 'MENUNGGU']
                     )
                     ->count();
 

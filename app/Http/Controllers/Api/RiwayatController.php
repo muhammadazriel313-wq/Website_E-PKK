@@ -1204,6 +1204,7 @@ class RiwayatController extends Controller
             'id_user'         => $row->id_user,
             'status'          => $this->mapGaleriStatus($row->status),
             'created_at'      => $row->created_at,
+            'updated_at'      => $row->updated_at,
             'id_role'         => $row->id_role,
             'id_organization' => $row->id_organization,
 

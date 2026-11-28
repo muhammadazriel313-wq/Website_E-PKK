@@ -167,7 +167,7 @@
             <p class="mb-2" style="font-size:12px; color:#475569;">Data akan diekspor ke dalam tab di Google Sheets berikut:</p>
             {{-- [PERUBAHAN 2026-10-09] Mengambil URL Spreadsheet dari config services; URL hardcode dinonaktifkan --}}
             {{-- <a href="https://docs.google.com/spreadsheets/d/1nxDW_CFMIVG2odpZksMeXN7EDblhhlH5SZWTMYkYgN0/edit?usp=sharing" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;"> --}}
-            <a id="linkSheetPokja3" href="{{ config('services.sheets.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
+            <a id="linkSheetPokja3" href="{{ config('services.pokja3.spreadsheet_url') ?: '#' }}" target="_blank" class="btn btn-sm btn-light text-primary" style="font-size:12px; font-weight:600; border: 1px solid #cce3fd;">
               <i class="bi bi-box-arrow-up-right"></i> Buka Spreadsheet Pokja 3
             </a>
           </div>
@@ -185,9 +185,9 @@
 <script>
   // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dan Spreadsheet dari config services; URL hardcode dinonaktifkan
   // const APPS_SCRIPT_URL_POKJA3 = "https://script.google.com/macros/s/AKfycbz0xapMUg_F6YJ-PVWdQn9gHoC5EGxJPodwaxX0G8C9K3In74RYEBVJ4Wve_s6krM5N6A/exec";
-  const APPS_SCRIPT_URL_POKJA3 = "{{ config('services.sheets.script_url') }}";
+  const APPS_SCRIPT_URL_POKJA3 = "{{ config('services.pokja3.script_url') }}";
   // const SHEET_HREF = "https://docs.google.com/spreadsheets/d/1nxDW_CFMIVG2odpZksMeXN7EDblhhlH5SZWTMYkYgN0/edit?usp=sharing";
-  const SHEET_HREF = "{{ config('services.sheets.spreadsheet_url') }}";
+  const SHEET_HREF = "{{ config('services.pokja3.spreadsheet_url') }}";
 
   // [PERUBAHAN 2026-10-09] Fungsi navigasi langsung ke tab Google Sheets Pokja 3
   function updateLinkPokja3() {

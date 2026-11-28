@@ -74,7 +74,7 @@ class Pokja4ExportController extends Controller
             // 2. KIRIM KE GOOGLE APPS SCRIPT VIA LARAVEL (BEBAS CORS)
             // [PERUBAHAN 2026-10-09] Mengambil URL Apps Script dari config services; URL hardcode dinonaktifkan
             // $url = "https://script.google.com/macros/s/AKfycbxI94KbVy5KxSoClLSGjrqSLCaU9rqGdiHghFFcLnKlFV9-SgRnHDhLR5661sBsQukN/exec";
-            $url = config('services.sheets.script_url');
+            $url = config('services.pokja4.script_url');
 
             if (empty($url)) {
                 return response()->json([
